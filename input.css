@@ -6,4 +6,7 @@
 @theme {
   --font-rokkit: "Rokkitt", "serif"; 
   --font-poppins: "Poppins", "sans-serif"; 
+
+
+  --color-border: #EFEFEF
 }

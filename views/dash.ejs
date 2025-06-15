@@ -70,18 +70,106 @@
                     </div>
                 </div>
             </div>
-            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-10 gap-5">
+            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
                 <div class="w-full">
                     <p class="font-medium">Quick Access</p>
                 </div>
                 <div class="w-full min-h-[12rem] grid grid-cols-3 gap-5">
-                    <div class="h-full w-full bg-[#FAFAFA] border border-[#EFEFEF] rounded-lg py-5 px-5 flex flex-col items-center justify-center">
+                    <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
                         <div class="w-full">
-                            <p></p>
+                            <p><i class="fa-solid fa-dollar-sign text-[#00B506] pr-2"></i> Financial Insights</p>
+                        </div>
+
+                        <div class="w-full flex flex-row items-start justify-between mt-4 gap-10 h-full">
+                            <div class="flex flex-col items-start justify-center gap-2 flex-none">
+                                <p class="text-[0.65rem]">Total Income</p>
+                                <p class="text-4xl">$1,225</p>
+                                <p class="text-[0.65rem]"><i class="fa-solid fa-arrow-trend-up pr-2 text-[#00B506]"></i> 12% Growth</p>
+                            </div>
+
+                            <div class="flex flex-col px-3 text-xs gap-2 py-2 items-start justify-center h-full flex-grow rounded-lg bg-[#FFFFFF] border border-border">
+                                <p>Total Invoices: 120</p>
+                                <p>Paid Invoice: 12</p>
+                                <p>Invoices this month: 120</p>
+                                <p>Revenue this month: $3000</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="h-full w-full bg-[#FAFAFA] border border-[#EFEFEF] rounded-lg"></div>
-                    <div class="h-full w-full bg-[#FAFAFA] border border-[#EFEFEF] rounded-lg"></div>
+                    <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
+                        <div class="w-full">
+                            <p><i class="fa-solid fa-list text-[#3D3BF3] pr-2"></i> Projects Insights</p>
+                        </div>
+                        <div class="w-full flex flex-row items-start justify-between mt-4 gap-10 h-full">
+                            <div class="w-full flex items-center justify-between">
+                                <div class="flex flex-col items-start justify-center gap-2">
+                                    <p class="text-[0.65rem]">Pending Tasks</p>
+                                    <p class="text-4xl">24</p>
+                                </div>
+                                <div class="flex flex-col items-start justify-center gap-2">
+                                    <p class="text-[0.65rem]">Completed Tasks</p>
+                                    <p class="text-4xl">12</p>
+                                </div>
+                                <div class="flex flex-col items-start justify-center gap-2">
+                                    <p class="text-[0.65rem]">Validation</p>
+                                    <p class="text-4xl">6</p>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
+                            <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-pink-400 to-fuchsia-500" style="width: 70%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Progress bar</span>
+                            <span>70%</span>
+                        </div>
+
+                    </div>
+                    <div class="w-full min-h-48 bg-[#FAFAFA] border border-border rounded-lg py-3 px-3 flex flex-row items-center gap-3">
+                     
+                        <div class="w-[60%] bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col"> 
+                            <div class="h-10 w-full flex items-center justify-center">
+                                <div class="w-[80%] h-10 flex items-center justify-start text-xs">
+                                    <p>June</p>
+                                </div>
+                            </div>
+                            <hr class="w-full border-border">
+                            <div class="w-full flex items-center justify-center py-2">
+                                <div class="w-[80%] flex items-center justify-center text-xs">
+                                    <% 
+                                    const now = new Date();
+                                    const year = now.getFullYear();
+                                    const month = now.getMonth(); // 0-indexed (Jan = 0)
+                                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                                    %>
+
+                                    <div class="grid grid-cols-7 w-full gap-2">
+                                    <% for(let day = 1; day <= daysInMonth; day++) { %>
+                                        <div class="w-full text-center rounded">
+                                        <%= day %>
+                                        </div>
+                                    <% } %>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+ 
+                        <div class="flex-grow bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col"> 
+                                <div class="h-10 w-full flex items-center justify-center">
+                                    <div class="w-[80%] h-10 flex items-center justify-start text-xs">
+                                        <p>Today</p>
+                                    </div>
+                                </div>
+                                <hr class="w-full border-border">
+                                <div class="w-full py-2 px-2">
+                                    <div class="min-h-8 rounded-lg bg-border w-full flex flex-row items-center justify-start px-2">
+                                        <i class="fa-solid fa-video pr-2 text-xs"></i><p class="text-[0.55rem]">Call with mike on 12:30</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>  
             </div>
         </div>
