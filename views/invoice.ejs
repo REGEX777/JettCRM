@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/output.css">
+    <title>Invoice Generator</title>
+    <style>
+        .item-row:hover {
+            background-color: #f9f9f9;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+    <!-- Parent -->
+    <div class="flex flex-row justify-start">
+       <div class="fixed h-screen bg-[#FFFFFF] w-[24rem] flex flex-col px-10 py-10">
+        
+            <div class="w-full">
+                <p class="font-rokkit text-3xl">JettCRM.</p>
+                <br>
+                <div class="font-poppins">
+                    <p>Menu</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col w-full mt-4 space-y-4 flex-grow overflow-y-auto font-poppins">
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] font-medium cursor-pointer">
+                    <i class="fa-solid fa-pencil"></i>
+                    <p>Manage Clients</p>
+                </div>
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-clock text-lg text-[#A3A3A3]"></i>
+                    <p>Track Projects</p>
+                </div>
+                                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-receipt text-lg text-[#A3A3A3]"></i>
+                    <p>Invoice Generator</p>
+                </div>
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-envelope text-lg text-[#A3A3A3]"></i>
+                    <p>Send E-mails</p>
+                </div>
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-dollar-sign text-lg text-[#A3A3A3]"></i>
+                    <p>Revenue Dashboard</p>
+                </div>
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-calendar-days text-lg text-[#A3A3A3]"></i>
+                    <p>Calendar/Task Organizer</p>
+                </div>
+            </div>
+            <div class="flex flex-col w-full mt-4 space-y-4 font-poppins">
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-gear text-[#A3A3A3]"></i>
+                    <p>Settings</p>
+                </div>
+                <div class="h-12 w-full flex flex-row items-center justify-start gap-5 px-5 rounded-lg text-[#3A3A3A] hover:bg-gradient-to-r from-[#fac3ff46] to-[#00d9ff42] hover:font-medium cursor-pointer">
+                    <i class="fa-solid fa-headset text-lg text-[#A3A3A3]"></i>
+                    <p>Help & Support</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main part -->
+        <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3"> 
+            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-10">
+                <p class="font-medium">Good Afternoon, Aditya</p>
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
+                    <i class="fa-solid fa-angle-down"></i>
+                    <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+                </button>
+                <div id="dropdownHover" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+                <div class="w-full flex justify-between items-center">
+                    <p class="font-medium text-xl">Create New Invoice</p>
+                    <button class="bg-[#3D3BF3] text-white px-4 py-2 rounded-lg hover:bg-[#3546FF] transition-colors">
+                        <i class="fa-solid fa-file-invoice mr-2"></i>Generate Invoice
+                    </button>
+                </div>
+                <form action="/services/invoice" method="POST" id="invoiceForm" class="w-full">
+                <div class="w-full grid grid-cols-2 gap-5"> 
+                    <div class="bg-[#FAFAFA] border border-border rounded-lg p-5">
+                        <h3 class="font-medium mb-3">From (Your Company)</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm text-gray-500">Company Name</label>
+                                <input type="text" class="w-full p-2 border border-border rounded-md" placeholder="Your Company Name" name="companyName" required>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-500">Address</label>
+                                <input type="text" class="w-full p-2 border border-border rounded-md" placeholder="Street Address" name="companyAddress1" required>
+                                <input type="text" class="w-full p-2 border border-border rounded-md mt-2" placeholder="City, State, ZIP" name="companyAddress2" required>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-sm text-gray-500">Tax ID</label>
+                                    <input type="text" class="w-full p-2 border border-border rounded-md" placeholder="Tax Identification Number" name="taxID">
+                                </div>
+                                <div>
+                                    <label class="text-sm text-gray-500">Phone</label>
+                                    <input type="tel" class="w-full p-2 border border-border rounded-md" placeholder="Phone Number" name="companyPhone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     
+                    <div class="bg-[#FAFAFA] border border-border rounded-lg p-5">
+                        <h3 class="font-medium mb-3">To (Client)</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm text-gray-500">Client Name</label>
+                                <input type="text" class="w-full p-2 border border-border rounded-md" placeholder="Client Company Name" name="clientName" required>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-500">Address</label>
+                                <input type="text" class="w-full p-2 border border-border rounded-md" placeholder="Street Address" name="clientAddress1" required>
+                                <input type="text" class="w-full p-2 border border-border rounded-md mt-2" placeholder="City, State, ZIP" name="clientAddress2" required>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-sm text-gray-500">Email</label>
+                                    <input type="email" class="w-full p-2 border border-border rounded-md" placeholder="client@example.com" name="clientEmail" required>
+                                </div>
+                                <div>
+                                    <label class="text-sm text-gray-500">Phone</label>
+                                    <input type="tel" class="w-full p-2 border border-border rounded-md" placeholder="Client Phone" name="clientPhone" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- invoice form -->
+                <div class="w-full bg-[#FAFAFA] border border-border rounded-lg p-5">
+                    <h3 class="font-medium mb-3">Invoice Details</h3>
+                    <div class="grid grid-cols-4 gap-3">
+                        <div>
+                            <label class="text-sm text-gray-500">Invoice #</label>
+                            <input type="text" class="w-full p-2 border border-border rounded-md" value="INV-001" name="invoiceNumber">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-500">Date</label>
+                            <input type="date" class="w-full p-2 border border-border rounded-md" name="sendDate" required>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-500">Due Date</label>
+                            <input type="date" class="w-full p-2 border border-border rounded-md" name="dueDate" required>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-500">Currency</label>
+                            <select class="w-full p-2 border border-border rounded-md" name="currency" required>
+                                <option>USD ($)</option>
+                                <option>EUR (€)</option>
+                                <option>GBP (£)</option>
+                                <option>INR (₹)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                 
+                <div class="w-full">
+                    <h3 class="font-medium mb-3">Items</h3>
+                    <div class="overflow-x-auto rounded-lg border border-border">
+                        <table class="w-full">
+                        <thead class="bg-[#FAFAFA] text-sm text-left">
+                            <tr>
+                            <th class="p-3">Description</th>
+                            <th class="p-3">Quantity</th>
+                            <th class="p-3">Rate</th>
+                            <th class="p-3">Amount</th>
+                            <th class="p-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsBody">
+                            <!-- Default row -->
+                            <tr class="item-row border-b border-border">
+                            <td class="p-3"><input type="text" class="item-desc w-full p-2 border rounded-md" placeholder="Service description" name="serviceDescription" required></td>
+                            <td class="p-3"><input type="number" class="item-qty w-full p-2 border rounded-md" value="1" min="1" name="qty" required></td>
+                            <td class="p-3"><input type="number" class="item-rate w-full p-2 border rounded-md" value="0" min="0" step="0.01" name="rate" required></td>
+                            <td class="p-3 item-amount font-medium">$0.00</td>
+                            <td class="p-3">
+                                <button class="remove-item text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                            <td colspan="5" class="p-3">
+                                <button id="addItemBtn" class="text-[#3546FF] hover:text-[#3D3BF3] flex items-center">
+                                <i class="fa-solid fa-plus mr-2"></i> Add Item
+                                </button>
+                            </td>
+                            </tr>
+                        </tfoot>
+                        </table>
+                    </div>
+                </div>
+                  
+                <div class="w-full grid grid-cols-2 gap-5">
+                    <div class="bg-[#FAFAFA] border border-border rounded-lg p-5">
+                        <h3 class="font-medium mb-3">Notes</h3>
+                        <textarea id="invoiceNotes" class="w-full p-2 border border-border rounded-md h-24" placeholder="Additional notes or terms" name="extraNotes"></textarea>
+                    </div>
+                    <div class="bg-[#FAFAFA] border border-border rounded-lg p-5">
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span>Tax (%):</span>
+                            <input type="number" id="taxRate" class="w-20 p-1 border border-border rounded-md text-right" value="0" min="0" max="100">
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span>Tax Amount:</span>
+                            <span id="taxAmount">$0.00</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span>Discount:</span>
+                            <input type="number" id="discount" class="w-20 p-1 border border-border rounded-md text-right" value="0" min="0">
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span>Discount Amount:</span>
+                            <span id="discountAmount">$0.00</span>
+                        </div>
+                        <div class="flex justify-between py-2 font-medium text-lg">
+                            <span>Total:</span>
+                            <span id="totalAmount">$0.00</span>
+                        </div>
+                        <input type="hidden" name="subtotalValue" id="subtotalValue">
+                        <input type="hidden" name="taxAmountValue" id="taxAmountValue">
+                        <input type="hidden" name="discountAmountValue" id="discountAmountValue">
+                        <input type="hidden" name="totalAmountValue" id="totalAmountValue">
+                    </div>
+                </div>
+                <div class="w-full flex justify-end mt-6">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">Submit Invoice</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="/javascript/invoice.js"></script>
+</body>
+</html>
