@@ -8,5 +8,13 @@
   --font-poppins: "Poppins", "sans-serif"; 
 
 
-  --color-border: #EFEFEF
+  --color-border: #EFEFEF;
+  --color-okgreen: #E9FFE6;
+  --color-okgreenborder: #0FAD00;
+  --color-badred: #FFE7E6;
+  --color-badredborder: #FF877F;
+  --color-pendingorangeborder: #FFA872;
+  --color-pendingorange: #FFE6D7;
+  --color-grayborder: #999696;
+  --color-graybg: #F0F0F0;
 }
