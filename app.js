@@ -57,7 +57,7 @@ import signupRoute from './routes/client/signup.js'
 import loginRoute from './routes/client/login.js'
 
 // Backend Routes (API) Imports
-import invoiceBack from './routes/backend/invoiceBack.js'
+// import invoiceBack from './routes/backend/invoiceBack.js'
 import signupBack from './routes/backend/signupBack.js'
 import loginBack from './routes/backend/loginBack.js'
 import logOutRoute from './routes/backend/logout.js'
@@ -71,7 +71,7 @@ app.use('/signup', signupRoute)
 app.use('/login', loginRoute)
 
 // Backend Route
-app.use('/services/invoice', invoiceBack)
+// app.use('/services/invoice', invoiceBack)
 app.use('/auth/signup', signupBack)
 app.use('/auth/login', loginBack)
 app.use('/logout', logOutRoute)
