@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <title>Add Client | JettCRM</title>
+</head>
+<body>
+    <!-- Parent -->
+    <% if (success.length > 0) { %>
+     <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+        <p><%= success[0] %></p>
+     </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+     <div class="h-10 w-full bg-red-500">
+        <p><%= error[0] %></p>
+     </div>
+    <% } %>
+    <div class="flex flex-row justify-start">
+
+        <%- include('../fragments/sidebar'); -%>
+
+        
+        <!-- Main Content Area -->
+        <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-10">
+                <p class="font-medium">Good Afternoon, Aditya</p>
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
+                    <i class="fa-solid fa-angle-down"></i>
+                    <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+                </button>
+            </div>
+            
+            <form action="/clients/add" method="POST">
+            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+                <div class="w-full flex justify-between items-center">
+                <div>
+                    <p class="font-medium text-2xl">Add New Client</p>
+                    <p class="text-sm text-[#A3A3A3]">Fill in the details to add a new client to your CRM</p>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="py-2 px-4 bg-[#3546FF] text-white rounded-lg flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Client
+                    </button>
+                </div>
+                </div>
+
+                <div class="w-full grid grid-cols-2 gap-5">
+                <div class="col-span-1 flex flex-col gap-5">
+                    <div class="flex flex-col gap-2">
+                    <label for="clientName" class="text-sm font-medium">Client Name*</label>
+                    <div class="relative">
+                        <input name="clientName" type="text" id="clientName" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="John Doe" required>
+                        <i class="fa-solid fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                    </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                    <label for="businessName" class="text-sm font-medium">Business Name</label>
+                    <div class="relative">
+                        <input name="businessName" type="text" id="businessName" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="Acme Inc.">
+                        <i class="fa-solid fa-building absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1 flex flex-col gap-5">
+                    <div class="flex flex-col gap-2">
+                    <label for="email" class="text-sm font-medium">Email*</label>
+                    <div class="relative">
+                        <input name="email" type="email" id="email" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="john@example.com" required>
+                        <i class="fa-solid fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                    </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                    <label for="phone" class="text-sm font-medium">Phone Number</label>
+                    <div class="relative">
+                        <input name="phone" type="tel" id="phone" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="(123) 456-7890">
+                        <i class="fa-solid fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="w-full mt-5">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('additionalFields')">
+                    <p class="font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-[#3546FF]"></i>
+                    Additional Information (Optional)
+                    </p>
+                    <i class="fa-solid fa-chevron-down text-[#A3A3A3]" id="additionalFieldsIcon"></i>
+                </div>
+
+                <div class="grid grid-cols-2 gap-5 mt-3 hidden" id="additionalFields">
+                    <div class="col-span-1 flex flex-col gap-5">
+                    <div class="flex flex-col gap-2">
+                        <label for="address" class="text-sm font-medium">Address</label>
+                        <div class="relative">
+                        <input name="address" type="text" id="address" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="123 Main St">
+                        <i class="fa-solid fa-location-dot absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="website" class="text-sm font-medium">Website</label>
+                        <div class="relative">
+                        <input name="website" type="url" id="website" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="https://example.com">
+                        <i class="fa-solid fa-globe absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-span-1 flex flex-col gap-5">
+                    <div class="flex flex-col gap-2">
+                        <label for="notes" class="text-sm font-medium">Notes</label>
+                        <textarea name="notes" id="notes" class="w-full h-24 bg-[#FAFAFA] border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="Any additional notes about this client"></textarea>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="/javascript/general.js"></script>
+</body>
+</html>

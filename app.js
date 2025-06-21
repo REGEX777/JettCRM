@@ -55,6 +55,7 @@ import invoiceRoute from './routes/client/invoicegen.js'
 import settingsRoute from './routes/client/settings.js'
 import signupRoute from './routes/client/signup.js'
 import loginRoute from './routes/client/login.js'
+import clientManageRoute from './routes/client/clientManage.js'
 
 // Backend Routes (API) Imports
 // import invoiceBack from './routes/backend/invoiceBack.js'
@@ -68,6 +69,7 @@ app.use('/', dashRoute);
 app.use('/geninvoice', invoiceRoute);
 app.use('/settings', settingsRoute);
 app.use('/signup', signupRoute)
+app.use('/clients', clientManageRoute)
 app.use('/login', loginRoute)
 
 // Backend Route
