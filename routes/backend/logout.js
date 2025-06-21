@@ -1,14 +1,16 @@
 import express from 'express';
-
-// middleware import
-
 import { isLoggedIn } from '../../middleware/isLoggedin.js';
 
-const router = express.Router()
-
+const router = express.Router();
 
 router.get('/', isLoggedIn, (req, res)=>{
-    res.render('dash')
+    req.logOut(function(err){
+        if(err){
+            return next(err);
+        }
+        res.redirect('/login')
+    })
 })
+
 
 export default router;

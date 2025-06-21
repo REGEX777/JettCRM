@@ -10,6 +10,17 @@
 </head>
 <body>
     <!-- Parent -->
+     <% if (success.length > 0) { %>
+     <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+        <p><%= success[0] %></p>
+     </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+     <div class="h-10 w-full bg-red-500">
+        <p><%= error[0] %></p>
+     </div>
+    <% } %>
     <div class="flex flex-row justify-start">
         <!-- Sidebar -->
         <div class="fixed h-screen bg-[#FFFFFF] w-[24rem] flex flex-col px-10 py-10">

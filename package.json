@@ -10,8 +10,19 @@
   "description": "",
   "type": "module",
   "dependencies": {
+    "@h1dd3nsn1p3r/pdf-invoice": "^1.0.10",
+    "bcrypt": "^6.0.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "mongoose": "^8.16.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
     "pdf-lib": "^1.17.1",
     "tailwindcss": "^4.1.10"
   }
