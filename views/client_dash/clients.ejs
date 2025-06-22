@@ -25,7 +25,7 @@
         <%- include('../fragments/sidebar'); -%>
 
         
-        <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+        <div class="flex flex-col h-screen bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
             <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10">
                 <p class="font-medium">Good Afternoon, Aditya</p>
                 <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
@@ -38,15 +38,15 @@
                 <div class="w-full flex justify-between items-center">
                     <p class="font-medium">Client Management</p>
                     <div class="flex gap-3">
-                        <button class="py-2 px-4 bg-[#3546FF] text-white rounded-lg flex items-center gap-2">
+                        <a href="/clients/add" class="py-2 px-4 bg-[#3546FF] text-white rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-plus"></i> Add New Client
-                        </button>
-                        <button class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
+                        </a>
+                        <a href="" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-filter"></i> Filter
-                        </button>
-                        <button class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
+                        </a>
+                        <a href="" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-download"></i> Export
-                        </button>
+                        </a>
                     </div>
                 </div>
                 
@@ -57,7 +57,7 @@
                         <input type="text" placeholder="Search clients..." class="bg-transparent w-full border-0">
                     </div>
                     <div class="h-12 bg-[#FAFAFA] border border-border rounded-lg flex items-center justify-center">
-                        <p class="text-sm">Total Clients: <span class="font-medium">24</span></p>
+                        <p class="text-sm">Total Clients: <span class="font-medium"><%= totalClients %></span></p>
                     </div>
                 </div>
                 
@@ -75,164 +75,152 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr class="border-b border-border hover:bg-[#FAFAFA]">
-                                <td class="py-3 px-4 flex items-center gap-3">
-                                    <div>
-                                        <p class="font-medium">Michael Johnson</p>
-                                        <p class="text-xs text-[#A3A3A3]">ID: #CL-001</p>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <p>michael@example.com</p>
-                                    <p class="text-xs text-[#A3A3A3]">(124) 123-4567</p>
-                                </td>
-                                <td class="py-3 px-4">Johnson Media</td>
-                                <td class="py-3 px-4">
-                                    <p>10</p>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <span class="py-1 px-3 rounded-full bg-[#E8F5E9] text-[#00B506] text-xs">Active</span>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-[#3546FF] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button class="p-2 text-[#FF3D3D] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <button class="p-2 text-[#3A3A3A] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                                                        <tr class="border-b border-border hover:bg-[#FAFAFA]">
-                                <td class="py-3 px-4 flex items-center gap-3">
-                                    <div>
-                                        <p class="font-medium">Michael Johnson</p>
-                                        <p class="text-xs text-[#A3A3A3]">ID: #CL-001</p>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <p>michael@example.com</p>
-                                    <p class="text-xs text-[#A3A3A3]">(124) 123-4567</p>
-                                </td>
-                                <td class="py-3 px-4">Johnson Media</td>
-                                <td class="py-3 px-4">
-                                    <p>10</p>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <span class="py-1 px-3 rounded-full bg-[#E8F5E9] text-[#00B506] text-xs">Active</span>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-[#3546FF] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button class="p-2 text-[#FF3D3D] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <button class="p-2 text-[#3A3A3A] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-
-                                                        <tr class="border-b border-border hover:bg-[#FAFAFA]">
-                                <td class="py-3 px-4 flex items-center gap-3">
-                                    <div>
-                                        <p class="font-medium">Michael Johnson</p>
-                                        <p class="text-xs text-[#A3A3A3]">ID: #CL-001</p>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <p>michael@example.com</p>
-                                    <p class="text-xs text-[#A3A3A3]">(124) 123-4567</p>
-                                </td>
-                                <td class="py-3 px-4">Johnson Media</td>
-                                <td class="py-3 px-4">
-                                    <p>10</p>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <span class="py-1 px-3 rounded-full bg-[#E8F5E9] text-[#00B506] text-xs">Active</span>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-[#3546FF] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button class="p-2 text-[#FF3D3D] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <button class="p-2 text-[#3A3A3A] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-
-                                                        <tr class="border-b border-border hover:bg-[#FAFAFA]">
-                                <td class="py-3 px-4 flex items-center gap-3">
-                                    <div>
-                                        <p class="font-medium">Michael Johnson</p>
-                                        <p class="text-xs text-[#A3A3A3]">ID: #CL-001</p>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <p>michael@example.com</p>
-                                    <p class="text-xs text-[#A3A3A3]">(124) 123-4567</p>
-                                </td>
-                                <td class="py-3 px-4">Johnson Media</td>
-                                <td class="py-3 px-4">
-                                    <p>10</p>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <span class="py-1 px-3 rounded-full bg-[#E8F5E9] text-[#00B506] text-xs">Active</span>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-[#3546FF] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button class="p-2 text-[#FF3D3D] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <button class="p-2 text-[#3A3A3A] hover:bg-[#F5F5F5] rounded-lg">
-                                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            
+                            <% clients.forEach((client, index) => { %>
+                                <tr class="border-b border-border hover:bg-[#FAFAFA] cursor-pointer" 
+                                    onclick="toggleClientDetails('<%= index %>')"
+                                    id="client-row-<%= index %>">
+                                    <td class="py-3 px-4 flex items-center gap-3">
+                                        <div>
+                                            <p class="font-medium"><%= client.clientName %></p>
+                                            <p class="text-xs text-[#A3A3A3]">ID: #CL-<%= String(index + 1).padStart(3, '0') %></p>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <p><%= client.email %></p>
+                                        <p class="text-xs text-[#A3A3A3]"><%= client.phoneNumber %></p>
+                                    </td>
+                                    <td class="py-3 px-4"><%= client.businessName %></td>
+                                    <td class="py-3 px-4">
+                                        <p><%= client.projects %></p>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="py-1 px-3 rounded-full bg-[#E8F5E9] text-[#00B506] text-xs">Active</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex gap-2">
+                                            <button class="p-2 text-[#3546FF] hover:bg-[#F5F5F5] rounded-lg" onclick="event.stopPropagation()">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <button class="p-2 text-[#FF3D3D] hover:bg-[#F5F5F5] rounded-lg" onclick="event.stopPropagation()">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                            <button class="p-2 text-[#3A3A3A] hover:bg-[#F5F5F5] rounded-lg" onclick="event.stopPropagation()">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="hidden bg-[#FAFAFA]" id="client-details-<%= index %>">
+                                    <td colspan="6" class="px-4 py-3">
+                                        <div class="grid grid-cols-2 gap-4 p-4">
+                                            <div class="col-span-1">
+                                                <div class="mb-4">
+                                                    <h4 class="text-sm font-medium text-[#3A3A3A] mb-2">Contact Information</h4>
+                                                    <div class="flex items-center gap-3 mb-2">
+                                                        <i class="fa-solid fa-phone text-[#A3A3A3] w-5"></i>
+                                                        <p class="text-sm"><%= client.phoneNumber %></p>
+                                                    </div>
+                                                    <div class="flex items-center gap-3 mb-2">
+                                                        <i class="fa-solid fa-envelope text-[#A3A3A3] w-5"></i>
+                                                        <p class="text-sm"><%= client.email %></p>
+                                                    </div>
+                                                    <% if (client.address) { %>
+                                                    <div class="flex items-start gap-3">
+                                                        <i class="fa-solid fa-location-dot text-[#A3A3A3] w-5 mt-1"></i>
+                                                        <p class="text-sm"><%= client.address %></p>
+                                                    </div>
+                                                    <% } %>
+                                                </div>
+                                                
+                                                <% if (client.website) { %>
+                                                <div class="mb-4">
+                                                    <h4 class="text-sm font-medium text-[#3A3A3A] mb-2">Website</h4>
+                                                    <div class="flex items-center gap-3">
+                                                        <i class="fa-solid fa-globe text-[#A3A3A3] w-5"></i>
+                                                        <a href="<%= client.website %>" target="_blank" class="text-sm text-[#3546FF] hover:underline"><%= client.website %></a>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                            </div>
+                                            
+                                            <div class="col-span-1">
+                                                <% if (client.notes) { %>
+                                                <div class="mb-4">
+                                                    <h4 class="text-sm font-medium text-[#3A3A3A] mb-2">Notes</h4>
+                                                    <p class="text-sm bg-white p-3 rounded-lg border border-border"><%= client.notes %></p>
+                                                </div>
+                                                <% } %>
+                                                
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-[#3A3A3A] mb-2">Recent Activity</h4>
+                                                    <div class="space-y-3">
+                                                        <div class="flex items-start gap-3">
+                                                            <div class="w-5 h-5 rounded-full bg-[#3546FF] flex items-center justify-center mt-0.5">
+                                                                <i class="fa-solid fa-plus text-white text-xs"></i>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-sm">Client added to system</p>
+                                                                <p class="text-xs text-[#A3A3A3]">2 days ago</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-start gap-3">
+                                                            <div class="w-5 h-5 rounded-full bg-[#00B506] flex items-center justify-center mt-0.5">
+                                                                <i class="fa-solid fa-check text-white text-xs"></i>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-sm">Initial contact made</p>
+                                                                <p class="text-xs text-[#A3A3A3]">1 day ago</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
                         </tbody>
+
                     </table>
                 </div>
                 
                 <!-- Pagination -->
                 <div class="w-full flex justify-between items-center pt-5">
-                    <p class="text-sm text-[#A3A3A3]">Showing 1 to 4 of 24 entries</p>
+                    <p class="text-sm text-[#A3A3A3]">
+                        Showing <%= startEntry %> to <%= endEntry %> of <%= totalClients %> entries
+                    </p>
                     <div class="flex gap-2">
-                        <button class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <button class="w-8 h-8 flex items-center justify-center bg-[#3546FF] text-white rounded-lg">1</button>
-                        <button class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">2</button>
-                        <button class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">3</button>
-                        <button class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
+                        <% if (currentPage > 1) { %>
+                            <a href="?page=<%= currentPage - 1 %>" class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </a>
+                        <% } else { %>
+                            <span class="w-8 h-8 flex items-center justify-center text-[#C1C1C1] border border-border rounded-lg cursor-not-allowed">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                        <% } %>
+                        <% for(let i = 1; i <= totalPages; i++) { %>
+                            <a href="?page=<%= i %>" class="w-8 h-8 flex items-center justify-center border border-border rounded-lg <%= currentPage === i ? 'bg-[#3546FF] text-white' : '' %>">
+                                <%= i %>
+                            </a>
+                        <% } %>
+
+                        <% if (currentPage < totalPages) { %>
+                            <a href="?page=<%= currentPage + 1 %>" class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        <% } else { %>
+                            <span class="w-8 h-8 flex items-center justify-center text-[#C1C1C1] border border-border rounded-lg cursor-not-allowed">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="/javascript/general.js"></script>
 </body>
 </html>

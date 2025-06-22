@@ -19,7 +19,9 @@ const clientSchema = new mongoose.Schema({
         type: String
     },
     website: String,
-    notes: String
+    notes: String,
+    status: String,
+    projects: Number
 })
 
 const Client = new mongoose.model('Client', clientSchema);
