@@ -10,12 +10,11 @@ import { validateEmail } from '../../middleware/emailValidator.js';
 router.post('/', validateEmail, passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: true
-}), (req, res)=>{
-    if(req.cookies.redUrl){
-        res.redirect(req.cookies.redUrl)
-        return
-    }
-    res.redirect('/')
-})
+}), (req, res) => {
+    const redirectTo = req.session.redUrl || '/';
+    console.log('[login] Redirecting to:', redirectTo);
+    delete req.session.redUrl;
+    res.redirect(redirectTo);
+});
 
 export default router;

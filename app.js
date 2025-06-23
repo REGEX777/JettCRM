@@ -9,7 +9,7 @@ import flash from 'connect-flash';
 
 // Middleware Imports
 import { storeOriginalUrl } from './middleware/saveOriginalURL.js';
-
+import { isLoggedIn } from './middleware/isLoggedIn.js';
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
@@ -69,7 +69,7 @@ app.use('/', dashRoute);
 app.use('/geninvoice', invoiceRoute);
 app.use('/settings', settingsRoute);
 app.use('/signup', signupRoute)
-app.use('/clients', clientManageRoute)
+app.use('/clients', isLoggedIn, clientManageRoute)
 app.use('/login', loginRoute)
 
 // Backend Route

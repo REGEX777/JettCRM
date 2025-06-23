@@ -44,7 +44,7 @@
                         <a href="" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-filter"></i> Filter
                         </a>
-                        <a href="" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
+                        <a href="/clients/export-excel" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-download"></i> Export
                         </a>
                     </div>
@@ -54,7 +54,7 @@
                 <div class="w-full grid grid-cols-4 gap-5">
                     <div class="col-span-3 h-12 bg-[#FAFAFA] border border-border rounded-lg flex items-center px-4">
                         <i class="fa-solid fa-magnifying-glass text-[#A3A3A3] pr-2"></i>
-                        <input type="text" placeholder="Search clients..." class="bg-transparent w-full border-0">
+                        <input type="text" id="clientSearch" placeholder="Search clients..." class="bg-transparent w-full border-0">
                     </div>
                     <div class="h-12 bg-[#FAFAFA] border border-border rounded-lg flex items-center justify-center">
                         <p class="text-sm">Total Clients: <span class="font-medium"><%= totalClients %></span></p>
@@ -76,13 +76,20 @@
                         </thead>
                         <tbody>
                             <% clients.forEach((client, index) => { %>
-                                <tr class="border-b border-border hover:bg-[#FAFAFA] cursor-pointer" 
+                                <tr class="client-row border-b border-border hover:bg-[#FAFAFA] cursor-pointer"
+                                    onclick="toggleClientDetails('<%= index %>')"
+                                    id="client-row-<%= index %>"
+                                    data-name="<%= client.clientName.toLowerCase() %>"
+                                    data-email="<%= client.email.toLowerCase() %>"
+                                    data-phone="<%= client.phoneNumber %>"
+                                    data-company="<%= client.businessName.toLowerCase() %>"
+                                    data-notes="<%= client.notes ? client.notes.toLowerCase() : '' %>"
                                     onclick="toggleClientDetails('<%= index %>')"
                                     id="client-row-<%= index %>">
                                     <td class="py-3 px-4 flex items-center gap-3">
                                         <div>
                                             <p class="font-medium"><%= client.clientName %></p>
-                                            <p class="text-xs text-[#A3A3A3]">ID: #CL-<%= String(index + 1).padStart(3, '0') %></p>
+                                            <p class="text-xs text-[#A3A3A3]">ID: <%= client.ID %></p>
                                         </div>
                                     </td>
                                     <td class="py-3 px-4">
@@ -191,6 +198,17 @@
                         Showing <%= startEntry %> to <%= endEntry %> of <%= totalClients %> entries
                     </p>
                     <div class="flex gap-2">
+                        <% function renderPageLink(page) { %>
+                            <a href="?page=<%= page %>" class="w-8 h-8 flex items-center justify-center border border-border rounded-lg <%= currentPage === page ? 'bg-[#3546FF] text-white' : '' %>">
+                                <%= page %>
+                            </a>
+                        <% } %>
+
+                        <% function renderDots() { %>
+                            <span class="w-8 h-8 flex items-center justify-center text-[#C1C1C1]">...</span>
+                        <% } %>
+
+                        <!-- Previous button -->
                         <% if (currentPage > 1) { %>
                             <a href="?page=<%= currentPage - 1 %>" class="w-8 h-8 flex items-center justify-center border border-border rounded-lg">
                                 <i class="fa-solid fa-chevron-left"></i>
@@ -200,10 +218,23 @@
                                 <i class="fa-solid fa-chevron-left"></i>
                             </span>
                         <% } %>
-                        <% for(let i = 1; i <= totalPages; i++) { %>
-                            <a href="?page=<%= i %>" class="w-8 h-8 flex items-center justify-center border border-border rounded-lg <%= currentPage === i ? 'bg-[#3546FF] text-white' : '' %>">
-                                <%= i %>
-                            </a>
+
+                        <% if (totalPages <= 7) { %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <%= renderPageLink(i) %>
+                            <% } %>
+                        <% } else { %>
+                            <%= renderPageLink(1) %>
+                            <% if (currentPage > 4) { renderDots(); } %>
+
+                            <% for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                                if (i > 1 && i < totalPages) {
+                            %>
+                                <%= renderPageLink(i) %>
+                            <% } } %>
+
+                            <% if (currentPage < totalPages - 3) { renderDots(); } %>
+                            <%= renderPageLink(totalPages) %>
                         <% } %>
 
                         <% if (currentPage < totalPages) { %>
@@ -222,5 +253,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <script src="/javascript/general.js"></script>
+    <script src="/javascript/searchAjax.js"></script>
 </body>
 </html>
