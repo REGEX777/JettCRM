@@ -29,13 +29,20 @@ const generateClientId = async (prefix = 'CL') => {
 
 router.get('/', async (req, res) => {
     try {
+
+        const {filter, sort} = req.query;
+        const sortOption = {};
+        if (sort === 'newest') sortOption.accountCreation = -1;
+        if (sort === 'oldest') sortOption.accountCreation = 1;
+
+
         const page = parseInt(req.query.page) || 1;
         const limit = 4;  
-        const totalClients = await Client.countDocuments();
+        const totalClients = await Client.countDocuments({belongsTo: req.user._id});
         const totalPages = Math.ceil(totalClients / limit);
         const skip = (page - 1) * limit;
 
-        const clients = await Client.find().skip(skip).limit(limit);
+        const clients = await Client.find({belongsTo: req.user._id}).sort(sortOption).skip(skip).limit(limit);
 
         res.render('client_dash/clients', {
             clients,
@@ -125,7 +132,6 @@ router.post('/upload-excel', upload.single('excel'), async (req, res) => {
             notes: ['notes', 'comments', 'remarks', 'description'],
             status: ['status', 'state', 'clientstatus'],
             projects: ['projects', 'projectcount', 'totalprojects'],
-            belongsTo: req.user._id
         };
 
         const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
@@ -165,6 +171,8 @@ router.post('/upload-excel', upload.single('excel'), async (req, res) => {
                 }
             }
 
+            client.belongsTo = req.user._id;
+            
             if (client.projects) {
                 client.projects = Number(client.projects) || 0;
             }

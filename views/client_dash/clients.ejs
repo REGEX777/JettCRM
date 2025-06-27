@@ -41,10 +41,26 @@
                         <a href="/clients/add" class="py-2 px-4 bg-[#3546FF] text-white rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-plus"></i> Add New Client
                         </a>
-                        <a href="" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
+                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-filter"></i> Filter
-                        </a>
-                        <a href="/clients/export-excel" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
+                        </button>
+                            <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                                    <li>
+                                        <a href="/clients?filter=active" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Active</a>
+                                    </li>
+                                    <li>
+                                        <a href="/clients?filter=paused" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Pause</a>
+                                    </li>
+                                    <li>
+                                        <a href="/clients?sort=newest" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Newest First</a>
+                                    </li>
+                                    <li>
+                                        <a href="/clients?sort=oldest" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Oldest First</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a href="/clients/export-excel" class="py-2 px-4 bg-white border border-[#3546FF] text-[#3546FF] rounded-lg flex items-center gap-2">
                             <i class="fa-solid fa-download"></i> Export
                         </a>
                     </div>
@@ -251,8 +267,9 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <script src="/javascript/general.js"></script>
     <script src="/javascript/searchAjax.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
 </body>
 </html>

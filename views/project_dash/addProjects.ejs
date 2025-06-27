@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <title>Create New Project</title>
+</head>
+<body>
+    <% if (success.length > 0) { %>
+     <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+        <p><%= success[0] %></p>
+     </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+     <div class="h-10 w-full bg-red-500">
+        <p><%= error[0] %></p>
+     </div>
+    <% } %>
+    <div class="flex flex-row justify-start">
+
+        <%- include('../fragments/sidebar'); -%>
+
+        <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-5">
+                <div class="flex items-center gap-4">
+                    <a href="/projects" class="flex items-center text-gray-500 hover:text-gray-700">
+                        <i class="fa-solid fa-arrow-left pr-2"></i>
+                    </a>
+                    <p class="font-medium text-xl">Create New Project</p>
+                </div>
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
+                    <i class="fa-solid fa-angle-down"></i>
+                    <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+                </button>
+
+                <div id="dropdownHover" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="min-h-[calc(100vh-10rem)] rounded-lg w-full bg-white flex flex-col items-center justify-start py-5 px-10 gap-5">
+                <form class="w-full flex flex-col gap-6" action="/projects" method="post">
+                    <div class="w-full">
+                        <label for="projectTitle" class="block mb-2 text-sm font-medium text-gray-700">Project Title*</label>
+                        <input type="text" id="projectTitle" name="projectTitle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter project title" required>
+                    </div>
+
+                    <div class="w-full">
+                    <label for="clientSelect" class="block mb-2 text-sm font-medium text-gray-700">Client*</label>
+                    
+                    <!-- Searchable client dropdown -->
+                    <div class="relative">
+                        <input 
+                        type="text" 
+                        id="clientSearch" 
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="Search by name, email, or client ID"
+                        autocomplete="off"
+                        oninput="searchClients(this.value)"
+                        >
+                        <div id="clientDropdown" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                        <!-- Search results will appear here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden select for form submission -->
+                    <select id="clientSelect" name="clientSelect" class="hidden" required>
+                        <option value="" disabled selected>Select a client</option>
+                    </select>
+
+                    <!-- New client email (only shown when "New Client" is selected) -->
+                    <div id="newClientEmailWrapper" class="mt-3 hidden">
+                        <label for="newClientEmail" class="block mb-1 text-sm font-medium text-gray-700">New Client Email*</label>
+                        <input 
+                        type="email" 
+                        id="newClientEmail" 
+                        name="newClientEmail" 
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="Enter client email"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">This will send an email invitation to the client</p>
+                    </div>
+                    </div>
+
+                    <div class="w-full grid grid-cols-2 gap-5">
+                        <div>
+                            <label for="startDate" class="block mb-2 text-sm font-medium text-gray-700">Start Date*</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fa-solid fa-calendar text-gray-400"></i>
+                                </div>
+                                <input datepicker type="text" id="startDate" name="startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select start date" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="deadline" class="block mb-2 text-sm font-medium text-gray-700">Deadline*</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fa-solid fa-calendar text-gray-400"></i>
+                                </div>
+                                <input datepicker type="text" id="deadline" name="deadline" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select deadline" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Priority*</label>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center">
+                                <input id="priority-high" type="radio" value="high" name="priority" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500" required>
+                                <label for="priority-high" class="ml-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                    <span class="h-3 w-3 rounded-full bg-red-500"></span> High
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="priority-medium" type="radio" value="medium" name="priority" class="w-4 h-4 text-yellow-500 bg-gray-100 border-gray-300 focus:ring-yellow-500">
+                                <label for="priority-medium" class="ml-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                    <span class="h-3 w-3 rounded-full bg-yellow-500"></span> Medium
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="priority-low" type="radio" value="low" name="priority" class="w-4 h-4 text-green-500 bg-gray-100 border-gray-300 focus:ring-green-500">
+                                <label for="priority-low" class="ml-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                    <span class="h-3 w-3 rounded-full bg-green-500"></span> Low
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <label for="projectDescription" class="block mb-2 text-sm font-medium text-gray-700">Project Description*</label>
+                        <textarea id="projectDescription" name="projectDescription" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Describe the project in detail..." required></textarea>
+                    </div>
+                    <!-- Project Budget -->
+                    <div class="w-full">
+                        <label for="projectBudget" class="block mb-2 text-sm font-medium text-gray-700">Project Budget ($)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <span class="text-gray-500">$</span>
+                            </div>
+                            <input type="number" id="projectBudget" name="projectBudget" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <label for="projectTeam" class="block mb-2 text-sm font-medium text-gray-700">Assign Team Members</label>
+                        <select id="projectTeam" name="projectTeam" multiple class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="1">Aditya Dubey (Project Manager)</option>
+                            <option value="1">Aditya Dubey (Project Manager)</option>
+                            <option value="1">Aditya Dubey (Project Manager)</option>
+                            <option value="1">Aditya Dubey (Project Manager)</option>
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Hold Ctrl/Cmd to select multiple members</p>
+                    </div>
+
+                    <div class="w-full">
+                        <label for="projectTags" class="block mb-2 text-sm font-medium text-gray-700">Project Tags</label>
+                        <div class="flex flex-wrap gap-2 items-center">
+                            <div class="flex items-center gap-1 bg-blue-100 px-3 py-1 rounded-full">
+                                <span class="text-xs text-blue-800">Design</span>
+                                <button type="button" class="text-blue-800 hover:text-blue-900">
+                                    <i class="fa-solid fa-xmark text-xs"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1 bg-green-100 px-3 py-1 rounded-full">
+                                <span class="text-xs text-green-800">Development</span>
+                                <button type="button" class="text-green-800 hover:text-green-900">
+                                    <i class="fa-solid fa-xmark text-xs"></i>
+                                </button>
+                            </div>
+                            <input type="text" id="projectTags" name="projectTags" class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" placeholder="Add tags...">
+                            <button type="button" class="p-2 text-gray-500 hover:text-gray-700">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Project Files</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fa-solid fa-cloud-arrow-up text-gray-400 text-2xl mb-2"></i>
+                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500">PDF, DOCX, XLSX, JPG, PNG (MAX. 10MB each)</p>
+                                </div>
+                                <input id="dropzone-file" type="file" class="hidden" multiple>
+                            </label>
+                        </div> 
+                    </div>
+
+                    <div class="w-full flex items-center justify-end gap-3 pt-5 border-t border-gray-200 mt-5">
+                        <button type="submit" class="text-white bg-[#3546FF] hover:bg-[#2938CC] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                            Create Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+<script src="/javascript/projects.js"></script>
+</html>

@@ -22,7 +22,7 @@
             <td class="py-3 px-4 flex items-center gap-3">
                 <div>
                     <p class="font-medium">${client.clientName}</p>
-                    <p class="text-xs text-[#A3A3A3]">ID: #CL-${String(index + 1).padStart(3, '0')}</p>
+                    <p class="text-xs text-[#A3A3A3]">ID: ${client.ID}</p>
                 </div>
             </td>
             <td class="py-3 px-4">

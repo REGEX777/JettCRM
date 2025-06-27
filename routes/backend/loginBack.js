@@ -11,10 +11,13 @@ router.post('/', validateEmail, passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: true
 }), (req, res) => {
-    const redirectTo = req.session.redUrl || '/';
-    console.log('[login] Redirecting to:', redirectTo);
-    delete req.session.redUrl;
-    res.redirect(redirectTo);
+    if(req.cookies.redUrl){
+        res.redirect(req.cookies.redUrl);
+        return;
+    }
+    req.flash('success', 'Logged in Succesfully.')
+    res.redirect('/')
 });
+
 
 export default router;

@@ -24,9 +24,7 @@ export default function (passport) {
                     if (!user) return done(null, false, {
                         message: 'Email Not Registered'
                     });
-                    // remove this
-                    console.log(password)
-                    console.log(user)
+                    
                     const isMatch = await bcrypt.compare(password, user.password);
                     if (!isMatch) return done(null, false, {
                         message: 'Incorrect Password'
