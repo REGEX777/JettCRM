@@ -121,3 +121,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("deleteConfirmModal");
+  const cancelBtn = document.getElementById("cancelDeleteBtn");
+  const inputId = document.getElementById("deleteMemberId");
+
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest(".delete-member-btn");
+    if (btn) {
+      const memberId = btn.dataset.id;
+      inputId.value = memberId;
+      modal.classList.remove("hidden");
+    }
+
+    if (e.target === cancelBtn) {
+      modal.classList.add("hidden");
+      inputId.value = "";
+    }
+  });
+});

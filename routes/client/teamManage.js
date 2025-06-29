@@ -1,4 +1,5 @@
 import express from 'express';
+import { Types } from 'mongoose';
 
 // mongoose model
 import Team from '../../models/Team.js';
@@ -78,6 +79,69 @@ router.post('/api/update-status', async (req, res) => {
   }
 });
 
+router.post('/api/delete', async (req, res) => {
+  try {
+    const { id } = req.body;
+    await Team.findByIdAndDelete(id);
+    req.flash('success', "Succefully Deleted Member")
+    res.redirect('/team')
+  } catch (err) {
+    console.error("Delete failed:", err);
+    res.status(500).json({ success: false });
+  }
+});
+
+router.get('/edit/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!Types.ObjectId.isValid(id)) {
+      return res.status(400).send("Bad Request");
+    }
+
+    const member = await Team.findById(id);
+    if (!member) {
+      return res.status(404).send('Not Found!');
+    }
+
+    res.render('team_dash/edit', { member });
+
+  } catch (err) {
+    console.error('Edit route error:', err);
+    res.status(503).send('Internal Server Error');
+  }
+});
+
+
+router.post('/edit/:id', async (req, res) => {
+    const id = req.params.id;
+    if (!Types.ObjectId.isValid(id)) {
+        return res.status(400).send('Invalid ID');
+    }
+
+    try{
+        const updatedData = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            phone: req.body.phone,
+            role: req.body.role,
+            department: req.body.department,
+            joinDate: req.body.joinDate,
+            salary: req.body.salary,
+            status: req.body.status,
+        }
+
+        const result = await Team.findByIdAndUpdate(id, updatedData, {new:true}) 
+        if(!result) return res.status(404).send('Member Not Found')
+        req.flash('success', 'Succesfully Updated User')
+        res.redirect(`/team/edit/${id}`)
+    } catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error');
+    }
+
+});
 
 router.post('/add', async (req, res) => {
     try {
