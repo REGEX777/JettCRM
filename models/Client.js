@@ -23,9 +23,9 @@ const clientSchema = new mongoose.Schema({
     status: String,
     projects: Number,
     ID: String,
-        belongsTo: {
+    belongsTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // or your user model name
+        ref: 'User',
         required: true
     }
 })

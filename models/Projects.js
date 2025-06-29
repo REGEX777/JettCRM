@@ -11,7 +11,12 @@ const projectSchema = new mongoose.Schema({
     budget: Number,
     teamMembers: Array,
     tags: Array,
-    fileNames: Array
+    fileNames: Array,
+    belongsTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 });
 
 const Project = new mongoose.model('Project', projectSchema);

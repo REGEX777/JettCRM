@@ -10,7 +10,9 @@ const teamSchema = new mongoose.Schema({
     age: Number,
     joinDate: String,
     salary: String,
-    notes: String
+    notes: String,
+    status: String,
+    teamOwner: mongoose.Schema.Types.ObjectId
 })
 
 const Team = new mongoose.model("teamMember", teamSchema)
