@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Members</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-50 flex">
+    <%- include('../fragments/sidebar'); -%>
+
+
+    <div class="ml-96 w-[calc(100%-24rem)]">
+        <header class="bg-white border-b border-gray-200 px-10 py-4 flex justify-between items-center">
+            <h2 class="text-lg font-medium text-gray-700">Team Members</h2>
+            <div class="flex items-center space-x-4">
+                <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="relative">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-medium">
+                            A
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-10">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Team Members</h1>
+                    <p class="text-gray-500">Manage your team members and their permissions</p>
+                </div>
+                <button class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add Member
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% teammates.forEach((member, index) => { %>
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium text-lg">
+                                    <%= member.firstName[0] + member.lastName[0] %>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-800"><%= member.firstName + " " + member.lastName %></h3>
+                                    <p class="text-sm text-gray-500"><%= member.email %></p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-500 mt-4">
+                                <span>
+                                    Member since:
+                                    <%= new Date(member.createdAt).toLocaleString('default', { month: 'long', year: 'numeric' }) %>
+                                </span>
+                                <span class="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                                    <% const membership = member.teamMemberOf.find(m => m.team.toString() === team._id.toString()) %>
+                                    <%= membership?.role || 'Member' %>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-100 px-6 py-3 bg-gray-50 flex justify-end space-x-2">
+                            <button class="text-gray-500 hover:text-indigo-600 p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-indigo-600 p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

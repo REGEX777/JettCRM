@@ -52,10 +52,12 @@ import dashRoute from './routes/client/dash.js'
 import invoiceRoute from './routes/client/invoicegen.js'
 import settingsRoute from './routes/client/settings.js'
 import signupRoute from './routes/client/signup.js'
-import loginRoute from './routes/client/login.js'
-import clientManageRoute from './routes/client/clientManage.js'
-import projectManageRoute from './routes/client/manageProjects.js'
-import teamManageRoute from './routes/client/teamManage.js'
+import loginRoute from './routes/client/login.js' 
+import projectManageRoute from './routes/client/manageProjects.js' 
+import inviteRoute from './routes/client/invite.js'
+import loungeRoute from './routes/client/entry.js'
+import teamRoute from './routes/client/team.js'
+import clientRoute from './routes/client/clientele.js'
 
 // Backend Routes (API) Imports
 // import invoiceBack from './routes/backend/invoiceBack.js'
@@ -68,12 +70,14 @@ import googleOauth2 from './routes/backend/oauth2/google.js'
 app.use('/', dashRoute);
 app.use('/geninvoice', invoiceRoute);
 app.use('/settings', settingsRoute);
-app.use('/signup', signupRoute)
-app.use('/clients', storeOriginalUrl, isLoggedIn, clientManageRoute)
+app.use('/signup', signupRoute) 
 // add store original url and isloggedin middleware
-app.use('/projects',storeOriginalUrl, isLoggedIn, projectManageRoute)
-app.use('/team', storeOriginalUrl, isLoggedIn, teamManageRoute)
+app.use('/projects', storeOriginalUrl, isLoggedIn, projectManageRoute) 
+app.use('/invite', inviteRoute)
 app.use('/login', loginRoute)
+app.use('/entry', loungeRoute) 
+app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute)
+app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute)
 
 // Backend Route
 // app.use('/services/invoice', invoiceBack)
@@ -81,6 +85,11 @@ app.use('/auth/signup', signupBack)
 app.use('/auth/login', loginBack)
 app.use('/logout', logOutRoute)
 app.use('/oauth2/', googleOauth2)
+
+
+
+
+
 
 app.listen(port, ()=>{
     console.log(`[+] Server Started On Port ${port}`)

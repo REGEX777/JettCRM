@@ -1,13 +1,9 @@
 import express from 'express';
 
-
 const router = express.Router();
 
-
 router.get('/', (req, res)=>{
-    const info = req.query
-    res.render('signup', {info})
+    res.render('common/commonArea')
 })
-
 
 export default router;

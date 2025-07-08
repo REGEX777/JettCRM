@@ -1,23 +1,17 @@
 import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
-    title: String, 
-    clientId: mongoose.Schema.Types.ObjectId,
-    clientEmail: String,
-    startDate: Date,
-    deadlineDate: Date,
-    priority: String,
-    description: String,
-    budget: Number,
-    teamMembers: Array,
-    tags: Array,
-    fileNames: Array,
-    belongsTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }
+  name: String,
+  description: String,
+  team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: true },
+  teamLead: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  assignedTeammates: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  client: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+
+  status: { type: String, enum: ['active', 'completed', 'on-hold'], default: 'active' },
+  createdAt: { type: Date, default: Date.now }
 });
+
 
 const Project = new mongoose.model('Project', projectSchema);
 

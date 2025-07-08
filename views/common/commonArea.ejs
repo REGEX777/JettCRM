@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <title>Invite Team Members | JettCRM</title>
+</head>
+<body>
+    <!-- Parent -->
+    <% if (success.length > 0) { %>
+     <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+        <p><%= success[0] %></p>
+     </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+     <div class="h-10 w-full bg-red-500">
+        <p><%= error[0] %></p>
+     </div>
+    <% } %>
+    <div class="flex flex-row justify-start">
+
+        <%- include('../fragments/sidebar'); -%>
+
+        <div class="flex flex-col min-h-screen bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10">
+                <p class="font-medium">Good Afternoon, Aditya</p>
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
+                    <i class="fa-solid fa-angle-down"></i>
+                    <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+                </button>
+            </div>
+ 
+            <a href="/teams" class="flex items-center text-[#3546FF] hover:underline">
+                <i class="fa-solid fa-arrow-left pr-2"></i> Back to Teams
+            </a>
+
+            <!-- Invite Form -->
+            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+                <div class="w-full">
+                    <p class="font-medium text-xl">Invite Team Members</p>
+                    <p class="text-sm text-[#A3A3A3]">Send invitations to join your team on JettCRM</p>
+                </div>
+
+                <form action="/teams/invite" method="POST" class="w-full grid grid-cols-2 gap-5">
+                    <div class="col-span-1 flex flex-col gap-2">
+                        <label for="name" class="text-sm font-medium">Full Name*</label>
+                        <div class="relative">
+                            <input name="name" type="text" id="name" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="John Doe" required>
+                            <i class="fa-solid fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                        </div>
+                    </div>
+ 
+                    <div class="col-span-1 flex flex-col gap-2">
+                        <label for="email" class="text-sm font-medium">Email*</label>
+                        <div class="relative">
+                            <input name="email" type="email" id="email" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" placeholder="john@example.com" required>
+                            <i class="fa-solid fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-[#A3A3A3]"></i>
+                        </div>
+                    </div>
+  
+
+                    <div class="col-span-2 flex flex-col gap-2">
+                        <label for="role" class="text-sm font-medium">Role*</label>
+                        <select name="role" id="role" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" required>
+                            <option value="" disabled selected>Select a role</option>
+                            <option value="member">Team Member</option>
+                            <option value="manager">Team Manager</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+
+  
+                    <div class="col-span-2 flex flex-col gap-2">
+                        <label for="role" class="text-sm font-medium">Department*</label>
+                        <select name="role" id="role" class="w-full h-12 bg-[#FAFAFA] border border-border rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-[#3546FF] focus:border-transparent" required>
+                            <option value="" disabled selected>Select a role</option>
+                            <option value="member">Design</option>
+                            <option value="manager">Design</option>
+                            <option value="admin">Design</option>
+                        </select>
+                    </div> 
+
+                    <!-- Submit Button -->
+                    <div class="col-span-2 flex justify-end">
+                        <button type="submit" class="py-2 px-6 bg-[#3546FF] text-white rounded-lg flex items-center gap-2 hover:bg-[#2a38cc] transition-colors">
+                            <i class="fa-solid fa-paper-plane"></i> Send Invitation
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+</html>
