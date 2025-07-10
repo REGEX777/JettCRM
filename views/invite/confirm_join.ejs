@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join <%= teamOrProjectName %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-[#FAFAFA] min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-md w-full bg-white rounded-lg border border-[#D9D9D9] overflow-hidden">
+    <div class="p-6 border-b border-[#D9D9D9]">
+      <h1 class="text-xl font-medium text-center">Join <%= teamOrProjectName %></h1>
+    </div>
+
+    <form action="/invite/accept" method="POST" class="p-6 space-y-4"> 
+      <input type="hidden" name="token" value="<%= invite.token %>">
+      <input type="hidden" name="email" value="<%= invite.email %>">
+ 
+      <div class="flex items-center p-3 bg-[#FAFAFA] border border-[#D9D9D9] rounded-lg">
+        <i class="fas fa-user-tag text-[#3546FF] mr-3"></i>
+        <div>
+          <p class="text-xs text-gray-500">Your Role</p>
+          <p class="font-medium"><%= roleLabel %></p>
+        </div>
+      </div>
+ 
+      <% if (department) { %>
+      <div class="flex items-center p-3 bg-[#FAFAFA] border border-[#D9D9D9] rounded-lg">
+        <i class="fas fa-building text-[#3546FF] mr-3"></i>
+        <div>
+          <p class="text-xs text-gray-500">Department</p>
+          <p class="font-medium"><%= department %></p>
+        </div>
+      </div>
+      <% } %>
+  
+      <div class="pt-4">
+        <p class="text-gray-600 text-center mb-4 text-sm">Accept this invitation to join <span class="font-medium"><%= teamOrProjectName %></span>?</p>
+        
+        <div class="flex space-x-3">
+          <button type="submit" class="flex-1 bg-[#3546FF] hover:bg-[#2a3acc] text-white py-2 px-4 rounded-lg text-sm font-medium transition">
+            Accept Invite
+          </button>
+
+          <a href="/" class="flex-1 border border-[#D9D9D9] hover:bg-[#FAFAFA] text-gray-700 py-2 px-4 rounded-lg text-sm font-medium text-center transition">
+            Decline
+          </a>
+        </div>
+      </div>
+    </form>
+
+    <div class="bg-[#FAFAFA] px-6 py-3 border-t border-[#D9D9D9]">
+      <p class="text-xs text-gray-500 text-center">
+        Invitation expires in 7 days
+      </p>
+    </div>
+  </div>
+</body>
+</html>

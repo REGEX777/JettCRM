@@ -49,9 +49,15 @@ router.post('/', validateEmail, isLoggedOut, async (req, res) => {
 
         if (token && role === "team") {
             const invite = await Invite.findOne({ token }).populate('team');
+            const team = await Team.findOne({_id: invite.team})
             if (!invite || invite.accepted || invite.role !== 'team') {
                 req.flash('error', 'This invite is invalid.');
                 return res.redirect('/signup');
+            }
+
+            if(invite.email != req.body.email){
+                req.flash('error', "Please use the email on which the invite was sent.")
+                return res.redirect('/signup')
             }
  
             newUser.teamMemberOf.push({
@@ -60,8 +66,10 @@ router.post('/', validateEmail, isLoggedOut, async (req, res) => {
                 department: invite.department || null
             });
 
-            await newUser.save();
+            team.members.push(newUser._id);
 
+            await newUser.save();
+            await team.save();
             invite.accepted = true;
             invite.linkedUser = newUser._id;
             await invite.save();

@@ -23,9 +23,17 @@
             </div>
             
             <form class="space-y-5" action="/auth/signup" method="post">
-                <input type="text" name="token" value="<%= info.token %>" hidden>
-                <input type="text" name="role" value="<%= info.role %>" hidden>
-                <input type="text" name="inviter" value="<%= info.inviter %>" hidden>
+                <% if (typeof info !== 'undefined' && info) { %>
+                    <% if (info.token) { %>
+                        <input type="text" name="token" value="<%= info.token %>" hidden>
+                    <% } %>
+                    <% if (info.role) { %>
+                        <input type="text" name="role" value="<%= info.role %>" hidden>
+                    <% } %>
+                    <% if (info.inviter) { %>
+                        <input type="text" name="inviter" value="<%= info.inviter %>" hidden>
+                    <% } %>
+                <% } %>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="first-name" class="block text-sm font-medium text-gray-700 mb-1">First name</label>

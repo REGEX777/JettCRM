@@ -8,90 +8,148 @@ import Team from '../../models/Team.js';
 
 const router = express.Router();
 
-router.get('/accept/:token', async(req, res)=>{
+router.get('/accept/:token', async (req, res) => {
     const token = req.params.token;
-    try{
-        const invite = await Invite.findOne({token}).populate('team invitedBy');
-        if(!invite){
-            return res.status(404).send("Invite is Invalid or expired.")
+
+    try {
+        const invite = await Invite.findOne({ token }).populate('team invitedBy');
+
+        if (!invite) {
+            return res.status(404).send("Invite is invalid or expired.");
         }
-        if(invite.accepted){
-            return res.status(400).send("Invite is no longer valid")
+
+        if (invite.accepted) {
+            return res.status(400).send("This invite has already been accepted.");
+        }
+
+        const maxAgeMs = 7 * 24 * 60 * 60 * 1000; 
+        const isExpired = Date.now() - new Date(invite.createdAt).getTime() > maxAgeMs;
+        if (isExpired) {
+            req.flash('error', 'Invite has expired.');
+            return res.redirect('/');
+        }
+
+        const invitedEmail = invite.email;
+        const existingUser = await User.findOne({ email: invitedEmail });
+
+        // if user exists
+        if (existingUser) {
+            if (!req.isAuthenticated || !req.isAuthenticated()) {
+                res.cookie('inviteInfo', {
+                    token: invite.token,
+                    role: invite.role
+                }, {
+                    maxAge: 5 * 60 * 1000,
+                    httpOnly: true
+                });
+                return res.redirect('/login');
+            }
+
+            if (req.user.email !== invitedEmail) {
+                req.flash('error', 'The invite does not exist for this account.');
+                return res.redirect('/');
+            }
+
+            return res.render('invite/confirm_join', {
+                invite,
+                teamOrProjectName: invite.team?.name || invite.project?.name || 'Project',
+                roleLabel: invite.teamRole || invite.role,
+                department: invite.department || null
+            });
+        }
+
+        if (req.isAuthenticated && req.isAuthenticated()) {
+            req.flash('error', 'You are already logged in. Please log out to create a new account.');
+            return res.redirect('/');
         }
 
         const inviterName = invite.invitedBy?.firstName || null;
+        const info = {
+            token: invite.token,
+            role: invite.role,
+            inviter: inviterName
+        };
 
-        return res.redirect(`/signup?token=${token}&role=${invite.role}&inviter=${encodeURIComponent(inviterName)}`);
-    }catch(err){
-        console.log(err);
-        res.status(500).send('Internal Server Error')
+        return res.render('signup', { info });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
-})
+});
 
-router.post('/accept', async (req, res)=>{
-    const token = req.body.token;
-    const { firstName, lastName, password, confirmPassword, email } = req.body;
-    try{
-        const invite = await Invite.findOne({token});
-        if(!invite){
-            req.flash('error', "Invalid or Expire Invite.")
-            return res.redirect('/auth/signup')
+router.post('/accept', async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        const invite = await Invite.findOne({ token }).populate('team');
+        if (!invite) {
+            req.flash('error', "Invalid or expired invite.");
+            return res.redirect('/');
         }
 
-        if(!password || !confirmPassword || password != confirmPassword){
-            req.flash('Passwords do not match or are missing')
-            return res.redirect(`/invite/accept/${token}`)
-        }
-
-        if(email != invite.email){
-            req.flash('error', 'Please use the email this invite was sent to.')
-            return res.redirect(`/invite/accept/${token}`)
+        if (invite.accepted) {
+            req.flash('error', "This invite has already been accepted.");
+            return res.redirect('/');
         }
 
         const existingUser = await User.findOne({ email: invite.email });
-        if(existingUser){
-            req.flash('error', 'User with this email already exists.')
-            return res.redirect('/login')
+        if (!existingUser) {
+            req.flash('error', 'The user account associated with this invite does not exist.');
+            return res.redirect('/signup');
+        }
+ 
+        if (!req.isAuthenticated || !req.isAuthenticated()) {
+            res.cookie('inviteInfo', {
+                token: invite.token,
+                role: invite.role
+            }, {
+                maxAge: 5 * 60 * 1000,
+                httpOnly: true
+            });
+            return res.redirect('/login');
+        }
+ 
+        if (req.user.email !== invite.email) {
+            req.flash('error', 'This invite was sent to a different email. Please log in with the correct account.');
+            return res.redirect('/logout');
         }
 
-        const hash = await bcrypt.hash(password, 12);
+        const team = invite.team;
+        if (!team) {
+            req.flash('error', 'The team associated with this invite no longer exists.');
+            return res.redirect('/');
+        }
+ 
+        if (!team.members.some(id => id.toString() === req.user._id.toString())){
+            team.members.push(req.user._id);
+        }
+ 
+        const alreadyMember = req.user.teamMemberOf.some(m =>
+            m.team.toString() === team._id.toString()
+        );
 
-        const newUser = new User({
-            firstName: firstName || invite.firstName || '',
-            lastName: lastName || invite.lastName || '',
-            email: invite.email,
-            password: hash,
-            accountCreation: new Date(),
-            admin: false,
-            isTeamOwner: false
-        });
-
-        await newUser.save();
-
-        const team = await Team.findOne({ teamOwner: invite.teamOwner });
-
-        if(team){
-            team.member.push(newUser._id)
-            await team.save();
+        if (!alreadyMember) {
+            req.user.teamMemberOf.push({
+                team: team._id,
+                role: invite.teamRole || null,
+                department: invite.department || null
+            });
         }
 
-        await Invite.deleteOne({_id: invite._id})
+        invite.accepted = true;
+        invite.linkedUser = req.user._id;
 
-        req.login(newUser, (err)=>{
-            if(err){
-                console.log(err);
-                req.flash('error', 'Something went wrong while trying to log you in.')
-                return res.redirect('/auth/login');
-            }
+        await Promise.all([team.save(), req.user.save(), invite.save()]);
 
-            req.flash('success', "Welcome Aboard, You've successfully joined the team!");
-            res.redirect('')
-        })
+        req.flash('success', `You've successfully joined ${team.name}`);
+        res.clearCookie('inviteInfo');
+        res.redirect('/team');
 
-    }catch(err){
-        console.log(err)
-        res.status(500).send('Internal Server Error')
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
-})
+});
 
 export default router;
