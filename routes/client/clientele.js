@@ -3,7 +3,17 @@ import express from 'express';
 const router = express.Router();
 
 
-// add code to invite client here!
+router.get('/', (req, res)=>{
+    res.send('helo')
+})
+
+router.get('/add', (req, res)=>{
+    res.render('clientele/addClient')
+})
+
+router.post('/add', (req, res)=>{
+    console.log(req.body)
+})
 
 
 export default router;

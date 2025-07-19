@@ -58,6 +58,8 @@ import inviteRoute from './routes/client/invite.js'
 import loungeRoute from './routes/client/entry.js'
 import teamRoute from './routes/client/team.js'
 import clientRoute from './routes/client/clientele.js'
+import teamdashRoute from './routes/client/teamDash.js'
+import taskRoute from './routes/client/tasks.js'
 
 // Backend Routes (API) Imports
 // import invoiceBack from './routes/backend/invoiceBack.js'
@@ -78,6 +80,8 @@ app.use('/login', loginRoute)
 app.use('/entry', loungeRoute) 
 app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute)
 app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute)
+app.use('/myteam', storeOriginalUrl, isLoggedIn, teamdashRoute)
+app.use('/work', storeOriginalUrl, isLoggedIn, taskRoute)
 
 // Backend Route
 // app.use('/services/invoice', invoiceBack)

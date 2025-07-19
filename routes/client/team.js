@@ -63,7 +63,7 @@ router.post('/invite',async (req, res)=>{
         const invite = new Invite({
             email,
             token,
-            role: 'team',
+            type: 'team',
             team: team._id,
             invitedBy: req.user._id,
             teamRole,

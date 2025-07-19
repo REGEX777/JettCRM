@@ -17,12 +17,24 @@ router.post('/', validateEmail, passport.authenticate('local', {
         res.clearCookie('inviteInfo')
         return res.redirect(`/invite/accept/${inviteInfo.token}`)
     }
-
-    if(req.cookies.redUrl){
+    
+    console.log(req.cookies);
+    
+    if (req.cookies.redUrl) {
         const redUrl = req.cookies.redUrl;
         res.clearCookie('redUrl');
         return res.redirect(redUrl);
     }
+
+    if (req.cookies.inviteInfo) {
+        try {
+            res.clearCookie('inviteInfo');
+            return res.redirect(`/invite/accept/${req.cookies.inviteInfo.token}`)
+        } catch (e) {
+            console.error('Failed to parse inviteInfo cookie:', e);
+        }
+    }
+    
     req.flash('success', 'Logged in Succesfully.')
     res.redirect('/')
 });

@@ -115,7 +115,13 @@ router.post('/', validateEmail, isLoggedOut, async (req, res) => {
         req.login(newUser, (err) => {
             if (err) return res.status(500).send(err);
             req.flash('success', 'Congratulations! You have signed up successfully, please check your mails to verify your account.');
-            return res.redirect('/');
+            if(req.cookies.inviteInfo){
+                res.clearCookie('inviteInfo')
+                return res.redirect(`/invite/accept/${req.cookies.inviteInfo.token}`)
+            }else{
+                return res.redirect('/');
+            }
+            
         });
 
     } catch (err) {

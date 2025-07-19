@@ -3,7 +3,7 @@ import mongoose, { mongo } from "mongoose";
 const inviteSchema = new mongoose.Schema({
   email: { type: String, required: true },
   token: { type: String, required: true, unique: true },
-  role: { type: String, enum: ['team', 'client'], required: true },
+  type: { type: String, enum: ['team', 'client'], required: true },
 
   team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },  
   project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }, 

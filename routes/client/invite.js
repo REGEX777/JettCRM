@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import Invite from '../../models/Invite.js';
 import User from '../../models/User.js';
 import Team from '../../models/Team.js';
+import Project from '../../models/Projects.js';
 
 const router = express.Router();
 
@@ -12,8 +13,7 @@ router.get('/accept/:token', async (req, res) => {
     const token = req.params.token;
 
     try {
-        const invite = await Invite.findOne({ token }).populate('team invitedBy');
-
+        const invite = await Invite.findOne({ token }).populate('team invitedBy project');
         if (!invite) {
             return res.status(404).send("Invite is invalid or expired.");
         }
@@ -31,7 +31,13 @@ router.get('/accept/:token', async (req, res) => {
 
         const invitedEmail = invite.email;
         const existingUser = await User.findOne({ email: invitedEmail });
-
+        const viewData = {
+            invite,
+            project: invite.project,
+            teamOrProjectName: invite.team?.name || invite.project?.name || 'Project',
+            roleLabel: invite.teamRole || invite.role,
+            department: invite.department || null
+        };
         // if user exists
         if (existingUser) {
             if (!req.isAuthenticated || !req.isAuthenticated()) {
@@ -50,12 +56,11 @@ router.get('/accept/:token', async (req, res) => {
                 return res.redirect('/');
             }
 
-            return res.render('invite/confirm_join', {
-                invite,
-                teamOrProjectName: invite.team?.name || invite.project?.name || 'Project',
-                roleLabel: invite.teamRole || invite.role,
-                department: invite.department || null
-            });
+            if(invite.type === 'client'){
+                return res.render('invite/client_invite', viewData);
+            }
+
+            return res.render('invite/confirm_join', viewData);
         }
 
         if (req.isAuthenticated && req.isAuthenticated()) {
@@ -63,15 +68,9 @@ router.get('/accept/:token', async (req, res) => {
             return res.redirect('/');
         }
 
-        const inviterName = invite.invitedBy?.firstName || null;
-        const info = {
-            token: invite.token,
-            role: invite.role,
-            inviter: inviterName
-        };
 
-        return res.render('signup', { info });
-
+        const viewToRender = invite.type === 'client' ? 'invite/client_invite' : 'signup';
+        return res.render(viewToRender, viewData);
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -82,7 +81,7 @@ router.post('/accept', async (req, res) => {
     const { token } = req.body;
 
     try {
-        const invite = await Invite.findOne({ token }).populate('team');
+        const invite = await Invite.findOne({ token }).populate('team project');
         if (!invite) {
             req.flash('error', "Invalid or expired invite.");
             return res.redirect('/');
@@ -95,21 +94,47 @@ router.post('/accept', async (req, res) => {
 
         const existingUser = await User.findOne({ email: invite.email });
         if (!existingUser) {
-            req.flash('error', 'The user account associated with this invite does not exist.');
+            res.cookie('inviteInfo', {
+                token: invite.token
+            }, {
+                maxAge: 5 * 60 * 1000,
+                httpOnly: true
+            });
             return res.redirect('/signup');
         }
  
         if (!req.isAuthenticated || !req.isAuthenticated()) {
-            res.cookie('inviteInfo', {
+            res.cookie('inviteInfo', JSON.stringify({
                 token: invite.token,
                 role: invite.role
-            }, {
+            }), {
                 maxAge: 5 * 60 * 1000,
                 httpOnly: true
             });
             return res.redirect('/login');
         }
- 
+        
+        if(invite.type === 'client'){
+            const project = invite.project;
+            if(!project){
+                req.flash('error', 'The project associated with this invite no longer exists.');
+                return res.redirect('/');
+            }
+
+            project.client = req.user._id;
+            await project.save();
+
+
+            req.flash('success', `Youve succesfully joined ${project.name}`)
+            invite.accepted = true;
+            invite.linkedUser = req.user._id;
+
+
+            await Promise.all([invite.save(), req.user.save()]);
+            res.clearCookie('inviteInfo');
+            return res.redirect(`/project/${project._id}`)
+        }
+
         if (req.user.email !== invite.email) {
             req.flash('error', 'This invite was sent to a different email. Please log in with the correct account.');
             return res.redirect('/logout');

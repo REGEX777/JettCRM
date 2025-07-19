@@ -59,38 +59,17 @@
                     <div class="w-full">
                     <label for="clientSelect" class="block mb-2 text-sm font-medium text-gray-700">Client*</label>
                     
-                    <!-- Searchable client dropdown -->
                     <div class="relative">
                         <input 
                         type="text" 
-                        id="clientSearch" 
+                        id="clientEmail"
+                        name="clientEmail"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="Search by name, email, or client ID"
                         autocomplete="off"
-                        oninput="searchClients(this.value)"
                         >
-                        <div id="clientDropdown" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
-                        <!-- Search results will appear here -->
-                        </div>
                     </div>
-                    
-                    <!-- Hidden select for form submission -->
-                    <select id="clientSelect" name="clientSelect" class="hidden" required>
-                        <option value="" disabled selected>Select a client</option>
-                    </select>
 
-                    <!-- New client email (only shown when "New Client" is selected) -->
-                    <div id="newClientEmailWrapper" class="mt-3 hidden">
-                        <label for="newClientEmail" class="block mb-1 text-sm font-medium text-gray-700">New Client Email*</label>
-                        <input 
-                        type="email" 
-                        id="newClientEmail" 
-                        name="newClientEmail" 
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                        placeholder="Enter client email"
-                        >
-                        <p class="text-xs text-gray-500 mt-1">This will send an email invitation to the client</p>
-                    </div>
                     </div>
 
                     <div class="w-full grid grid-cols-2 gap-5">
@@ -157,10 +136,9 @@
                     <div class="w-full">
                         <label for="projectTeam" class="block mb-2 text-sm font-medium text-gray-700">Assign Team Members</label>
                         <select id="projectTeam" name="projectTeam" multiple class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="1">Aditya Dubey (Project Manager)</option>
-                            <option value="1">Aditya Dubey (Project Manager)</option>
-                            <option value="1">Aditya Dubey (Project Manager)</option>
-                            <option value="1">Aditya Dubey (Project Manager)</option>
+                            <% members.forEach(member => { %>
+                                <option value="<%= member.id %>"><%= member.name %> (<%= member.email %>)</option>
+                            <% }) %>
                         </select>
                         <p class="mt-1 text-xs text-gray-500">Hold Ctrl/Cmd to select multiple members</p>
                     </div>
@@ -213,5 +191,5 @@
     
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
-<script src="/javascript/projects.js"></script>
+<!-- <script src="/javascript/projects.js"></script> -->
 </html>

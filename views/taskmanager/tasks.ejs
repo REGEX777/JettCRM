@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= project.name %> - Your Tasks</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+      Tasks for Project: <%= project.name %>
+    </h1>
+
+    <% if (tasks.length === 0) { %>
+      <p class="text-gray-600">You have no assigned tasks in this project.</p>
+    <% } else { %>
+      <div class="grid gap-6">
+        <% tasks.forEach(task => { %>
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2"><%= task.taskname %></h2>
+            <p class="text-gray-700 mb-4"><%= task.taskdescription %></p>
+            <p class="text-sm text-gray-600 mb-1">
+              <strong>Deadline:</strong> 
+              <%= task.deadlineDate ? new Date(task.deadlineDate).toDateString() : 'Not set' %>
+            </p>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+</body>
+</html>

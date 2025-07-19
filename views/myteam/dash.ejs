@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Dashboard</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-[#FAFAFA] min-h-screen">
+    <% if (success.length > 0) { %>
+        <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+            <p class="text-white"><%= success[0] %></p>
+        </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+        <div class="h-10 w-full bg-red-500 flex items-center justify-center">
+            <p class="text-white"><%= error[0] %></p>
+        </div>
+    <% } %>
+
+    <div class="flex flex-col px-10 py-5 pt-10 gap-3">
+        <div class="h-16 rounded-lg w-full bg-white flex items-center justify-between px-10 mb-6 shadow-sm">
+            <p class="font-medium">Your Teams</p>
+            <div class="flex items-center gap-4">
+                <button class="p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-bell text-gray-500"></i>
+                </button>
+                <div class="relative">
+                    <button class="flex items-center gap-2">
+                        <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" 
+                             class="h-10 w-10 rounded-lg object-cover">
+                        <i class="fas fa-angle-down text-gray-500"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5 shadow-sm">
+            <% if (teams.length === 0) { %>
+                <div class="w-full text-center py-10">
+                    <p class="text-gray-500">You're not part of any teams yet.</p>
+                    <button class="mt-4 px-4 py-2 bg-[#3546FF] text-white rounded-lg hover:bg-[#2a38cc] transition">
+                        Create New Team
+                    </button>
+                </div>
+            <% } else { %>
+                <div class="w-full">
+                    <h2 class="font-medium text-lg">Your Team Memberships</h2>
+                </div>
+                
+                <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <% teams.forEach(team => { %>
+                        <a href="/myteam/<%= team.id %>" class="border border-gray-200 rounded-lg p-4 hover:bg-[#FAFAFA] transition group">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-medium text-gray-800 group-hover:text-[#3546FF] transition"><%= team.name %></h3>
+                                    <div class="flex gap-2 mt-2">
+                                        <span class="text-xs px-2 py-1 bg-[#f0f0f0] rounded">
+                                            <%= team.role %>
+                                        </span>
+                                        <span class="text-xs px-2 py-1 bg-[#f0f0f0] rounded">
+                                            <%= team.department %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-gray-400 group-hover:text-[#3546FF] transition"></i>
+                            </div>
+                        </a>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</body>
+</html>

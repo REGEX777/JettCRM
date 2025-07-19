@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-50 flex">
+
+    <%- include('../fragments/sidebar'); -%>
+
+    <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+        <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-10">
+            <p class="font-medium">Good Afternoon, Aditya</p>
+            <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
+                class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
+                <i class="fa-solid fa-angle-down"></i>
+                <img alt="profilepic"
+                    src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920"
+                    class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+            </button>
+
+            <div id="dropdownHover"
+                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                    <li>
+                        <a href="#"
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
+                            out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+         
+        <div class="w-full bg-white rounded-lg shadow-sm border border-[#EAEAEA] p-8">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Create New Task</h1>
+            
+            <form method="post" action="/projects/taskmanager/<%= project._id %>" class="space-y-6"> 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> 
+                    <div class="col-span-2">
+                        <label for="taskname" class="block text-sm font-medium text-gray-700 mb-2">Task Name</label>
+                        <input type="text" id="taskname" name="taskname"
+                            class="w-full px-4 py-3 border border-[#EAEAEA] rounded-lg focus:ring-2 focus:ring-[#3546FF] focus:border-[#3546FF]"
+                            placeholder="Enter task name" required>
+                    </div>
+ 
+                    <div class="col-span-2">
+                        <label for="taskdescription" class="block text-sm font-medium text-gray-700 mb-2">Task Description</label>
+                        <textarea id="taskdescription" name="taskdescription" rows="5"
+                            class="w-full px-4 py-3 border border-[#EAEAEA] rounded-lg focus:ring-2 focus:ring-[#3546FF] focus:border-[#3546FF]"
+                            placeholder="Describe the task details"></textarea>
+                    </div>
+ 
+                    <div>
+                        <label for="teammates" class="block text-sm font-medium text-gray-700 mb-2">Assign Teammates</label>
+                        <select id="teammates" name="teammates" multiple
+                            class="w-full px-4 py-3 border border-[#EAEAEA] rounded-lg focus:ring-2 focus:ring-[#3546FF] focus:border-[#3546FF]">
+                            <% team.forEach(member =>{ %>
+                                <option value="<%= member._id %>"><%= member.firstName %>  <%= member.lastName %> (<%= member.email %>)</option>
+                            <% }) %>
+                        </select>
+                        <p class="mt-2 text-xs text-gray-500">Hold Ctrl/Cmd to select multiple teammates</p>
+                    </div>
+ 
+                        <div>
+                            <label for="deadline" class="block mb-2 text-sm font-medium text-gray-700">Deadline*</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fa-solid fa-calendar text-gray-400"></i>
+                                </div>
+                                <input datepicker type="text" id="deadline" name="deadline" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select deadline" required>
+                            </div>
+                        </div>
+                </div>
+ 
+                <div class="flex justify-end space-x-4 pt-6 border-t border-[#EAEAEA]">
+                    <button type="button"
+                        class="px-6 py-3 border border-[#EAEAEA] rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#3546FF] hover:bg-[#2938CC] transition">
+                        Create Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+</html>
