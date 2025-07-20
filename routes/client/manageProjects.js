@@ -16,7 +16,8 @@ router.get('/', async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = 6;
         const skip = (page - 1) * limit;
-
+        const sort = req.query.sort || 'newest';
+        const status = req.query.status || 'all';
         const team = await Team.findOne({owner: req.user._id}).populate({
             path: 'projects',
             populate: {
@@ -29,26 +30,191 @@ router.get('/', async (req, res) => {
             return res.redirect('/dashboard');
         }
 
-        const allProjects = team.projects;
-        const totalProjects = allProjects.length;
+        let filteredProjects = [...team.projects];
+        if (status !== 'all') {
+            filteredProjects = filteredProjects.filter(project =>
+                status === 'completed'
+                ? project.status === 'completed'
+                : project.status !== 'completed'
+            );
+        }
+
+
+        switch (sort) {
+            case 'oldest':
+                filteredProjects.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                break;
+            case 'az':
+                filteredProjects.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'za':
+                filteredProjects.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            default:
+                filteredProjects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+
+
+        const totalProjects = filteredProjects.length;
         const totalPages = Math.ceil(totalProjects / limit);
-        const paginatedProjects = allProjects.slice(skip, skip + limit);
+        const paginatedProjects = filteredProjects.slice(skip, skip + limit);
 
         res.render('project_dash/manageProjects', {
             projects: paginatedProjects,
             currentPage: page,
             totalPages,
             totalProjects,
-            success: req.flash('success'),
-            error: req.flash('error'),
             startIndex: skip + 1,
-            endIndex: Math.min(skip + limit, totalProjects)
+            endIndex: Math.min(skip + limit, totalProjects),
+            status,
+            sort
         });
     } catch (err) {
         console.log(err)
         res.status(500).send('Internal Server Error')
     }
 })
+
+
+// Search
+router.get('/search',async (req, res)=>{
+    const query = req.query.q?.trim().toLowerCase();
+    if(!query) return res.json([]);
+
+    try{
+        const team = await Team.findOne({owner: req.user._id}).populate({
+            path: 'projects',
+            populate: { path: 'client'}
+        })
+
+        if(!team) return res.json([]);
+
+        const filtered = team.projects.filter(project =>
+            project.name.toLowerCase().includes(query) ||
+            (project.client?.email || '').toLowerCase().includes(query)
+        );
+
+        res.json(filtered.map(p => ({
+            id: p._id,
+            name: p.name,
+            clientEmail: p.client?.email || '',
+            status: p.status,
+            createdAt: p.createdAt
+        })));
+
+    }catch(err){
+        console.log(err)
+        res.status(500).send('Internal Server Error')
+    }
+})
+
+
+// project with tasks
+router.get('/v/:id', async (req, res)=>{
+    const projectId = req.params.id;
+    try{
+        const project = await Project.findOne({_id: projectId})
+            .populate('team')
+            .populate('assignedTeammates')
+            .populate('tasks.teammates');
+
+        if(!project){
+            req.flash('error', "Project Not Found")
+            res.redirect('/projects')
+        }
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', "Unauthorized")
+            return res.redirect('/projects')
+        }
+
+        res.render('project_dash/project', {project})
+    }catch(err){
+        console.log(err)
+        res.status(500).send('Internal Server Error')
+    }
+})
+
+
+// edit route
+
+router.get('/edit/:id',async (req, res)=>{
+    const projectId = req.params.id;
+    try{
+        const project = await Project.findOne({_id: projectId}).populate({
+            path: 'team',
+            populate:{
+                path: 'members'
+            }
+        });
+        if(!project){
+            req.flash('error', 'Not Found')
+            return res.redirect('/projects')
+        }
+
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')
+            return res.redirect('/projects')
+        }
+
+        res.render('project_dash/editProject', {project, members: project.team.members})
+
+    }catch(err){
+        console.log(err)
+        res.status(500).send('Internal Server Error')
+    }
+})
+
+
+router.post('/edit/:id',async (req, res)=>{
+    const projectId = req.params.id;
+    try{
+        const {
+            projectTitle,
+            clientEmail,
+            deadline,
+            projectDescription,
+            projectBudget,
+            projectTeam
+        } = req.body;
+
+        const project = await Project.findOne({_id: projectId}).populate('team');
+
+        if (!project) {
+            req.flash('error', 'Project not found');
+            return res.redirect('/projects');
+        }
+
+        if (!project.team.owner.equals(req.user._id)) {
+            req.flash('error', 'Unauthorized');
+            return res.redirect('/projects');
+        }
+
+        
+        const parsedDeadlineDate = new Date(deadline);
+        const parsedBudget = parseFloat(projectBudget);
+
+        const teamMembers = Array.isArray(projectTeam) ? projectTeam : [projectTeam];
+
+        project.name = projectTitle || project.name;
+        project.clientEmail = clientEmail || '';
+        project.deadlineDate = isNaN(parsedDeadlineDate) ? project.deadlineDate : parsedDeadlineDate;
+        project.description = projectDescription || '';
+        project.budget = isNaN(parsedBudget) ? project.budget : parsedBudget;
+        project.assignedTeammates = teamMembers;
+        
+
+        await project.save();
+
+
+        req.flash('success', 'The project was updated successfully')
+        return res.redirect('/projects')
+    }catch(err){
+        console.log(err);
+        return res.status(500).send('Internal Server Error')
+    }
+})
+
+
 
 
 router.get('/add', async (req, res) => {
@@ -86,6 +252,7 @@ router.post("/", async (req, res) => {
             startDate,
             deadline,
             priority,
+            budget,
             projectDescription,
             projectBudget,
             projectTeam,
@@ -112,8 +279,6 @@ router.post("/", async (req, res) => {
         if (isNaN(parsedStartDate) || isNaN(parsedDeadlineDate))
             return res.status(400).send("Invalid start or deadline date");
 
-        if (!["low", "medium", "high"].includes(priority.toLowerCase()))
-            return res.status(400).send("Priority must be low medium or high");
 
         const parsedBudget = parseFloat(projectBudget);
 
@@ -131,8 +296,8 @@ router.post("/", async (req, res) => {
             clientEmail: clientEmail || "",
             team: team._id,
             startDate: parsedStartDate,
+            budget,
             deadlineDate: parsedDeadlineDate,
-            priority: priority.toLowerCase(),
             description: projectDescription || "",
             budget: parsedBudget,
             assignedTeammates: teamMembers,
@@ -156,7 +321,8 @@ router.post("/", async (req, res) => {
 
         console.log(`client invite: https:/localhost:9000/invite/accept/${token}`)
 
-        res.status(200).send("Project Created Succesfully")
+        req.flash('success', 'Project Created Successfully!')
+        res.redirect('/projects')
 
     } catch (err) {
         res.send(err)

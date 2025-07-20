@@ -50,46 +50,33 @@
             </div>
 
             <div class="min-h-[calc(100vh-10rem)] rounded-lg w-full bg-white flex flex-col items-center justify-start py-5 px-10 gap-5">
-                <form class="w-full flex flex-col gap-6" action="/projects" method="post">
+                <form class="w-full flex flex-col gap-6" action="/projects/edit/<%= project._id %>" method="post">
                     <div class="w-full">
                         <label for="projectTitle" class="block mb-2 text-sm font-medium text-gray-700">Project Title*</label>
-                        <input type="text" id="projectTitle" name="projectTitle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter project title" required>
-                    </div>
-
-                    <div class="w-full">
-                    <label for="clientSelect" class="block mb-2 text-sm font-medium text-gray-700">Client*</label>
-                    
-                    <div class="relative">
-                        <input 
-                        type="text" 
-                        id="clientEmail"
-                        name="clientEmail"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                        placeholder="Search by name, email, or client ID"
-                        autocomplete="off"
-                        >
-                    </div>
-
+                        <input type="text" value="<%= project.name %>" id="projectTitle" name="projectTitle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter project title" required>
                     </div>
 
                     <div class="w-full grid grid-cols-2 gap-5">
-                        <div>
-                            <label for="startDate" class="block mb-2 text-sm font-medium text-gray-700">Start Date*</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <i class="fa-solid fa-calendar text-gray-400"></i>
-                                </div>
-                                <input datepicker type="text" id="startDate" name="startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select start date" required>
-                            </div>
-                        </div>
-                        
                         <div>
                             <label for="deadline" class="block mb-2 text-sm font-medium text-gray-700">Deadline*</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <i class="fa-solid fa-calendar text-gray-400"></i>
                                 </div>
-                                <input datepicker type="text" id="deadline" name="deadline" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select deadline" required>
+                                <%
+                                const formattedDeadline = project.deadlineDate
+                                    ? new Date(project.deadlineDate).toISOString().slice(0, 10)
+                                    : '';
+                                %>
+
+                                <input 
+                                type="date" 
+                                name="deadline" 
+                                id="deadline" 
+                                value="<%= formattedDeadline %>" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
+                                required
+                                />
                             </div>
                         </div>
                     </div>
@@ -97,16 +84,15 @@
 
                     <div class="w-full">
                         <label for="projectDescription" class="block mb-2 text-sm font-medium text-gray-700">Project Description*</label>
-                        <textarea id="projectDescription" name="projectDescription" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Describe the project in detail..." required></textarea>
+                        <textarea id="projectDescription" name="projectDescription" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Describe the project in detail..." required><%= project.description %></textarea>
                     </div>
-                    <!-- Project Budget -->
                     <div class="w-full">
                         <label for="projectBudget" class="block mb-2 text-sm font-medium text-gray-700">Project Budget ($)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <span class="text-gray-500">$</span>
                             </div>
-                            <input type="number" id="projectBudget" name="projectBudget" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="0.00">
+                            <input value="<%= project.budget %>"  type="number" id="projectBudget" name="projectBudget" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="0.00">
                         </div>
                     </div>
 
@@ -114,7 +100,10 @@
                         <label for="projectTeam" class="block mb-2 text-sm font-medium text-gray-700">Assign Team Members</label>
                         <select id="projectTeam" name="projectTeam" multiple class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <% members.forEach(member => { %>
-                                <option value="<%= member.id %>"><%= member.name %> (<%= member.email %>)</option>
+                                <option value="<%= member._id %>" 
+                                <%= project.assignedTeammates.some(teammate => teammate.toString() === member._id.toString()) ? 'selected' : '' %>>
+                                <%= member.name %> (<%= member.email %>)
+                                </option>
                             <% }) %>
                         </select>
                         <p class="mt-1 text-xs text-gray-500">Hold Ctrl/Cmd to select multiple members</p>

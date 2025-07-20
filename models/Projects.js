@@ -11,6 +11,7 @@ const projectSchema = new mongoose.Schema({
   status: { type: String, enum: ['active', 'completed', 'on-hold'], default: 'active' },
   createdAt: { type: Date, default: Date.now },
   deadlineDate: { type: Date, default: null },
+  budget: Number,
   tasks: [
     {
       taskname: String,

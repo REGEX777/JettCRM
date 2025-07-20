@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <title><%= project.name %> | Project Details</title>
+</head>
+<body class="bg-gray-50 font-sans">
+    <% if (success.length > 0) { %>
+    <div class="w-full bg-green-500 text-white py-2 px-4 text-center">
+        <p><%= success[0] %></p>
+    </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+    <div class="w-full bg-red-500 text-white py-2 px-4 text-center">
+        <p><%= error[0] %></p>
+    </div>
+    <% } %>
+
+    <%- include('../fragments/sidebar'); -%>
+
+    
+    <div class="ml-96 flex-1 p-8">
+            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-5">
+                <div class="flex items-center gap-4">
+                    <a href="/projects" class="flex items-center text-gray-500 hover:text-gray-700">
+                        <i class="fa-solid fa-arrow-left pr-2"></i>
+                    </a>
+                    <p class="font-medium text-xl">Create New Project</p>
+                </div>
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
+                    <i class="fa-solid fa-angle-down"></i>
+                    <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+                </button>
+
+                <div id="dropdownHover" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800"><%= project.name %></h1>
+            <div class="flex items-center space-x-4">
+                <span class="px-3 py-1 rounded-full text-sm font-medium 
+                    <%= project.status === 'active' ? 'bg-blue-100 text-blue-800' : '' %>
+                    <%= project.status === 'completed' ? 'bg-green-100 text-green-800' : '' %>
+                    <%= project.status === 'on-hold' ? 'bg-yellow-100 text-yellow-800' : '' %>">
+                    <%= project.status.charAt(0).toUpperCase() + project.status.slice(1) %>
+                </span>
+                <% if (project.client) { %>
+                <div class="flex items-center">
+                    <i class="fas fa-user-tie text-gray-500 mr-2"></i>
+                    <span class="text-gray-600">Client: <%= project.client.name || project.clientEmail %></span>
+                </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 space-y-6">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-3">Project Description</h2>
+                        <p class="text-gray-600 whitespace-pre-line"><%= project.description || 'No description provided' %></p>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-3">Assigned Teammates</h2>
+                        <% if (project.assignedTeammates && project.assignedTeammates.length > 0) { %>
+                            <div class="flex flex-wrap gap-3">
+                                <% project.assignedTeammates.forEach(teammate => { %>
+                                    <div class="flex items-center gap-2 bg-gray-50 rounded-full py-1 px-3">
+                                        <img class="w-6 h-6 rounded-full" 
+                                            src="<%= teammate.avatar || 'https://ui-avatars.com/api/?name=' + teammate.firstName + '&background=random' %>" 
+                                            alt="<%= teammate.name %>">
+                                        <span class="text-sm text-gray-700"><%= teammate.firstName %> <%= teammate.lastName %></span>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } else { %>
+                            <p class="text-gray-400">No teammates assigned yet</p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Right columnn -->
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Team</h3>
+                        <p class="text-gray-800"><%= project.team.name %></p>
+                    </div>
+                    
+                    <% if (project.deadlineDate) { %>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Deadline</h3>
+                        <p class="text-gray-800"><%= new Date(project.deadlineDate).toLocaleDateString() %></p>
+                        <%
+                            var daysLeft = Math.ceil((new Date(project.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24));
+                        %>
+                        <p class="text-sm <%= daysLeft <= 7 ? 'text-red-500' : 'text-gray-500' %>">
+                            <%= daysLeft > 0 ? `${daysLeft} days remaining` : 'Deadline passed' %>
+                        </p>
+                    </div>
+                    <% } %>
+                    
+                    <% if (project.budget) { %>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Budget</h3>
+                        <p class="text-gray-800">$<%= project.budget.toLocaleString() %></p>
+                    </div>
+                    <% } %>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Created</h3>
+                        <p class="text-gray-800"><%= new Date(project.createdAt).toLocaleDateString() %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6 flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-gray-800">Tasks</h2>
+            <a href="/projects/taskmanager/<%= project._id %>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                <i class="fas fa-plus mr-2"></i>Add Task
+            </a>
+        </div>
+
+        <% if (project.tasks && project.tasks.length > 0) { %>
+            <div class="grid grid-cols-1 gap-4">
+                <% project.tasks.forEach(task => { %>
+                <div class="task-card bg-white rounded-lg border border-gray-200 p-4 transition duration-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800"><%= task.taskname %></h3>
+                            <% if (task.taskdescription) { %>
+                            <p class="text-sm text-gray-600 mt-1"><%= task.taskdescription %></p>
+                            <% } %>
+                        </div>
+                        <% if (task.deadlineDate) { %>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Due: <%= new Date(task.deadlineDate).toLocaleDateString() %></p>
+                            <%
+                                var taskDaysLeft = Math.ceil((new Date(task.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24));
+                            %>
+                            <span class="text-xs px-2 py-1 rounded-full 
+                                <%= taskDaysLeft <= 3 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' %>">
+                                <%= taskDaysLeft > 0 ? `${taskDaysLeft} days left` : 'Overdue' %>
+                            </span>
+                        </div>
+                        <% } %>
+                    </div>
+                    
+                    <% if (task.teammates && task.teammates.length > 0) { %>
+                        <div class="mt-3 flex items-center">
+                            <span class="text-sm text-gray-500 mr-2">Assigned to:</span>
+                            <div class="flex flex-row items-center justify-center gap-4">
+                                <% task.teammates.forEach(teammate => { %>
+                                    <div class="flex -space-x-2 items-center gap-3 bg-gray-50 px-[3px] py-[3px] rounded-full">
+                                        <img class="w-6 h-6 rounded-full border-2 border-white" 
+                                            src="<%= teammate.avatar || 'https://ui-avatars.com/api/?name=' + teammate.firstName + '&background=random' %>" 
+                                            alt="<%= teammate.firstName || teammate.name %>">
+                                        <p class="text-xs text-gray-600 pr-1"><%= teammate.firstName %> <%= teammate.lastName %></p>
+                                    </div>
+                                <% }); %>
+                                
+                            </div>
+
+                        </div>
+                    <% } %>
+                </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
+                <i class="fas fa-tasks text-4xl text-gray-300 mb-3"></i>
+                <h3 class="text-lg font-medium text-gray-500">No tasks yet</h3>
+                <p class="text-gray-400 mt-1">Add your first task to get started</p>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
