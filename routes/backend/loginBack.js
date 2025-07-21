@@ -18,7 +18,6 @@ router.post('/', validateEmail, passport.authenticate('local', {
         return res.redirect(`/invite/accept/${inviteInfo.token}`)
     }
     
-    console.log(req.cookies);
     
     if (req.cookies.redUrl) {
         const redUrl = req.cookies.redUrl;

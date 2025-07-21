@@ -116,7 +116,8 @@ router.get('/v/:id', async (req, res)=>{
         const project = await Project.findOne({_id: projectId})
             .populate('team')
             .populate('assignedTeammates')
-            .populate('tasks.teammates');
+            .populate('tasks.teammates')
+            .populate('client');
 
         if(!project){
             req.flash('error', "Project Not Found")
@@ -126,7 +127,6 @@ router.get('/v/:id', async (req, res)=>{
             req.flash('error', "Unauthorized")
             return res.redirect('/projects')
         }
-
         res.render('project_dash/project', {project})
     }catch(err){
         console.log(err)
@@ -420,13 +420,78 @@ router.post('/taskmanager/:id', async (req, res) => {
             return res.status(404).send('Project not found')
         }
 
-        res.json(updatedProject)
+        req.flash('success', 'Task Created Succesfully')
+        res.redirect(`/projects/v/${projectId}`)
     } catch (err) {
         console.log(err)
         res.status(500).send('Internal Server Error')
     }
 })
 
+
+router.get('/e/:projectId/tasks/edit/:taskId', async (req, res)=>{
+    const projectId = req.params.projectId;
+    const taskId = req.params.taskId;
+    try{
+        const project = await Project.findOne({_id: projectId})
+            .populate('tasks.teammates')
+            .populate('assignedTeammates')
+            .populate('team');
+        
+        if(!project){
+            req.flash('error', 'Project Does Not Exist')
+            return res.redirect(`/projects/v/${projectId}`)
+        }
+
+        const task = project.tasks.id(taskId);
+
+        if(!task){
+            req.flash('error', 'Task not found.')
+            return res.redirect(`/projects/v/${projectId}`)
+        }
+
+        res.render('taskmanager/editTask', {
+            project,
+            task,
+            allTeammates: project.assignedTeammates
+        })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).send('Internal Server Error')
+    }
+})
+
+router.post('/e/:projectId/tasks/edit/:taskid', async (req, res)=>{
+    const projectId = req.params.projectId;
+    const taskId = req.params.taskid;
+    const { taskname, taskdescription, deadline, teammates } = req.body;
+    try{
+        const project = await Project.findOne({_id: projectId});
+        if(!project){
+            req.flash('error', 'Project Not found')
+            return res.redirect(`/projects/v/${projectId}`)
+        }
+
+        const task = project.tasks.id(taskId);
+        if(!task){
+            req.flash('error', 'Task Not Found')
+            return res.redirect(`/projects/v/${projectId}`)
+        }
+        task.taskname = taskname;
+        task.taskdescription = taskdescription;
+        task.deadlineDate = deadline;
+        task.teammates = Array.isArray(teammates) ? teammates : [teammates];
+    
+        await project.save()
+
+        req.flash('success', 'Task updated successfully!')
+        return res.redirect(`/projects/v/${projectId}`)
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error')
+    }
+})
 
 
 export default router;
