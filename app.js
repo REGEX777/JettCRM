@@ -81,7 +81,7 @@ app.use('/entry', loungeRoute)
 app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute)
 app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute)
 app.use('/myteam', storeOriginalUrl, isLoggedIn, teamdashRoute)
-app.use('/work', storeOriginalUrl, isLoggedIn, taskRoute)
+app.use('/mytasks', storeOriginalUrl, isLoggedIn, taskRoute)
 
 // Backend Route
 // app.use('/services/invoice', invoiceBack)

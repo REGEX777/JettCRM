@@ -209,10 +209,18 @@
                             <%
                                 var taskDaysLeft = Math.ceil((new Date(task.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24));
                             %>
-                            <span class="text-xs px-2 py-1 rounded-full 
-                                <%= taskDaysLeft <= 3 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' %>">
-                                <%= taskDaysLeft > 0 ? `${taskDaysLeft} days left` : 'Overdue' %>
-                            </span>
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <span class="text-xs px-2 py-1 rounded-full 
+                                    <%= task.status === 'working' ? 'bg-blue-100 text-blue-800' : '' %>
+                                    <%= task.status === 'pending approval' ? 'bg-purple-100 text-grey-800' : '' %>
+                                    <%= task.status === 'completed' ? 'bg-green-100 text-green-800' : '' %>">
+                                    <%= task.status.charAt(0).toUpperCase() + task.status.slice(1) %>
+                                </span>                          
+                                <span class="text-xs px-2 py-1 rounded-full 
+                                    <%= taskDaysLeft <= 3 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' %>">
+                                    <%= taskDaysLeft > 0 ? `${taskDaysLeft} days left` : 'Overdue' %>
+                                </span>
+                            </div>
                         </div>
                         <% } %>
                     </div>
@@ -232,9 +240,18 @@
                                     <% }); %>
                                 </div>
                             </div>
-                            <a href="/projects/e/<%= project._id %>/tasks/edit/<%= task._id %>" class="flex flex-row items-center justify-center gap-2 hover:bg-gray-200 transition-all duration-75 px-2 py-1 rounded-lg text-sm cursor-pointer">
-                                <p><i class="fa-solid fa-pencil"></i> Edit</p>
-                            </a>
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <% if(task.status === 'pending approval'){ %> 
+                                    <button onclick="showApprovalModal('<%= task.approvalLink %>', '<%= task._id %>', '<%= project._id %>')" class="flex flex-row items-center justify-center gap-2 hover:bg-gray-200 transition-all duration-75 px-2 py-1 rounded-lg text-sm cursor-pointer">
+                                        <p><i class="fa-solid fa-magnifying-glass"></i> Review</p>
+                                    </button>
+                                <% } %>
+
+                                <a href="/projects/e/<%= project._id %>/tasks/edit/<%= task._id %>" class="flex flex-row items-center justify-center gap-2 hover:bg-gray-200 transition-all duration-75 px-2 py-1 rounded-lg text-sm cursor-pointer">
+                                    <p><i class="fa-solid fa-pencil"></i> Edit</p>
+                                </a>
+                            </div>
+
 
                         </div>
                     <% } %>
@@ -248,6 +265,23 @@
                 <p class="text-gray-400 mt-1">Add your first task to get started</p>
             </div>
         <% } %>
+    </div>
+    <div id="approvalModal" class="fixed inset-0 z-50 bg-[#0000002f] flex items-center justify-center hidden">
+        <div class="bg-white w-96 rounded-lg shadow-lg p-6 text-center">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Submitted Link</h2>
+            <p id="approvalLink" class="text-blue-600 break-words"></p>
+
+            <div class="mt-6 flex justify-center space-x-4">
+            <a id="approve" href="#"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                Approve Project
+            </a>
+            <button onclick="closeApprovalModal()"
+                class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition">
+                Close
+            </button>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>

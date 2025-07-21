@@ -17,11 +17,16 @@ const projectSchema = new mongoose.Schema({
       taskname: String,
       taskdescription: String,
       teammates: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-      deadlineDate: Date
+      deadlineDate: Date,
+      status: {
+        type: String,
+        enum: ['working', 'completed', 'pending approval'],
+        default: 'working'
+      },
+      approvalLink: String
     }
   ]
 });
-
 
 const Project = new mongoose.model('Project', projectSchema);
 
