@@ -112,6 +112,10 @@ router.get('/search',async (req, res)=>{
 // project with tasks
 router.get('/v/:id', async (req, res)=>{
     const projectId = req.params.id;
+    if(!projectId){
+        req.flash('error', 'Invalid Project ID.')
+        return res.redirect('/projects')
+    }
     try{
         const project = await Project.findOne({_id: projectId})
             .populate('team')
@@ -139,6 +143,10 @@ router.get('/v/:id', async (req, res)=>{
 
 router.get('/edit/:id',async (req, res)=>{
     const projectId = req.params.id;
+    if(!projectId){
+        req.flash('error', 'Invalid Project ID')
+        res.redirect('/projects')
+    }
     try{
         const project = await Project.findOne({_id: projectId}).populate({
             path: 'team',
@@ -167,6 +175,10 @@ router.get('/edit/:id',async (req, res)=>{
 
 router.post('/edit/:id',async (req, res)=>{
     const projectId = req.params.id;
+    if(!projectId){
+        req.flash('error', 'Invalid Project ID')
+        res.redirect('/projects')
+    }
     try{
         const {
             projectTitle,
@@ -214,6 +226,22 @@ router.post('/edit/:id',async (req, res)=>{
     }
 })
 
+// updates page
+router.get('/update/:id', async (req, res)=>{
+    const projectId = req.params.id; 
+    try{
+        const project = await Project.findOne({_id: projectId});
+        if(!project){
+            req.flash('error', 'Project Not Found')
+            return res.redirect('/projects')
+        }
+
+        res.render('project_dash/updates')
+    }catch(err){
+        console.log(err)
+        return res.status(500).send('Internal Server Error')
+    }
+})
 
 
 
@@ -332,6 +360,10 @@ router.post("/", async (req, res) => {
 
 router.get('/delete/:id', async (req, res)=>{
     const projectId = req.params.id;
+    if(!projectId){
+        req.flash('error', 'Invalid Project ID')
+        res.redirect('/projects')
+    }
     try{
         const project = await Project.findOne({_id: projectId}).populate('team');
         if(!project){
@@ -367,6 +399,10 @@ router.get('/delete/:id', async (req, res)=>{
 router.get('/taskmanager/:id', async (req, res) => {
     try {
         const projectId = req.params.id;
+        if(!projectId){
+            req.flash('error', 'Invalid Project ID')
+            res.redirect('/projects')
+        }
         const project = await Project.findOne({
             _id: projectId
         }).populate('assignedTeammates')
@@ -389,6 +425,10 @@ router.get('/taskmanager/:id', async (req, res) => {
 router.post('/taskmanager/:id', async (req, res) => {
     try {
         const projectId = req.params.id;
+        if(!projectId){
+            req.flash('error', 'Invalid Project ID')
+            res.redirect('/projects')
+        }
         const project = await Project.findOne({
             _id: projectId
         });
@@ -431,6 +471,10 @@ router.post('/taskmanager/:id', async (req, res) => {
 
 router.get('/e/:projectId/tasks/edit/:taskId', async (req, res)=>{
     const projectId = req.params.projectId;
+    if(!projectId){
+        req.flash('error', 'Invalid Project ID')
+        res.redirect('/projects')
+    }
     const taskId = req.params.taskId;
     try{
         const project = await Project.findOne({_id: projectId})
@@ -464,6 +508,10 @@ router.get('/e/:projectId/tasks/edit/:taskId', async (req, res)=>{
 
 router.post('/e/:projectId/tasks/edit/:taskid', async (req, res)=>{
     const projectId = req.params.projectId;
+    if(!projectId){
+        req.flash('error', 'Invalid Project ID')
+        res.redirect('/projects')
+    }
     const taskId = req.params.taskid;
     const { taskname, taskdescription, deadline, teammates } = req.body;
     try{

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Project Update</title>
+  <link rel="stylesheet" href="/css/output.css">
+  <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-2xl mx-auto p-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Create New Project Update</h1>
+      
+      <form class="space-y-5">
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Update Title*</label>
+          <input type="text" id="title" name="title" required 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                 placeholder="E.g., Design Phase Completed">
+        </div>
+         
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Update Type*</label>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="type" value="milestone" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-2 text-sm text-gray-700">Milestone</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="type" value="progress" class="h-4 w-4 text-blue-600 focus:ring-blue-500" checked>
+              <span class="ml-2 text-sm text-gray-700">Progress</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="type" value="note" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+              <span class="ml-2 text-sm text-gray-700">Note</span>
+            </label>
+          </div>
+        </div>
+         
+        <div>
+          <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
+          <select id="status" name="status" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="pending_review">Pending Review</option>
+            <option value="on_hold">On Hold</option>
+          </select>
+        </div>
+         
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Select Icon</label>
+          <div class="grid grid-cols-5 gap-2">
+            <label class="flex flex-col items-center p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="icon" value="paint-brush" class="h-4 w-4 text-blue-600 focus:ring-blue-500" checked>
+              <i class="fas fa-paint-brush text-gray-600 mt-1"></i>
+            </label>
+            <label class="flex flex-col items-center p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="icon" value="code" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+              <i class="fas fa-code text-gray-600 mt-1"></i>
+            </label>
+            <label class="flex flex-col items-center p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="icon" value="clipboard-check" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+              <i class="fas fa-clipboard-check text-gray-600 mt-1"></i>
+            </label>
+            <label class="flex flex-col items-center p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="icon" value="file-alt" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+              <i class="far fa-file-alt text-gray-600 mt-1"></i>
+            </label>
+            <label class="flex flex-col items-center p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="radio" name="icon" value="comments" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+              <i class="far fa-comments text-gray-600 mt-1"></i>
+            </label>
+          </div>
+        </div>
+         
+        <div>
+          <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Update Details*</label>
+          <textarea id="content" name="content" rows="4" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Describe the update in detail..."></textarea>
+        </div>
+         
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Related Links</label>
+          <div id="links-container" class="space-y-2"> 
+            <div class="link-item flex items-center space-x-2">
+              <input type="text" name="link_text[]" placeholder="Link text" 
+                     class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+              <input type="url" name="link_url[]" placeholder="https://example.com" 
+                     class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+              <button type="button" class="remove-link text-red-500 hover:text-red-700">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <button type="button" id="add-link" class="mt-2 text-sm text-blue-600 hover:text-blue-800 flex items-center">
+            <i class="fas fa-plus mr-1"></i> Add another link
+          </button>
+        </div>
+         
+        <div class="flex justify-end space-x-3 pt-4">
+          <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Publish Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('add-link').addEventListener('click', function() {
+      const container = document.getElementById('links-container');
+      const newLink = container.querySelector('.link-item').cloneNode(true);
+      newLink.querySelectorAll('input').forEach(input => input.value = '');
+      container.appendChild(newLink);
+    });
+
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-link')) {
+        const linkItems = document.querySelectorAll('.link-item');
+        if (linkItems.length > 1) {
+          e.target.closest('.link-item').remove();
+        } else {
+          const inputs = e.target.closest('.link-item').querySelectorAll('input');
+          inputs.forEach(input => input.value = '');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

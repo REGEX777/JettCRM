@@ -77,18 +77,6 @@
                 <i class="far fa-calendar-alt mr-2"></i>
                 <span><%= task.deadlineDate ? new Date(task.deadlineDate).toLocaleDateString() : 'No deadline' %></span>
               </div>
-              <div class="flex -space-x-2">
-                <% if (task.assignedTo && task.assignedTo.length > 0) { %>
-                  <% task.assignedTo.slice(0, 2).forEach(user => { %>
-                    <img class="w-6 h-6 rounded-full border-2 border-white" src="<%= user.avatar || '/images/default-avatar.png' %>" alt="<%= user.name %>">
-                  <% }) %>
-                  <% if (task.assignedTo.length > 2) { %>
-                    <span class="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 border-2 border-white text-xs font-medium">+<%= task.assignedTo.length - 2 %></span>
-                  <% } %>
-                <% } else { %>
-                  <span class="text-xs text-gray-500">Unassigned</span>
-                <% } %>
-              </div>
             </div>
           </div>
         <% }) %>
