@@ -139,6 +139,27 @@ router.get('/v/:id', async (req, res)=>{
 })
 
 
+router.get('/v/updates/:id',async (req, res)=>{
+    const projectId = req.params.id;
+    try{
+        const project = await Project.findOne({_id: projectId}).populate('team');
+        if(!project){
+            req.flash('error', 'Project Not Found')
+            return res.redirect(`/projects/v/${projectId}`)
+        }
+
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')
+            return res.redirect(`/projects/v/${projectId}`)
+        }
+
+        res.render('project_dash/projectUpdate', {project})
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error')
+    }
+})
+
 // edit route
 
 router.get('/edit/:id',async (req, res)=>{
@@ -230,19 +251,142 @@ router.post('/edit/:id',async (req, res)=>{
 router.get('/update/:id', async (req, res)=>{
     const projectId = req.params.id; 
     try{
-        const project = await Project.findOne({_id: projectId});
+        const project = await Project.findOne({_id: projectId}).populate('team');
+        if(project.status)
         if(!project){
             req.flash('error', 'Project Not Found')
             return res.redirect('/projects')
         }
-
-        res.render('project_dash/updates')
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', "Unauthorized")
+            return res.redirect('/projects')
+        }  
+        
+        if (project.status === 'completed') {
+            req.flash('error', 'This project is already marked as completed. No more updates allowed.');
+            return res.redirect(`/projects/v/${projectId}`);
+        }
+        res.render('project_dash/updates', {project: project})
     }catch(err){
         console.log(err)
         return res.status(500).send('Internal Server Error')
     }
 })
 
+
+router.post('/update/:id', async (req, res)=>{
+    const projectId = req.params.id;
+    const { title, type, status, icon, content, link_text, link_url, markCompleted } = req.body;
+    try{
+        const project = await Project.findOne({_id: projectId}).populate('team');
+
+        if(!project){
+            req.flash('error', "Project not found")
+            return res.redirect('/projects')
+        }
+
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')
+            return res.redirect('/projects')
+        }
+
+        if (project.status === 'completed') {
+            req.flash('error', 'This project is already marked as completed. No more updates allowed.');
+            return res.redirect(`/projects/v/${projectId}`);
+        }
+
+        const relatedLinks = (Array.isArray(link_text) && Array.isArray(link_url))
+            ? link_text.map((text, index) => ({
+                linkTitle: text,
+                link: link_url[index]
+            }))
+            : [];
+
+        project.updates.push({
+            title,
+            uType: type,
+            icon,
+            details: content,
+            relatedLinks,
+            createdAt: new Date()
+        })
+        if (markCompleted === 'on') {
+            project.status = 'completed';
+            await project.save();
+            req.flash('success', 'Project Marked Completed')
+            res.redirect(`/projects/v/${projectId}`)
+        }
+        await project.save();
+        req.flash('success', 'Updated Successfully')
+        res.redirect(`/projects/update/${projectId}`)
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error')
+    }
+})
+
+
+router.get('/update/activate/:id', async (req, res)=>{
+    const projectId = req.params.id;
+    try{
+        const project = await Project.findOne({_id: projectId}).populate('team');
+
+        if(!project){
+            req.flash('error', 'Project Not Found')
+            return res.redirect(`/project/v/${projectId}`)
+        }
+
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')
+            return res.redirect(`/project/v/${projectId}`)
+        }
+
+        if(project.status === "active"){
+            req.flash('error', 'Project Is Already Active')
+            return res.redirect(`/project/v/${projectId}`)
+        }
+        
+        project.status = "active"
+
+        await project.save();
+        req.flash('success', "Successfully activated the project!")
+        res.redirect(`/projects/v/${projectId}`)
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error')
+    }
+})
+
+
+// feedback
+router.post('/f/:projectId/update/:updateIndex/feedback', async (req, res)=>{
+    const {projectId, updateIndex} = req.params;
+    const comment = req.body.comment;
+
+    try{
+        const project = await Project.findOne({_id: projectId});
+        if(!project){
+            req.flash('error', 'Project Not Found')
+            return res.redirect(`/client/pv/${projectId}`)
+        }
+
+        if (!project.updates[updateIndex]){
+            req.flash('error', 'Update Not Found')
+            return res.status(404).send('Update not found')
+        };
+
+        project.updates[updateIndex].feedbacks.push({
+            comment
+        })
+
+        await project.save();
+        req.flash('success', 'Feedback Received')
+        res.redirect(`/client/pv/${projectId}`)
+    }catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error')
+    }
+})
 
 
 router.get('/add', async (req, res) => {

@@ -25,6 +25,26 @@ const projectSchema = new mongoose.Schema({
       },
       approvalLink: String
     }
+  ],
+  updates: [
+    {
+      title: String,
+      uType: { type: String, enum: ['milestone', 'progress', 'note'] },
+      icon: { type: String, enum: ['paintbrush', 'code', 'clipboard', 'file', 'comments'] },
+      details: String,
+      relatedLinks: [
+        {
+          linkTitle: String,
+          link: String
+        }
+      ],
+      status: {type: String, default: null},
+      createdAt: { type: Date, default: Date.now },
+      feedbacks: [{
+        comment: String,
+        createdAt: { type: Date, default: Date.now }
+      }]
+    }
   ]
 });
 
