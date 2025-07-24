@@ -314,7 +314,7 @@ router.post('/update/:id', async (req, res)=>{
             project.status = 'completed';
             await project.save();
             req.flash('success', 'Project Marked Completed')
-            res.redirect(`/projects/v/${projectId}`)
+            return res.redirect(`/projects/v/${projectId}`)
         }
         await project.save();
         req.flash('success', 'Updated Successfully')
@@ -359,27 +359,27 @@ router.get('/update/activate/:id', async (req, res)=>{
 
 
 // feedback
-router.post('/f/:projectId/update/:updateIndex/feedback', async (req, res)=>{
-    const {projectId, updateIndex} = req.params;
+router.post('/f/:projectId/update/:updateId/feedback', async (req, res)=>{
+    const {projectId, updateId} = req.params;
     const comment = req.body.comment;
 
     try{
+        console.log(comment)
         const project = await Project.findOne({_id: projectId});
         if(!project){
             req.flash('error', 'Project Not Found')
             return res.redirect(`/client/pv/${projectId}`)
         }
 
-        if (!project.updates[updateIndex]){
+        const update = project.updates.id(updateId)
+        if (!update){
             req.flash('error', 'Update Not Found')
             return res.status(404).send('Update not found')
         };
-
-        project.updates[updateIndex].feedbacks.push({
-            comment
-        })
-
+        
+        update.feedbacks.push({ comment });
         await project.save();
+        
         req.flash('success', 'Feedback Received')
         res.redirect(`/client/pv/${projectId}`)
     }catch(err){
