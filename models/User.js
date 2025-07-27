@@ -23,7 +23,8 @@ const userSchema = new mongoose.Schema({
 
   teamOwnerOf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Team' }],
   teamMemberOf: [teamMembershipSchema],
-  clientOf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }]
+  clientOf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+  stripeAccountId: String
 });
 
 const User = mongoose.model('User', userSchema);

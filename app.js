@@ -61,12 +61,16 @@ import clientRoute from './routes/client/clientele.js'
 import teamdashRoute from './routes/client/teamDash.js'
 import taskRoute from './routes/client/tasks.js'
 
+
 // Backend Routes (API) Imports
 // import invoiceBack from './routes/backend/invoiceBack.js'
 import signupBack from './routes/backend/signupBack.js'
 import loginBack from './routes/backend/loginBack.js'
 import logOutRoute from './routes/backend/logout.js'
 import googleOauth2 from './routes/backend/oauth2/google.js'
+
+// Stripe
+import stripeRoute from './routes/client/stripe.js'
 
 // Client Route
 app.use('/', dashRoute);
@@ -90,7 +94,8 @@ app.use('/auth/login', loginBack)
 app.use('/logout', logOutRoute)
 app.use('/oauth2/', googleOauth2)
 
-
+// Stripe implementation
+app.use('/stripe', storeOriginalUrl, isLoggedIn, stripeRoute)
 
 
 

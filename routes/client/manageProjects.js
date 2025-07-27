@@ -502,6 +502,72 @@ router.post("/", async (req, res) => {
     }
 })
 
+
+router.get('/v/expenses/:id', async (req, res)=>{
+    const projectId = req.params.id;
+    try{
+        const project = await Project.findOne({_id: projectId}).populate('team');
+        if(!project){
+            req.flash('error', 'Project not found')
+            return res.redirect('/projects')
+        }
+
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')    
+            return res.redirect('/projects')
+        }
+
+        const expenses = project.expenses;
+        res.render('project_dash/expense_tracker', { project, expenses });
+    }catch(err){
+        console.log(err)
+        res.status(500).send('')
+    }
+})
+
+router.post('/v/expenses/:id', async (req, res) => {
+    const projectId = req.params.id;
+    const { title, amount, type, description } = req.body;
+    
+    try { 
+        const project = await Project.findOne({ _id: projectId }).populate({
+            path: 'team',
+            populate: {
+                path: 'owner'
+            }
+        });
+        
+        if (!project) {
+            req.flash('error', 'Project not found.');
+            return res.redirect('/projects');
+        }
+ 
+        if (!project.team.owner._id.equals(req.user._id)) {
+            req.flash('error', 'Unauthorized.');
+            return res.redirect('/projects');
+        }
+ 
+        const newExpense = {
+            title: title.trim(),
+            amount: parseFloat(amount),
+            type: type.trim(),
+            description: description ? description.trim() : ''
+        };
+  
+        project.expenses.push(newExpense);
+        await project.save();
+
+        req.flash('success', 'Expense added successfully!');
+        res.redirect(`/projects/v/expenses/${projectId}`);
+
+    } catch(err) {
+        console.error('Error adding expense:', err);
+        req.flash('error', 'Failed to add expense.');
+        res.redirect(`/projects/v/expenses/${projectId}`);
+    }
+});
+
+
 router.get('/delete/:id', async (req, res)=>{
     const projectId = req.params.id;
     if(!projectId){

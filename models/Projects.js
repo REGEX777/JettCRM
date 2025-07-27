@@ -45,6 +45,14 @@ const projectSchema = new mongoose.Schema({
         createdAt: { type: Date, default: Date.now }
       }]
     }
+  ],
+  expenses: [ 
+    {
+      title: String,
+      amount: Number,
+      type: String,
+      description: String
+    }
   ]
 });
 

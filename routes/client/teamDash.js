@@ -50,4 +50,29 @@ router.get('/:id', async (req, res) => {
 
 
 
+router.get('/team/:id/projects', async (req, res) => {
+  try {
+    const team = await Team.findById(req.params.id);
+    if (!team) return res.status(404).json({ error: 'Team not found' });
+
+    const isMember = team.members.some(id => id.equals(req.user._id));
+    if (!isMember) return res.status(403).json({ error: 'Unauthorized' });
+
+    const search = req.query.search || '';
+    const regex = new RegExp(search, 'i');
+
+    const projects = await Project.find({
+      team: team._id,
+      assignedTeammates: req.user._id,
+      name: { $regex: regex }
+    });
+
+    res.json(projects);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+
 export default router;

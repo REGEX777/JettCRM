@@ -1,21 +1,20 @@
+document.getElementById("clientSearch").addEventListener("input", function () {
+    const query = this.value.trim();
+    fetch(`/clients/api?search=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => updateTable(data))
+        .catch(err => console.error("Search error:", err));
+});
 
-        document.getElementById("clientSearch").addEventListener("input", function () {
-          const query = this.value.trim();
-          fetch(`/clients/api?search=${encodeURIComponent(query)}`)
-            .then(res => res.json())
-            .then(data => updateTable(data))
-            .catch(err => console.error("Search error:", err));
-        });
+function updateTable(clients) {
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = "";
 
-        function updateTable(clients) {
-          const tbody = document.querySelector("tbody");
-          tbody.innerHTML = ""; 
+    clients.forEach((client, index) => {
+        const rowId = `client-row-${index}`;
+        const detailsId = `client-details-${index}`;
 
-          clients.forEach((client, index) => {
-            const rowId = `client-row-${index}`;
-            const detailsId = `client-details-${index}`;
-
-            const html = `
+        const html = `
         <tr class="border-b border-border hover:bg-[#FAFAFA] cursor-pointer"
             onclick="toggleClientDetails('${index}')"
             id="${rowId}">
@@ -112,14 +111,14 @@
         </tr>
         `;
 
-            tbody.insertAdjacentHTML("beforeend", html);
-          });
+        tbody.insertAdjacentHTML("beforeend", html);
+    });
 
-          if (clients.length === 0) {
-            tbody.innerHTML = `
+    if (clients.length === 0) {
+        tbody.innerHTML = `
             <tr>
                 <td colspan="6" class="text-center py-6 text-[#A3A3A3] text-sm">No clients found.</td>
             </tr>
         `;
-          }
-        }
+    }
+}
