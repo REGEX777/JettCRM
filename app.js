@@ -6,7 +6,12 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import passportConfig from './config/passport.js'
 import flash from 'connect-flash';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Middleware Imports
 import { storeOriginalUrl } from './middleware/saveOriginalURL.js';
 import { isLoggedIn } from './middleware/isLoggedIn.js';
@@ -69,8 +74,6 @@ import loginBack from './routes/backend/loginBack.js'
 import logOutRoute from './routes/backend/logout.js'
 import googleOauth2 from './routes/backend/oauth2/google.js'
 
-// Stripe
-import stripeRoute from './routes/client/stripe.js'
 
 // Client Route
 app.use('/', dashRoute);
@@ -94,9 +97,8 @@ app.use('/auth/login', loginBack)
 app.use('/logout', logOutRoute)
 app.use('/oauth2/', googleOauth2)
 
-// Stripe implementation
-app.use('/stripe', storeOriginalUrl, isLoggedIn, stripeRoute)
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 

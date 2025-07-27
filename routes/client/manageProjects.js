@@ -11,6 +11,9 @@ import Invite from '../../models/Invite.js';
 const router = express.Router();
 
 
+// Utility Import
+import { uploadInvoice } from '../../utils/multerConfig.js';
+
 router.get('/', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -525,11 +528,13 @@ router.get('/v/expenses/:id', async (req, res)=>{
     }
 })
 
-router.post('/v/expenses/:id', async (req, res) => {
+router.post('/v/expenses/:id', uploadInvoice.single('invoice'), async (req, res) => {
     const projectId = req.params.id;
     const { title, amount, type, description } = req.body;
-    
+    const invoiceFile = req.file;
     try { 
+
+
         const project = await Project.findOne({ _id: projectId }).populate({
             path: 'team',
             populate: {
@@ -548,12 +553,13 @@ router.post('/v/expenses/:id', async (req, res) => {
         }
  
         const newExpense = {
-            title: title.trim(),
+            title: title?.trim(),
             amount: parseFloat(amount),
-            type: type.trim(),
-            description: description ? description.trim() : ''
+            type: type?.trim(),
+            description: description?.trim() || '',
+            invoicePath: invoiceFile?.path.replace(/^.*uploads[\\/]/, '/uploads/')
         };
-  
+
         project.expenses.push(newExpense);
         await project.save();
 
@@ -566,6 +572,44 @@ router.post('/v/expenses/:id', async (req, res) => {
         res.redirect(`/projects/v/expenses/${projectId}`);
     }
 });
+
+router.post('/v/update/budget/:id', async (req, res) => {
+  const projectId = req.params.id;
+  const { budget } = req.body;
+
+  try {
+    const project = await Project.findById(projectId).populate('team');
+
+    if (!project) {
+      req.flash('error', 'Project not found');
+      return res.redirect('/projects');
+    }
+
+    if (!project.team.owner.equals(req.user._id)) {
+      req.flash('error', 'Unauthorized');
+      return res.redirect('/projects');
+    }
+    console.log(req.body)
+    project.budget = budget;
+    project.updates.push({
+        title: `PM Updated the budget to $ ${budget}`,
+        uType: 'alert',
+        icon: 'exclamation',
+        createdAt: new Date()
+    })
+    await project.save();
+
+    req.flash('success', 'Budget updated successfully');
+    res.redirect(`/projects/v/expenses/${projectId}`);
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Something went wrong');
+    res.redirect('/projects');
+  }
+});
+
+
+
 
 
 router.get('/delete/:id', async (req, res)=>{

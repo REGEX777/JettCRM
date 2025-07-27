@@ -1,5 +1,21 @@
 import mongoose from 'mongoose';
 
+
+const expenseSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  amount: { type: Number, required: true },
+  type: { type: String, required: true },
+  description: { type: String, default: '' },
+  invoicePath: { type: String, default: null },
+  links: [ 
+    {
+      title: String,
+      link: String
+    }
+   ]
+}, { timestamps: true });
+
+
 const projectSchema = new mongoose.Schema({
   name: String,
   description: String,
@@ -29,8 +45,8 @@ const projectSchema = new mongoose.Schema({
   updates: [
     {
       title: String,
-      uType: { type: String, enum: ['milestone', 'progress', 'note'] },
-      icon: { type: String, enum: ['paintbrush', 'code', 'clipboard', 'file', 'comments'] },
+      uType: { type: String, enum: ['milestone', 'progress', 'note', 'alert'] },
+      icon: { type: String, enum: ['paintbrush', 'code', 'clipboard', 'file', 'comments', 'exclamation'] },
       details: String,
       relatedLinks: [
         {
@@ -46,14 +62,7 @@ const projectSchema = new mongoose.Schema({
       }]
     }
   ],
-  expenses: [ 
-    {
-      title: String,
-      amount: Number,
-      type: String,
-      description: String
-    }
-  ]
+  expenses: [expenseSchema] 
 });
 
 const Project = new mongoose.model('Project', projectSchema);
