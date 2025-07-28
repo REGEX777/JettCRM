@@ -24,7 +24,10 @@ const userSchema = new mongoose.Schema({
   teamOwnerOf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Team' }],
   teamMemberOf: [teamMembershipSchema],
   clientOf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
-  stripeAccountId: String
+  stripeAccountId: String,
+  googleAccessToken: String,
+  googleRefreshToken: String,
+  googleTokenExpiryDate: Date
 });
 
 const User = mongoose.model('User', userSchema);

@@ -50,6 +50,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  res.locals.user = req.user || null; 
+  next();
+});
+
 const port = 9000;
 
 // CLient route imports
@@ -74,6 +79,10 @@ import loginBack from './routes/backend/loginBack.js'
 import logOutRoute from './routes/backend/logout.js'
 import googleOauth2 from './routes/backend/oauth2/google.js'
 
+// misc routes import
+import meetingsRoute from './routes/misc/calendar.js'
+
+import onboardROute from './routes/misc/onboard.js'
 
 // Client Route
 app.use('/', dashRoute);
@@ -97,6 +106,12 @@ app.use('/auth/login', loginBack)
 app.use('/logout', logOutRoute)
 app.use('/oauth2/', googleOauth2)
 
+
+// test route
+app.use('/stripe', storeOriginalUrl, isLoggedIn, onboardROute )
+
+// meetings
+app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute)
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
