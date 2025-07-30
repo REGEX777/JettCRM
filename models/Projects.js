@@ -46,7 +46,7 @@ const projectSchema = new mongoose.Schema({
     {
       title: String,
       uType: { type: String, enum: ['milestone', 'progress', 'note', 'alert'] },
-      icon: { type: String, enum: ['paintbrush', 'code', 'clipboard', 'file', 'comments', 'exclamation'] },
+      icon: { type: String, enum: ['paintbrush', 'code', 'clipboard', 'file', 'comments', 'exclamation', 'calendar'] },
       details: String,
       relatedLinks: [
         {

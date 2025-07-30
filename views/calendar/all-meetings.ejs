@@ -1,63 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>All Meetings | JettCRM</title>
-  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/output.css">
-  <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/output.css">
+    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <title>Projects Management</title>
 </head>
-<body class="bg-gray-50 text-gray-800">
 
-  <div class="max-w-5xl mx-auto px-6 py-10">
-    <div class="mb-6">
-      <a href="/" class="text-blue-600 text-sm font-medium flex items-center">
-        <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
-      </a>
+<body>
+    <!-- Parent -->
+    <% if (success.length > 0) { %>
+    <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+        <p class="text-white"><%= success[0] %></p>
     </div>
-
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold">Upcoming Meetings</h1>
-      <a href="/calendar/new-meeting" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition">
-        <i class="fas fa-plus mr-2"></i> Schedule New Meeting
-      </a>
-    </div>
-
-    <% if (events.length === 0) { %>
-      <div class="bg-white p-6 rounded-xl shadow text-center">
-        <p class="text-gray-500 text-sm">No meetings scheduled.</p>
-      </div>
-    <% } else { %>
-      <div class="space-y-4">
-        <% events.forEach(event => { %>
-          <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
-            <div class="flex justify-between items-center mb-2">
-              <h2 class="text-lg font-semibold">
-                <%= event.summary || 'Untitled Meeting' %>
-              </h2>
-              <% if (event.hangoutLink) { %>
-                <a href="<%= event.hangoutLink %>" target="_blank" class="text-blue-600 text-sm underline">
-                  Join Google Meet
-                </a>
-              <% } %>
-            </div>
-
-            <div class="text-sm text-gray-600 space-y-1">
-              <p><strong>Start:</strong> <%= new Date(event.start.dateTime || event.start.date).toLocaleString('en-IN') %></p>
-              <% if (event.end && event.end.dateTime) { %>
-                <p><strong>End:</strong> <%= new Date(event.end.dateTime).toLocaleString('en-IN') %></p>
-              <% } %>
-              <% if (event.description) { %>
-                <p><strong>Description:</strong> <%= event.description %></p>
-              <% } %>
-            </div>
-          </div>
-        <% }) %>
-      </div>
     <% } %>
-  </div>
+    <% if (error.length > 0) { %>
+    <div class="h-10 w-full bg-red-500 flex items-center justify-center">
+        <p class="text-white"><%= error[0] %></p>
+    </div>
+    <% } %>
+    <div class="flex flex-row justify-start">
 
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+        <%- include('../fragments/sidebar'); -%>
+
+        <div
+            class="flex flex-col min-h-screen bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-5">
+                <div class="flex items-center gap-4">
+                    <a href="/" class="flex items-center text-gray-500 hover:text-gray-700">
+                        <i class="fa-solid fa-arrow-left pr-2"></i>
+                    </a>
+                    <p class="font-medium text-xl">Upcoming Meetings</p>
+                </div>
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
+                    class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg"
+                    type="button">
+                    <i class="fa-solid fa-angle-down"></i>
+                    <img alt="profilepic"
+                        src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920"
+                        class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
+                </button>
+
+                <div id="dropdownHover"
+                    class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
+                                out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="w-full flex items-center justify-center">
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="flex justify-between items-center mb-6 w-full">
+                        <h1 class="text-3xl font-bold">Upcoming Meetings</h1>
+                        <a href="/calendar/new-meeting"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition">
+                            <i class="fas fa-plus mr-2"></i> Schedule New Meeting
+                        </a>
+                    </div>
+
+                    <% if (events.length === 0) { %>
+                    <div class="bg-white p-6 rounded-xl shadow text-center">
+                        <p class="text-gray-500 text-sm">No meetings scheduled.</p>
+                    </div>
+                    <% } else { %>
+                    <div class="space-y-4 w-full">
+                        <% events.forEach(event => { %>
+                        <div
+                            class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <h2 class="text-lg font-semibold">
+                                    <%= event.summary || 'Untitled Meeting' %>
+                                </h2>
+                                <% if (event.hangoutLink) { %>
+                                <a href="<%= event.hangoutLink %>" target="_blank"
+                                    class="text-blue-600 text-sm underline">
+                                    Join Google Meet
+                                </a>
+                                <% } %>
+                            </div>
+
+                            <div class="text-sm text-gray-600 space-y-1">
+                                <p><strong>Start:</strong>
+                                    <%= new Date(event.start.dateTime || event.start.date).toLocaleString('en-IN') %>
+                                </p>
+                                <% if (event.end && event.end.dateTime) { %>
+                                <p><strong>End:</strong> <%= new Date(event.end.dateTime).toLocaleString('en-IN') %></p>
+                                <% } %>
+                                <% if (event.description) { %>
+                                <p><strong>Description:</strong> <%= event.description %></p>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
+                    <% } %>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
+
 </html>

@@ -43,7 +43,9 @@ router.get('/accept/:token', async (req, res) => {
             if (!req.isAuthenticated || !req.isAuthenticated()) {
                 res.cookie('inviteInfo', {
                     token: invite.token,
-                    role: invite.role
+                    type: invite.type,
+                    teamRole: invite.teamRole,
+                    department: invite.department
                 }, {
                     maxAge: 5 * 60 * 1000,
                     httpOnly: true
@@ -60,6 +62,7 @@ router.get('/accept/:token', async (req, res) => {
                 return res.render('invite/client_invite', viewData);
             }
 
+
             return res.render('invite/confirm_join', viewData);
         }
 
@@ -68,14 +71,31 @@ router.get('/accept/:token', async (req, res) => {
             return res.redirect('/');
         }
 
+        res.cookie('inviteInfo', {
+            token: invite.token,
+            type: invite.type,
+            teamRole: invite.teamRole,
+            department: invite.department
+        }, {
+            maxAge: 5 * 60 * 1000, 
+            httpOnly: true
+        });
 
-        const viewToRender = invite.type === 'client' ? 'invite/client_invite' : 'signup';
+        let viewToRender;
+        if (invite.type === 'team') {
+            viewToRender = 'invite/confirm_join';
+        } else if (invite.type === 'client') {
+            viewToRender = 'invite/client_invite';
+        } else {
+            viewToRender = 'signup';
+        }
         return res.render(viewToRender, viewData);
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 router.post('/accept', async (req, res) => {
     const { token } = req.body;

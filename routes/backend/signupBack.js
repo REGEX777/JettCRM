@@ -17,7 +17,6 @@ const router = express.Router();
 
 router.post('/', validateEmail, isLoggedOut, async (req, res) => {
     const { token, role } = req.body; 
-
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -116,9 +115,10 @@ router.post('/', validateEmail, isLoggedOut, async (req, res) => {
             if (err) return res.status(500).send(err);
             req.flash('success', 'Congratulations! You have signed up successfully, please check your mails to verify your account.');
             if(req.cookies.inviteInfo){
-                res.clearCookie('inviteInfo')
-                return res.redirect(`/invite/accept/${req.cookies.inviteInfo.token}`)
-            }else{
+                const inviteToken = req.cookies.inviteInfo.token;
+                res.clearCookie('inviteInfo');
+                return res.redirect(`/invite/accept/${inviteToken}`);
+            } else {
                 return res.redirect('/');
             }
             

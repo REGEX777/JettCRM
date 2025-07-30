@@ -91,7 +91,7 @@ app.use('/settings', settingsRoute);
 app.use('/signup', signupRoute) 
 // add store original url and isloggedin middleware
 app.use('/projects', storeOriginalUrl, isLoggedIn, projectManageRoute) 
-app.use('/invite', inviteRoute)
+app.use('/invite', storeOriginalUrl, inviteRoute)
 app.use('/login', loginRoute)
 app.use('/entry', loungeRoute) 
 app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute)

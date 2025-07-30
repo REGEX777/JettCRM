@@ -25,14 +25,6 @@ router.post('/', validateEmail, passport.authenticate('local', {
         return res.redirect(redUrl);
     }
 
-    if (req.cookies.inviteInfo) {
-        try {
-            res.clearCookie('inviteInfo');
-            return res.redirect(`/invite/accept/${req.cookies.inviteInfo.token}`)
-        } catch (e) {
-            console.error('Failed to parse inviteInfo cookie:', e);
-        }
-    }
     
     req.flash('success', 'Logged in Succesfully.')
     res.redirect('/')
