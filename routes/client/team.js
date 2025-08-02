@@ -28,7 +28,42 @@ router.get('/',async (req, res)=>{
         console.log(err)
         res.status(500).send('Internal Server Error')
     }
-})
+});
+
+
+router.get('/api/search', async (req, res) => {
+    try {
+        const rawQuery = req.query.query?.trim() || '';
+        const user = req.user;
+
+        const team = await Team.findOne({ owner: user._id });
+        if (!team) return res.status(404).json([]);
+
+        const terms = rawQuery.split(/\s+/).filter(Boolean);
+
+        const conditions = terms.map(term => ({
+            $or: [
+                { firstName: new RegExp(term, 'i') },
+                { lastName: new RegExp(term, 'i') },
+                { email: new RegExp(term, 'i') }
+            ]
+        }));
+
+        const members = await User.find({
+            'teamMemberOf.team': team._id,
+            $and: conditions
+        }).lean();
+
+        members.forEach(m => {
+            m.membership = m.teamMemberOf.find(tm => tm.team.toString() === team._id.toString());
+        });
+
+        res.json(members);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json([]);
+    }
+});
 
 router.get('/add', (req, res)=>{
     res.render('team/addTeam')

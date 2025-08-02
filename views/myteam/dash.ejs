@@ -1,78 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Dashboard</title>
-    <link rel="stylesheet" href="/css/output.css">
-    <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Dashboard</title>
+  <link rel="stylesheet" href="/css/output.css">
+  <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#FAFAFA] min-h-screen">
-    <% if (success.length > 0) { %>
-        <div class="h-10 w-full bg-green-500 flex items-center justify-center">
-            <p class="text-white"><%= success[0] %></p>
-        </div>
-    <% } %>
+<body class="bg-gray-50 min-h-screen font-sans">
 
-    <% if (error.length > 0) { %>
-        <div class="h-10 w-full bg-red-500 flex items-center justify-center">
-            <p class="text-white"><%= error[0] %></p>
-        </div>
-    <% } %>
-
-    <div class="flex flex-col px-10 py-5 pt-10 gap-3">
-        <div class="h-16 rounded-lg w-full bg-white flex items-center justify-between px-10 mb-6 shadow-sm">
-            <p class="font-medium">Your Teams</p>
-            <div class="flex items-center gap-4">
-                <button class="p-2 rounded-lg hover:bg-gray-100">
-                    <i class="fas fa-bell text-gray-500"></i>
-                </button>
-                <div class="relative">
-                    <button class="flex items-center gap-2">
-                        <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" 
-                             class="h-10 w-10 rounded-lg object-cover">
-                        <i class="fas fa-angle-down text-gray-500"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5 shadow-sm">
-            <% if (teams.length === 0) { %>
-                <div class="w-full text-center py-10">
-                    <p class="text-gray-500">You're not part of any teams yet.</p>
-                    <button class="mt-4 px-4 py-2 bg-[#3546FF] text-white rounded-lg hover:bg-[#2a38cc] transition">
-                        Create New Team
-                    </button>
-                </div>
-            <% } else { %>
-                <div class="w-full">
-                    <h2 class="font-medium text-lg">Your Team Memberships</h2>
-                </div>
-                
-                <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <% teams.forEach(team => { %>
-                        <a href="/myteam/<%= team.id %>" class="border border-gray-200 rounded-lg p-4 hover:bg-[#FAFAFA] transition group">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-medium text-gray-800 group-hover:text-[#3546FF] transition"><%= team.name %></h3>
-                                    <div class="flex gap-2 mt-2">
-                                        <span class="text-xs px-2 py-1 bg-[#f0f0f0] rounded">
-                                            <%= team.role %>
-                                        </span>
-                                        <span class="text-xs px-2 py-1 bg-[#f0f0f0] rounded">
-                                            <%= team.department %>
-                                        </span>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-400 group-hover:text-[#3546FF] transition"></i>
-                            </div>
-                        </a>
-                    <% }) %>
-                </div>
-            <% } %>
-        </div>
-
+  <% if (success.length > 0) { %>
+    <div class="w-full bg-green-500 py-2 flex items-center justify-center">
+      <p class="text-white text-sm font-medium"><%= success[0] %></p>
     </div>
+  <% } %>
+
+  <% if (error.length > 0) { %>
+    <div class="w-full bg-red-500 py-2 flex items-center justify-center">
+      <p class="text-white text-sm font-medium"><%= error[0] %></p>
+    </div>
+  <% } %>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Team Dashboard</h1>
+        <p class="text-sm text-gray-500">Manage your team memberships and collaborations</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button class="p-2 rounded-full hover:bg-gray-100 transition">
+          <i class="fas fa-bell text-gray-600"></i>
+        </button>
+        <div class="relative">
+          <button class="flex items-center space-x-2 focus:outline-none">
+            <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920"
+                 class="h-10 w-10 rounded-lg object-cover border border-gray-200">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6">
+      <% if (teams.length === 0) { %>
+        <div class="text-center py-12">
+          <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-users text-gray-400 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No Teams to Display</h3>
+          <p class="text-gray-500 mb-6 max-w-md mx-auto">You are not currently a member of any teams. Create a new team or ask to join an existing one.</p>
+          <button class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">
+            Create New Team
+          </button>
+        </div>
+      <% } else { %>
+        <div class="mb-4 flex justify-between items-center">
+          <h2 class="text-lg font-semibold text-gray-800">Your Team Memberships</h2>
+          <span class="text-sm text-gray-500"><%= teams.length %> teams</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% teams.forEach(team => { %>
+            <a href="/myteam/<%= team.id %>" class="group">
+              <div class="border border-gray-200 rounded-lg p-5 hover:border-indigo-300 hover:bg-indigo-50/20 transition-all">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-base font-medium text-gray-800 group-hover:text-indigo-600 transition">
+                      <%= team.name %>
+                    </h3>
+                    <div class="flex gap-2 mt-3 flex-wrap">
+                      <span class="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                        <%= team.role %>
+                      </span>
+                      <span class="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                        <%= team.department %>
+                      </span>
+                    </div>
+                  </div>
+                  <i class="fas fa-chevron-right text-gray-300 group-hover:text-indigo-500 mt-1 transition"></i>
+                </div>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </body>
 </html>
