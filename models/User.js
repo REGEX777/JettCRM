@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '/default/default.jpg'
   },
+  lastEmailChange: {
+    type: Date,
+    default: null,
+  }
 });
 
 const User = mongoose.model('User', userSchema);

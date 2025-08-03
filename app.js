@@ -83,6 +83,10 @@ import meetingsRoute from './routes/misc/calendar.js'
 
 import onboardROute from './routes/misc/onboard.js'
 
+// api routes
+import emailRoute from './routes/api/email.js'
+
+
 // Client Route
 app.use('/', dashRoute);
 app.use('/geninvoice', invoiceRoute);
@@ -114,6 +118,10 @@ app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute)
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
+// API veriofication route
+
+app.use('/email', emailRoute)
 
 
 app.listen(port, ()=>{

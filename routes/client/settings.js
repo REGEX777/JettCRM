@@ -2,12 +2,14 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs/promises'; 
 import { v4 as uuidv4 } from 'uuid'; 
+import sharp from 'sharp';
+import crypto from 'crypto';
 
 import { uploadProfilePic } from '../../utils/profileUpload.js';
 
 // Model Import
 import User from '../../models/User.js';
-import sharp from 'sharp';
+import EmailUpdate from '../../models/EmailUpdate.js';
 
 const router = express.Router();
 
@@ -112,6 +114,51 @@ router.post('/personal', uploadProfilePic.single('profileImage'), async (req, re
     res.redirect('/settings');
   }
 });
+
+
+// email change roiute
+router.post('/email/update',async (req, res)=>{
+  const user = req.user;
+  const newEmail = req.body.newEmail;
+
+  try{
+    if (!newEmail || !newEmail.includes('@')) {
+      req.flash('error', 'Invalid email address');
+      return res.redirect('/settings');
+    }
+
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    if (user.lastEmailChange && user.lastEmailChange > oneWeekAgo) {
+      req.flash('error', 'Email can only be changed once per weak');
+      return res.redirect('/settings');
+    }
+
+    await EmailUpdate.deleteMany({ userId: user._id });
+  
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 15); // 15 minute
+
+
+    await EmailUpdate.create({
+      userId: user._id,
+      newEmail,
+      token,
+      expiresAt
+    })
+
+    // email thingy will go hereeee
+
+    const verificationLink = `http://localhost:9000/email/verify/${token}`
+
+    console.log(verificationLink)
+
+    req.flash('success', 'Verification Link Sent to Your New Email')
+    res.redirect('/settings')
+  }catch(err){
+    console.log(err)
+    res.status(500).send('Internal Server Error')
+  }
+})
 
 
 export default router;

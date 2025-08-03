@@ -106,23 +106,25 @@
         </form>
         <div class="mt-8 bg-white shadow-md border border-gray-200 rounded-lg p-6 w-full">
           <h2 class="text-lg font-semibold mb-4 text-gray-800">Change Email Address</h2>
+          <!-- email form -->
+          <form action="/settings/email/update" method="post">
+            <div class="mb-4">
+              <label for="currentEmail" class="block text-sm text-gray-600 mb-1">Current Email</label>
+              <input type="email" id="currentEmail" disabled value="<%= user.email %>"
+                class="w-full px-3 py-2 bg-gray-100 rounded-md border border-gray-300 text-gray-700">
+            </div>
 
-          <div class="mb-4">
-            <label for="currentEmail" class="block text-sm text-gray-600 mb-1">Current Email</label>
-            <input type="email" id="currentEmail" disabled value="<%= user.email %>"
-              class="w-full px-3 py-2 bg-gray-100 rounded-md border border-gray-300 text-gray-700">
-          </div>
+            <div class="mb-4">
+              <label for="newEmail" class="block text-sm text-gray-600 mb-1">New Email</label>
+              <input type="email" name="newEmail" id="newEmail" placeholder="Enter new email address"
+                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+            </div>
 
-          <div class="mb-4">
-            <label for="newEmail" class="block text-sm text-gray-600 mb-1">New Email</label>
-            <input type="email" id="newEmail" placeholder="Enter new email address"
-              class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
-          </div>
-
-          <button
-            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-all duration-200">
-            Update Email
-          </button>
+            <button
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-all duration-200">
+              Update Email
+            </button>
+          </form>
         </div>
       </section>
     </main>
