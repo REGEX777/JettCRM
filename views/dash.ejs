@@ -57,6 +57,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- tasks card -->
                     <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
                         <div class="w-full">
                             <p><i class="fa-solid fa-list text-[#3D3BF3] pr-2"></i> Projects Insights</p>
@@ -65,76 +67,73 @@
                             <div class="w-full flex items-center justify-between">
                                 <div class="flex flex-col items-start justify-center gap-2">
                                     <p class="text-[0.65rem]">Pending Tasks</p>
-                                    <p class="text-4xl">24</p>
+                                    <p class="text-4xl"><%= pending %></p>
                                 </div>
                                 <div class="flex flex-col items-start justify-center gap-2">
                                     <p class="text-[0.65rem]">Completed Tasks</p>
-                                    <p class="text-4xl">12</p>
+                                    <p class="text-4xl"><%= completed %></p>
                                 </div>
                                 <div class="flex flex-col items-start justify-center gap-2">
                                     <p class="text-[0.65rem]">Validation</p>
-                                    <p class="text-4xl">6</p>
+                                    <p class="text-4xl"><%= validation %></p>
                                 </div>
                             </div>
                         </div>
                         <div class="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
                             <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-pink-400 to-fuchsia-500"
-                                style="width: 70%;"></div>
+                                style="width: <%= progress %>%">
+                            </div>
                         </div>
                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                             <span>Progress bar</span>
-                            <span>70%</span>
+                            <span><%= progress %>%</span>
                         </div>
 
                     </div>
-                    <div
-                        class="w-full min-h-48 bg-[#FAFAFA] border border-border rounded-lg py-3 px-3 flex flex-row items-center gap-3">
+                    
+                    
+                    
+                    <div class="w-full bg-[#FAFAFA] border border-border rounded-md py-3 px-3 flex flex-col gap-2">
 
-                        <div
-                            class="w-[60%] bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col">
-                            <div class="h-10 w-full flex items-center justify-center">
-                                <div class="w-[80%] h-10 flex items-center justify-start text-xs">
-                                    <p>June</p>
-                                </div>
-                            </div>
-                            <hr class="w-full border-border">
-                            <div class="w-full flex items-center justify-center py-2">
-                                <div class="w-[80%] flex items-center justify-center text-xs">
-                                    <% 
-                                    const now = new Date();
-                                    const year = now.getFullYear();
-                                    const month = now.getMonth(); // 0-indexed (Jan = 0)
-                                    const daysInMonth = new Date(year, month + 1, 0).getDate();
-                                    %>
-
-                                    <div class="grid grid-cols-7 w-full gap-2">
-                                        <% for(let day = 1; day <= daysInMonth; day++) { %>
-                                        <div class="w-full text-center rounded">
-                                            <%= day %>
-                                        </div>
-                                        <% } %>
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="text-sm font-semibold text-[#333] px-1">
+                            Upcoming Meetings
                         </div>
 
-                        <div
-                            class="flex-grow bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col">
-                            <div class="h-10 w-full flex items-center justify-center">
-                                <div class="w-[80%] h-10 flex items-center justify-start text-xs">
-                                    <p>Today</p>
+                        <% if (events && events.length > 0) { %>
+                        <div class="flex flex-col gap-2">
+                            <% events.slice(0, 2).forEach(event => { %>
+                            <div class="bg-white border border-border rounded-md p-2 flex items-center justify-between">
+                                <div class="flex flex-col text-xs">
+                                    <p class="font-medium text-[#111]"><%= event.summary || "No Title" %></p>
+                                    <% if (event.start && event.start.dateTime) { %>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">
+                                        <%= new Date(event.start.dateTime).toLocaleString('en-IN', {
+                                            weekday: 'short',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        }) %>
+                                    </p>
+                                    <% } else { %>
+                                    <p class="text-[11px] text-gray-400 mt-0.5">No start time</p>
+                                    <% } %>
                                 </div>
+                                <a href="<%= event.hangoutLink || (event.conferenceData?.entryPoints?.[0]?.uri || '#') %>"
+                                    target="_blank" class="text-blue-500 text-xs underline hover:text-blue-700">
+                                    Join
+                                </a>
                             </div>
-                            <hr class="w-full border-border">
-                            <div class="w-full py-2 px-2">
-                                <div
-                                    class="min-h-8 rounded-lg bg-border w-full flex flex-row items-center justify-start px-2">
-                                    <i class="fa-solid fa-video pr-2 text-xs"></i>
-                                    <p class="text-[0.55rem]">Call with mike on 12:30</p>
-                                </div>
-                            </div>
+                            <% }); %>
                         </div>
+
+                        <% if (events.length > 2) { %>
+                        <a href="/calendar" class="text-[11px] text-blue-500 hover:underline px-1 mt-1 self-start">See all meetings</a>
+                        <% } %>
+
+                        <% } else { %>
+                        <div class="text-xs text-gray-500 mt-1 px-1">No meetings found.</div>
+                        <% } %>
 
                     </div>
                 </div>
@@ -145,38 +144,41 @@
                     <p class="font-medium">Upcoming Deadlines</p>
                 </div>
                 <div class="flex flex-col items-center justify-center w-full gap-3">
-                    <div
-                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <p>Johnsons Media Campaign <i
-                                class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF]"></i></p>
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <div
-                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
-                                <p>High Priority Project</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
-                                <p>Due in 24 Days</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <p>Johnsons Media Campaign <i
-                                class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF]"></i></p>
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <div
-                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
-                                <p>High Priority Project</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
-                                <p>Due in 24 Days</p>
+                    <% if (upcomingDeadlines.length > 0) { %>
+                    <% upcomingDeadlines.forEach(project => { %>
+                    <a href="/projects/v/<%= project._id %>" target="_blank" class="w-full">
+                        <div
+                            class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5 hover:bg-gray-100 transition">
+                            <p class="font-medium">
+                                <%= project.name %>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF] ml-1"></i>
+                            </p>
+                            <div class="flex flex-row items-center justify-center gap-2">
+
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                                    <p>
+                                        <% if (project.daysRemaining === 0) { %>
+                                        Due Today
+                                        <% } else if (project.daysRemaining < 0) { %>
+                                        Overdue by <%= Math.abs(project.daysRemaining) %>
+                                        Day<%= Math.abs(project.daysRemaining) > 1 ? 's' : '' %>
+                                        <% } else { %>
+                                        Due in <%= project.daysRemaining %>
+                                        Day<%= project.daysRemaining > 1 ? 's' : '' %>
+                                        <% } %>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                    <% }) %>
+                    <% } else { %>
+                    <p class="text-gray-500">You have no upcoming deadlines.</p>
+                    <% } %>
+
                     <div class="flex items-center justify-center">
-                        <a href="#">See All</a>
+                        <a href="/projects" class="text-[#3546FF] font-medium hover:underline">See All</a>
                     </div>
                 </div>
             </div>
