@@ -27,14 +27,8 @@
     <%- include('../fragments/sidebar'); -%>
 
     <main class="ml-[24rem] w-[calc(100%-24rem)] px-10 py-8 space-y-10">
-      <div class="bg-white shadow rounded-xl flex items-center justify-between px-8 py-4 sticky top-0 z-10">
-        <h1 class="text-xl font-semibold">Settings</h1>
-        <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
-          class="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition">
-          <i class="fa-solid fa-angle-down text-sm"></i>
-          <img src="<%= user.profilePicture %>" class="h-10 w-10 rounded-lg border border-gray-300 object-cover" />
-        </button>
-      </div>
+      <%- include('../fragments/header'); -%>
+
 
       <section class="bg-white rounded-2xl shadow p-8">
         <form action="/settings/personal" method="POST" enctype="multipart/form-data"

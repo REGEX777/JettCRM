@@ -20,9 +20,13 @@ router.get('/',async (req, res)=>{
         const teammates = await User.find({
             'teamMemberOf.team': team._id
         });
+        const headerText = "My Team"
+        const backBtnLink = '/team'
         res.render('team/team', {
             team,
-            teammates
+            teammates,
+            headerText,
+            backBtnLink
         });
     }catch(err){
         console.log(err)
@@ -66,7 +70,9 @@ router.get('/api/search', async (req, res) => {
 });
 
 router.get('/add', (req, res)=>{
-    res.render('team/addTeam')
+    const headerText = "Invite Team Members"
+    const backBtnLink = '/team'
+    res.render('team/addTeam', {headerText, backBtnLink})
 })
 
 router.post('/invite',async (req, res)=>{

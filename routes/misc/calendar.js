@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 
 import User from '../../models/User.js';
 import Project from '../../models/Projects.js';
+import { header } from 'express-validator';
 
 const router = express.Router();
 
@@ -99,7 +100,10 @@ router.get('/', async (req, res) => {
       const bTime = new Date(b.start.dateTime || b.start.date).getTime();
       return bTime - aTime;
     });
-    res.render('calendar/all-meetings', { events: meetingEvents });
+
+    const headerText = "All Meetings"
+    const backBtnLink = '/'
+    res.render('calendar/all-meetings', { events: meetingEvents, headerText, backBtnLink });
 
   } catch (err) {
     console.error('Error fetching events:', err);
@@ -146,10 +150,14 @@ router.get('/new-meeting', async (req, res) => {
       prefillEmail = client?.email || '';
     }
 
+    const headerText = "Schedule A New Meeting"
+    const backBtnLink = '/calendar'
     res.render('calendar/new-meeting', {
       user,
       prefillEmail,
       projectId: projectId || '',
+      headerText,
+      backBtnLink
     });
   } catch (err) {
     console.error(err);

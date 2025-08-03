@@ -62,6 +62,8 @@ router.get('/', async (req, res) => {
         const totalPages = Math.ceil(totalProjects / limit);
         const paginatedProjects = filteredProjects.slice(skip, skip + limit);
 
+        const headerText = `Manage Projects`
+        const backBtnLink = '/'
         res.render('project_dash/manageProjects', {
             projects: paginatedProjects,
             currentPage: page,
@@ -70,7 +72,9 @@ router.get('/', async (req, res) => {
             startIndex: skip + 1,
             endIndex: Math.min(skip + limit, totalProjects),
             status,
-            sort
+            sort,
+            headerText,
+            backBtnLink
         });
     } catch (err) {
         console.log(err)
@@ -134,7 +138,10 @@ router.get('/v/:id', async (req, res)=>{
             req.flash('error', "Unauthorized")
             return res.redirect('/projects')
         }
-        res.render('project_dash/project', {project})
+        const headerText = "Task Manager"
+        const backBtnLink = '/projects'
+
+        res.render('project_dash/project', {project, headerText, backBtnLink})
     }catch(err){
         console.log(err)
         res.status(500).send('Internal Server Error')
@@ -188,7 +195,9 @@ router.get('/edit/:id',async (req, res)=>{
             return res.redirect('/projects')
         }
 
-        res.render('project_dash/editProject', {project, members: project.team.members})
+        const headerText = "Project Edit"
+        const backBtnLink = '/projects'
+        res.render('project_dash/editProject', {project, members: project.team.members, headerText, backBtnLink})
 
     }catch(err){
         console.log(err)
@@ -408,9 +417,12 @@ router.get('/add', async (req, res) => {
             name: `${member.firstName} ${member.lastName}`,
             email: member.email
         }))
-
+        const headerText = 'Add New Project'
+        const backBtnLink = '/projects'
         res.render('project_dash/addProjects', {
-            members
+            members,
+            headerText,
+            backBtnLink
         })
 
     } catch (err) {
@@ -747,11 +759,14 @@ router.get('/e/:projectId/tasks/edit/:taskId', async (req, res)=>{
             req.flash('error', 'Task not found.')
             return res.redirect(`/projects/v/${projectId}`)
         }
-
+        const headerText = "Edit Task"
+        const backBtnLink = '/projects'
         res.render('taskmanager/editTask', {
             project,
             task,
-            allTeammates: project.assignedTeammates
+            allTeammates: project.assignedTeammates,
+            headerText,
+            backBtnLink
         })
 
     }catch(err){

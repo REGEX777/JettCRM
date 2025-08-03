@@ -54,6 +54,14 @@ app.use((req, res, next) => {
   next();
 });
 
+
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url} | Authenticated: ${req.isAuthenticated?.()}`);
+  next();
+});
+
+
+
 const port = 9000;
 
 // CLient route imports
@@ -86,40 +94,37 @@ import onboardROute from './routes/misc/onboard.js'
 // api routes
 import emailRoute from './routes/api/email.js'
 
+// public
+app.use('/signup', signupRoute);
+app.use('/login', loginRoute);
+app.use('/invite', storeOriginalUrl, inviteRoute);
+app.use('/entry', loungeRoute);
 
-// Client Route
-app.use('/', dashRoute);
-app.use('/geninvoice', invoiceRoute);
+// login signup auth
+app.use('/logout', logOutRoute);
+app.use('/auth/signup', signupBack);
+app.use('/auth/login', loginBack);
+app.use('/oauth2/', googleOauth2);
+
+// secure routes
+app.use('/geninvoice', isLoggedIn, invoiceRoute);
 app.use('/settings', storeOriginalUrl, isLoggedIn, settingsRoute);
-app.use('/signup', signupRoute) 
-// add store original url and isloggedin middleware
-app.use('/projects', storeOriginalUrl, isLoggedIn, projectManageRoute) 
-app.use('/invite', storeOriginalUrl, inviteRoute)
-app.use('/login', loginRoute)
-app.use('/entry', loungeRoute) 
-app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute)
-app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute)
-app.use('/myteam', storeOriginalUrl, isLoggedIn, teamdashRoute)
-app.use('/mytasks', storeOriginalUrl, isLoggedIn, taskRoute)
+app.use('/projects', storeOriginalUrl, isLoggedIn, projectManageRoute);
+app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute);
+app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute);
+app.use('/myteam', storeOriginalUrl, isLoggedIn, teamdashRoute);
+app.use('/mytasks', storeOriginalUrl, isLoggedIn, taskRoute);
+app.use('/stripe', storeOriginalUrl, isLoggedIn, onboardROute);
+app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute);
 
-// Backend Route
-// app.use('/services/invoice', invoiceBack)
-app.use('/auth/signup', signupBack)
-app.use('/auth/login', loginBack)
-app.use('/logout', logOutRoute)
-app.use('/oauth2/', googleOauth2)
-
-
-// test route
-app.use('/stripe', storeOriginalUrl, isLoggedIn, onboardROute )
-
-// meetings
-app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute)
-
+// bzzzzzzzzzz static file
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// never gonna give u up
+app.use('/', storeOriginalUrl, isLoggedIn, dashRoute);
 
-// API veriofication route
+
+// api
 
 app.use('/email', emailRoute)
 

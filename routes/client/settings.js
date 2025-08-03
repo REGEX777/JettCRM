@@ -29,8 +29,9 @@ const deleteOldProfileImage = async (imagePath) => {
 
 router.get('/', async (req, res) => {
   try {
-
-    res.render('settings/settings');
+    const headerText = "Settings"
+    const backBtnLink = '/'
+    res.render('settings/settings', {headerText, backBtnLink});
   } catch (err) {
     console.error(err);
     res.status(500).send('Error loading settings.');

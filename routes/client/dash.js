@@ -2,12 +2,19 @@ import express from 'express';
 
 // middleware import
 
-import { isLoggedIn } from '../../middleware/isLoggedin.js';
 
 const router = express.Router()
 
 
-router.get('/', isLoggedIn, (req, res)=>{
+router.get('/',  (req, res)=>{
+    try{
+        const user = req.user;
+        const headerText = `Welcome, ${user.firstName}`;
+        res.render('dash', {headerText})
+    }catch(err){
+        console.log(err)
+        res.status(500).send("Internal Server Error")
+    }
     res.render('dash')
 })
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,43 +9,28 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <title>Document</title>
 </head>
+
 <body>
     <!-- Parent -->
-     <% if (success.length > 0) { %>
-     <div class="h-10 w-full bg-green-500 flex items-center justify-center">
+    <% if (success.length > 0) { %>
+    <div class="h-10 w-full bg-green-500 flex items-center justify-center">
         <p><%= success[0] %></p>
-     </div>
+    </div>
     <% } %>
 
     <% if (error.length > 0) { %>
-     <div class="h-10 w-full bg-red-500">
+    <div class="h-10 w-full bg-red-500">
         <p><%= error[0] %></p>
-     </div>
+    </div>
     <% } %>
     <div class="flex flex-row justify-start">
 
         <%- include('fragments/sidebar'); -%>
 
         <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
-            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10 mb-10">
-                <p class="font-medium">Good Afternoon, Aditya</p>
-            <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" class="flex flex-row items-center justify-center gap-2 hover:bg-border p-1 rounded-lg" type="button">
-                <i class="fa-solid fa-angle-down"></i>
-                <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920" class="h-10 w-10 bg-[#D9D9D9] rounded-lg">
-            </button>
-
-            <div id="dropdownHover" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
-                    </li>
-                </ul>
-            </div>
-            </div>
-            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+            <%- include('fragments/header'); -%>
+            <div
+                class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
                 <div class="w-full">
                     <p class="font-medium">Quick Access</p>
                 </div>
@@ -58,10 +44,12 @@
                             <div class="flex flex-col items-start justify-center gap-2 flex-none">
                                 <p class="text-[0.65rem]">Total Income</p>
                                 <p class="text-4xl">$1,225</p>
-                                <p class="text-[0.65rem]"><i class="fa-solid fa-arrow-trend-up pr-2 text-[#00B506]"></i> 12% Growth</p>
+                                <p class="text-[0.65rem]"><i class="fa-solid fa-arrow-trend-up pr-2 text-[#00B506]"></i>
+                                    12% Growth</p>
                             </div>
 
-                            <div class="flex flex-col px-3 text-xs gap-2 py-2 items-start justify-center h-full flex-grow rounded-lg bg-[#FFFFFF] border border-border">
+                            <div
+                                class="flex flex-col px-3 text-xs gap-2 py-2 items-start justify-center h-full flex-grow rounded-lg bg-[#FFFFFF] border border-border">
                                 <p>Total Invoices: 120</p>
                                 <p>Paid Invoice: 12</p>
                                 <p>Invoices this month: 120</p>
@@ -87,10 +75,11 @@
                                     <p class="text-[0.65rem]">Validation</p>
                                     <p class="text-4xl">6</p>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                         <div class="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
-                            <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-pink-400 to-fuchsia-500" style="width: 70%;"></div>
+                            <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-pink-400 to-fuchsia-500"
+                                style="width: 70%;"></div>
                         </div>
                         <div class="flex justify-between text-xs text-gray-500 mt-1">
                             <span>Progress bar</span>
@@ -98,9 +87,11 @@
                         </div>
 
                     </div>
-                    <div class="w-full min-h-48 bg-[#FAFAFA] border border-border rounded-lg py-3 px-3 flex flex-row items-center gap-3">
-                     
-                        <div class="w-[60%] bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col"> 
+                    <div
+                        class="w-full min-h-48 bg-[#FAFAFA] border border-border rounded-lg py-3 px-3 flex flex-row items-center gap-3">
+
+                        <div
+                            class="w-[60%] bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col">
                             <div class="h-10 w-full flex items-center justify-center">
                                 <div class="w-[80%] h-10 flex items-center justify-start text-xs">
                                     <p>June</p>
@@ -117,57 +108,69 @@
                                     %>
 
                                     <div class="grid grid-cols-7 w-full gap-2">
-                                    <% for(let day = 1; day <= daysInMonth; day++) { %>
+                                        <% for(let day = 1; day <= daysInMonth; day++) { %>
                                         <div class="w-full text-center rounded">
-                                        <%= day %>
+                                            <%= day %>
                                         </div>
-                                    <% } %>
+                                        <% } %>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
- 
-                        <div class="flex-grow bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col"> 
+
+                        <div
+                            class="flex-grow bg-white rounded-lg border border-border h-full flex items-center justify-start flex-col">
                             <div class="h-10 w-full flex items-center justify-center">
                                 <div class="w-[80%] h-10 flex items-center justify-start text-xs">
                                     <p>Today</p>
                                 </div>
                             </div>
-                                <hr class="w-full border-border">
+                            <hr class="w-full border-border">
                             <div class="w-full py-2 px-2">
-                                <div class="min-h-8 rounded-lg bg-border w-full flex flex-row items-center justify-start px-2">
-                                    <i class="fa-solid fa-video pr-2 text-xs"></i><p class="text-[0.55rem]">Call with mike on 12:30</p>
+                                <div
+                                    class="min-h-8 rounded-lg bg-border w-full flex flex-row items-center justify-start px-2">
+                                    <i class="fa-solid fa-video pr-2 text-xs"></i>
+                                    <p class="text-[0.55rem]">Call with mike on 12:30</p>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                </div>  
+                </div>
             </div>
-            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+            <div
+                class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
                 <div class="w-full">
                     <p class="font-medium">Upcoming Deadlines</p>
                 </div>
                 <div class="flex flex-col items-center justify-center w-full gap-3">
-                    <div class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <p>Johnsons Media Campaign <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF]"></i></p>
+                    <div
+                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                        <p>Johnsons Media Campaign <i
+                                class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF]"></i></p>
                         <div class="flex flex-row items-center justify-center gap-2">
-                            <div class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
                                 <p>High Priority Project</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
                                 <p>Due in 24 Days</p>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <p>Johnsons Media Campaign <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF]"></i></p>
+                    <div
+                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                        <p>Johnsons Media Campaign <i
+                                class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF]"></i></p>
                         <div class="flex flex-row items-center justify-center gap-2">
-                            <div class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
                                 <p>High Priority Project</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
                                 <p>Due in 24 Days</p>
                             </div>
                         </div>
@@ -177,67 +180,83 @@
                     </div>
                 </div>
             </div>
-            <div class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+            <div
+                class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
                 <div class="w-full">
                     <p class="font-medium">Pending Invoices</p>
                 </div>
                 <div class="flex flex-col items-center justify-center w-full gap-3">
-                    <div class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                    <div
+                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
                         <div class="flex flex-row items-center justify-center gap-2">
                             <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
 
-                            <div class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
                                 <p>Payment Pending</p>
                             </div>
                         </div>
                         <div class="flex flex-row items-center justify-center gap-2">
-                            <div class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
                                 <p>Billed to: test@gmail.com</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
                                 <p>$2,324</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
                                 <p>Generated on 23/02/2025</p>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                    <div
+                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
                         <div class="flex flex-row items-center justify-center gap-2">
                             <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
 
-                            <div class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
                                 <p>Payment Pending</p>
                             </div>
                         </div>
                         <div class="flex flex-row items-center justify-center gap-2">
-                            <div class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
                                 <p>Billed to: test@gmail.com</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
                                 <p>$2,324</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
                                 <p>Generated on 23/02/2025</p>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                    <div
+                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
                         <div class="flex flex-row items-center justify-center gap-2">
                             <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
 
-                            <div class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
                                 <p>Payment Pending</p>
                             </div>
                         </div>
                         <div class="flex flex-row items-center justify-center gap-2">
-                            <div class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
                                 <p>Billed to: test@gmail.com</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
                                 <p>$2,324</p>
                             </div>
-                            <div class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                            <div
+                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
                                 <p>Generated on 23/02/2025</p>
                             </div>
                         </div>
@@ -249,6 +268,7 @@
             </div>
         </div>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
+
 </html>
