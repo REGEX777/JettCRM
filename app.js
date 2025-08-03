@@ -32,11 +32,10 @@ app.use(express.urlencoded({
 }))
 
 app.use(session({
-    secret: 'supersecretkey',
+    secret: process.env.CGRADE_KEY,
     resave: false,
     saveUninitialized: false
 }))
-// app.use(storeOriginalUrl)
 
 passportConfig(passport);
 app.use(passport.initialize());
@@ -87,7 +86,7 @@ import onboardROute from './routes/misc/onboard.js'
 // Client Route
 app.use('/', dashRoute);
 app.use('/geninvoice', invoiceRoute);
-app.use('/settings', settingsRoute);
+app.use('/settings', storeOriginalUrl, isLoggedIn, settingsRoute);
 app.use('/signup', signupRoute) 
 // add store original url and isloggedin middleware
 app.use('/projects', storeOriginalUrl, isLoggedIn, projectManageRoute) 

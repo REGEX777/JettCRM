@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName:  { type: String, required: true },
   email:     { type: String, required: true },
+  oldEmail:  { type: String },
   password:  {
     type: String,
     required: function () {
@@ -27,7 +28,11 @@ const userSchema = new mongoose.Schema({
   stripeAccountId: String,
   googleAccessToken: String,
   googleRefreshToken: String,
-  googleTokenExpiryDate: Date
+  googleTokenExpiryDate: Date,
+  profilePicture: {
+    type: String,
+    default: '/default/default.jpg'
+  },
 });
 
 const User = mongoose.model('User', userSchema);
