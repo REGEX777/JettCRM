@@ -77,7 +77,7 @@ import teamRoute from './routes/client/team.js'
 import clientRoute from './routes/client/clientele.js'
 import teamdashRoute from './routes/client/teamDash.js'
 import taskRoute from './routes/client/tasks.js'
-
+import estimateRoute from './routes/client/estimate.js'
 
 // Backend Routes (API) Imports
 // import invoiceBack from './routes/backend/invoiceBack.js'
@@ -115,7 +115,8 @@ app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute);
 app.use('/myteam', storeOriginalUrl, isLoggedIn, teamdashRoute);
 app.use('/mytasks', storeOriginalUrl, isLoggedIn, taskRoute);
 app.use('/stripe', storeOriginalUrl, isLoggedIn, onboardROute);
-app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute);
+// app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute);
+app.use('/tools/estimate', storeOriginalUrl, isLoggedIn, estimateRoute);
 
 // bzzzzzzzzzz static file
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

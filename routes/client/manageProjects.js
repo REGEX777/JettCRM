@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 
         if (!team) {
             req.flash('error', 'Team not found');
-            return res.redirect('/dashboard');
+            return res.redirect('/');
         }
 
         let filteredProjects = [...team.projects];
