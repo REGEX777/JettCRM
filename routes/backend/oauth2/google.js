@@ -7,7 +7,13 @@ const router = express.Router();
 
 
 
-router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+router.get('/google', (req, res, next) => {
+  const { token, role } = req.query;
+  if (token && role) {
+    req.session.oauthInvite = { token, role };
+  }
+  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+});
 
 router.get('/google/callback',
   passport.authenticate('google', {
