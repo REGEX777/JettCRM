@@ -118,7 +118,7 @@ router.post('/personal', uploadProfilePic.single('profileImage'), async (req, re
 
 
 // email change roiute
-router.post('/email/update',async (req, res)=>{
+router.post('/email/update', async (req, res)=>{
   const user = req.user;
   const newEmail = req.body.newEmail;
 
@@ -161,5 +161,37 @@ router.post('/email/update',async (req, res)=>{
   }
 })
 
+
+router.post('/business/update', async (req, res)=>{
+  try{
+    const user = await User.findOne({_id: req.user._id});
+
+    if(!user){
+      req.flash('error', 'Invalid Session')
+      return res.redirect('/settings')
+    }
+
+
+    if (req.body.businessName && req.body.businessName.trim() !== '') {
+      user.businessName = req.body.businessName;
+    }
+
+    if (req.body.businessAddress && req.body.businessAddress.trim() !== '') {
+      user.businessAddress = req.body.businessAddress;
+    }
+
+    if (req.body.businessEmail && req.body.businessEmail.trim() !== '') {
+      user.businessEmail = req.body.businessEmail;
+    }
+
+    await user.save();
+
+    req.flash('success', "Business information updartes successfully!")
+    res.redirect('/settings')
+  }catch(err){
+    console.log(err)
+    res.status(500).send('Internal Server Error')
+  }
+})
 
 export default router;

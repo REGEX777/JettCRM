@@ -36,7 +36,13 @@ const userSchema = new mongoose.Schema({
   lastEmailChange: {
     type: Date,
     default: null,
-  }
+  },
+
+
+  // user business stuff
+  businessName: String,
+  businessAddress: String,
+  businessEmail: String
 });
 
 const User = mongoose.model('User', userSchema);

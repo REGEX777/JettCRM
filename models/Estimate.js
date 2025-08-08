@@ -13,14 +13,17 @@ const estimateSchema = new mongoose.Schema({
     notes: String,
     user: {type:mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
 
-    status: {type: String, enum: ['Draft', 'Sent']},
+    status: {type: String, enum: ['Draft', 'Sent'], default: 'Draft'},
 
     originalTotal: Number,
     totalAfterDiscount: Number,
 
     // if being sent to a client
 
-    client: {type:mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
+    client: {type:mongoose.Schema.Types.ObjectId, ref: 'User'},
+    clientEmail: {type: String, required: true},
+    clientAddress: String,
+    clientName: String
 
 }, {timestamps: true})
 

@@ -30,102 +30,119 @@
                 <%- include('../fragments/header'); -%>
                 <main class="p-8 w-full">
 
+                        <!-- pdf btn -->
+                        <div class="flex justify-between items-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-800">Estimate #<%= estimate._id.toString().slice(-6).toUpperCase() %></h1>
+                            <div class="flex gap-4">
+                                <a href="/tools/estimate/<%= estimate._id %>/pdf" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                                    <i class="fas fa-print mr-2"></i>Download PDF
+                                </a>
+                                <button class="px-4 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition">
+                                    <i class="fas fa-paper-plane mr-2"></i>Send to Client
+                                </button>
+                            </div>
+                        </div>
 
-                    <div class="flex justify-between items-center mb-8">
-                        <h1 class="text-3xl font-bold text-gray-800">Estimate #<%= estimate._id %></h1>
-                        <div class="flex gap-4">
-                            <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                                <i class="fas fa-print mr-2"></i>Print
+                        <!-- estimate stuff -->
+                        <div id="estimateContent" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h2 class="text-xl font-semibold text-gray-800"><%= user.businessName %></h2>
+                                        <p class="text-gray-500"><%= user.businessAddress %></p>
+                                        <p class="text-gray-500"><%= user.businessEmail %></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-gray-500">Estimate #<%= estimate._id.toString().slice(-6).toUpperCase() %></p>
+                                        <p class="text-gray-500">Date: <%= new Date(estimate.createdAt).toLocaleDateString() %></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- client -->
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-800 mb-2">Client Information</h3>
+                                <% if(estimate.client){ %> 
+                                    <p class="text-gray-700"><%= estimate.client.firstName + " " + estimate.client.lastName %></p>
+                                    <p class="text-gray-500"><%= estimate.client.email %></p>
+                                    <p class="text-gray-500"><%= estimate.client.address || '-' %></p>
+                                <% } else if (estimate.clientName || estimate.clientEmail || estimate.clientAddress) { %>
+                                    <p class="text-gray-700"><%= estimate.clientName || '-' %></p>
+                                    <p class="text-gray-500"><%= estimate.clientEmail || '-' %></p>
+                                    <p class="text-gray-500"><%= estimate.clientAddress || '-' %></p>
+
+                                <% } else { %>
+                                    <p class="text-gray-700">-</p>
+                                    <p class="text-gray-500">-</p>
+                                    <p class="text-gray-500">-</p>
+                                <% } %>
+                                
+                                <p class="text-gray-500">123 Client Address</p>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <% estimate.items.forEach(item => { %>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= item.name %></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">$<%= item.price.toFixed(2) %></td>
+                                        </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            
+
+                            
+                            <div class="p-6 bg-gray-50">
+                                <div class="flex justify-end">
+                                    <div class="w-64">
+                                        <div class="flex justify-between py-2">
+                                            <span class="text-gray-600">Subtotal;:</span>
+                                            <span class="font-medium">$<%= (estimate.items.reduce((sum, item) => sum + item.price, 0)).toFixed(2) %></span>
+                                        </div>
+                                        <% if (estimate.discount > 0) { %>
+                                        <div class="flex justify-between py-2">
+                                            <span class="text-gray-600">Discount (<%= estimate.discountType === 'flat' ? '$' + estimate.discount : estimate.discount + '%' %>):</span>
+                                            <span class="font-medium text-red-600">- $<%= (estimate.discountType === 'flat' ? estimate.discount : (estimate.items.reduce((sum, item) => sum + item.price, 0) * estimate.discount / 100)).toFixed(2) %></span>
+                                        </div>
+                                        <% } %>
+                                        <div class="flex justify-between py-2">
+                                            <span class="text-gray-600">Tax (<%= estimate.tax %>%):</span>
+                                            <span class="font-medium">$<%= ((estimate.items.reduce((sum, item) => sum + item.price, 0) - (estimate.discountType === 'flat' ? estimate.discount : (estimate.items.reduce((sum, item) => sum + item.price, 0) * estimate.discount / 100))) * estimate.tax / 100).toFixed(2) %></span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-t border-gray-200 mt-2">
+                                            <span class="text-gray-800 font-semibold">Total:</span>
+                                            <span class="text-gray-800 font-bold">$<%= ((estimate.items.reduce((sum, item) => sum + item.price, 0) - (estimate.discountType === 'flat' ? estimate.discount : (estimate.items.reduce((sum, item) => sum + item.price, 0) * estimate.discount / 100))) * (1 + estimate.tax / 100)).toFixed(2) %></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <% if (estimate.notes) { %>
+                            <div class="p-6 border-t border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-800 mb-2">Notes</h3>
+                                <p class="text-gray-700"><%= estimate.notes %></p>
+                            </div>
+                            <% } %>
+                        </div>
+
+                        <div class="flex justify-end gap-4">
+                            <button class="px-4 py-2 bg-gray-200 rounded-lg text-gray-700 hover:bg-gray-300 transition">
+                                <i class="fas fa-edit mr-2"></i>Edit Estimate
                             </button>
                             <button class="px-4 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition">
-                                <i class="fas fa-paper-plane mr-2"></i>Send to Client
+                                <i class="fas fa-check mr-2"></i>Convert to Invoice
                             </button>
                         </div>
-                    </div>
-
-                    <!-- estimate stuff -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-                        <div class="p-6 border-b border-gray-200">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h2 class="text-xl font-semibold text-gray-800">Your Business Name</h2>
-                                    <p class="text-gray-500">123 Business Street<br>City, State 10001</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-gray-500">Estimate #<%= estimate._id %></p>
-                                    <p class="text-gray-500">Date: <%= new Date(estimate.createdAt).toLocaleDateString() %></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- client -->
-                        <div class="p-6 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-800 mb-2">Client Information</h3>
-                            <p class="text-gray-700">Client Name</p>
-                            <p class="text-gray-500">client@example.com</p>
-                            <p class="text-gray-500">123 Client Address</p>
-                        </div>
-
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <% estimate.items.forEach(item => { %>
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= item.name %></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">$<%= item.price.toFixed(2) %></td>
-                                    </tr>
-                                    <% }); %>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="p-6 bg-gray-50">
-                            <div class="flex justify-end">
-                                <div class="w-64">
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-gray-600">Subtotal;:</span>
-                                        <span class="font-medium">$<%= (estimate.items.reduce((sum, item) => sum + item.price, 0)).toFixed(2) %></span>
-                                    </div>
-                                    <% if (estimate.discount > 0) { %>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-gray-600">Discount (<%= estimate.discountType === 'flat' ? '$' + estimate.discount : estimate.discount + '%' %>):</span>
-                                        <span class="font-medium text-red-600">- $<%= (estimate.discountType === 'flat' ? estimate.discount : (estimate.items.reduce((sum, item) => sum + item.price, 0) * estimate.discount / 100)).toFixed(2) %></span>
-                                    </div>
-                                    <% } %>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-gray-600">Tax (<%= estimate.tax %>%):</span>
-                                        <span class="font-medium">$<%= ((estimate.items.reduce((sum, item) => sum + item.price, 0) - (estimate.discountType === 'flat' ? estimate.discount : (estimate.items.reduce((sum, item) => sum + item.price, 0) * estimate.discount / 100))) * estimate.tax / 100).toFixed(2) %></span>
-                                    </div>
-                                    <div class="flex justify-between py-2 border-t border-gray-200 mt-2">
-                                        <span class="text-gray-800 font-semibold">Total:</span>
-                                        <span class="text-gray-800 font-bold">$<%= ((estimate.items.reduce((sum, item) => sum + item.price, 0) - (estimate.discountType === 'flat' ? estimate.discount : (estimate.items.reduce((sum, item) => sum + item.price, 0) * estimate.discount / 100))) * (1 + estimate.tax / 100)).toFixed(2) %></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <% if (estimate.notes) { %>
-                        <div class="p-6 border-t border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-800 mb-2">Notes</h3>
-                            <p class="text-gray-700"><%= estimate.notes %></p>
-                        </div>
-                        <% } %>
-                    </div>
-
-                    <div class="flex justify-end gap-4">
-                        <button class="px-4 py-2 bg-gray-200 rounded-lg text-gray-700 hover:bg-gray-300 transition">
-                            <i class="fas fa-edit mr-2"></i>Edit Estimate
-                        </button>
-                        <button class="px-4 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition">
-                            <i class="fas fa-check mr-2"></i>Convert to Invoice
-                        </button>
-                    </div>
                 </main>
             </div>
         </div>
@@ -133,4 +150,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
+
 </html>
