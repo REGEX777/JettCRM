@@ -35,17 +35,113 @@ router.get('/v/:id', async (req, res)=>{
 })
 
 
-router.get('/', async (req, res)=>{
-    try{
-        const estimates = await Estimate.find({user: req.user._id});
-        const headerText = "EEEOOOO"
-        res.render("estimate/estimates", {estimates, headerText})
+router.get('/edit/:id', async (req, res)=>{
+    try {
+        const id = req.params.id;
+        
+        const estimate = await Estimate.findOne({_id: id}).populate('user');
 
+        if(!estimate){
+            req.flash('error', 'Not Found')
+            return res.redirect('/tools/estimate')
+        }
+
+
+        if(!estimate.user._id.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')
+            res.redirect('/tools/estimate')
+        }
+
+        const headerText = "eee"
+        const backBtnLink = "/tools/estimate"
+        res.render('estimate/editEstimate', {estimate, headerText, backBtnLink})
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Internal Server Error')
+    }
+})
+
+
+router.post('/edit/:id', async (req, res)=>{
+    const {items, tax, discount, discountType, notes, clientEmail, clientName, clientAddress} = req.body;
+
+    try{
+        if(!items || !Array.isArray(items) || items.length === 0 || !clientEmail){
+            req.flash('error', 'Insufficient data provided');
+            return res.redirect(`/tools/estimate/edit/${req.params.id}`);
+        }
+
+        const parsedItems = items.map(item => ({
+            name: item.name,
+            price: Number(item.price) || 0
+        }));
+
+        const originalTotal = parsedItems.reduce((acc, item) => acc + item.price, 0);
+
+        let discountValue = 0;
+        if (discountType === 'flat') {
+            discountValue = Number(discount) || 0;
+        } else if (discountType === 'percent') {
+            discountValue = (originalTotal * (Number(discount) || 0)) / 100;
+        }
+        const totalAfterDiscount = originalTotal - discountValue;
+
+        const existingClient = await User.findOne({ email: clientEmail });
+
+        await Estimate.findByIdAndUpdate(req.params.id, {
+            items: parsedItems,
+            tax: Number(tax) || 0,
+            discount: Number(discount) || 0,
+            discountType,
+            notes,
+            originalTotal,
+            totalAfterDiscount,
+            client: existingClient ? existingClient._id : undefined,
+            clientEmail,
+            clientAddress,
+            clientName
+        });
+
+        req.flash('success', 'Estimate updated successfully!');
+        res.redirect(`/tools/estimate/edit/${req.params.id}`);
     }catch(err){
         console.log(err)
         res.status(500).send('Internal Server Error')
     }
 })
+
+
+router.get('/', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1; // Current page
+        const limit = 5; // Items per page
+        const skip = (page - 1) * limit;
+
+        // Get total number of estimates for this user
+        const totalCount = await Estimate.countDocuments({ user: req.user._id });
+
+        // Get paginated estimates
+        const estimates = await Estimate.find({ user: req.user._id })
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 }); // newest first
+
+        const headerText = "EEEOOOO";
+
+        res.render("estimate/estimates", {
+            estimates,
+            headerText,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / limit),
+            totalCount,
+            extraQuery: "" // You can pass filters here like `status=Draft`
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 router.get('/create', (req, res)=>{
@@ -126,6 +222,129 @@ router.post('/create',async (req, res)=>{
         res.status(500).send('Internal Server Error')
     }
 })
+
+
+// api for searchinggg
+
+function escapeRegex(text = '') {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+
+router.get('/api', async (req, res) => {
+  try {
+    const { search = '', status, dateRange, dateFrom, dateTo } = req.query;
+
+    
+    const query = {};
+
+    if (status && status !== 'All') query.status = new RegExp(`^${escapeRegex(status)}$`, 'i');
+
+
+
+    if (dateRange && dateRange !== 'all') {
+      const now = new Date();
+      if (dateRange === 'today') {
+        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        const end = new Date(start); end.setDate(end.getDate() + 1);
+        query.createdAt = { $gte: start, $lt: end };
+      } else if (dateRange === 'week') {
+        const start = new Date(); start.setDate(now.getDate() - 7);
+
+        query.createdAt = { $gte: start };
+      } else if (dateRange === 'month') {
+        const start = new Date(now.getFullYear(), now.getMonth(), 1);
+        
+        query.createdAt = { $gte: start };
+      } else if (dateRange === 'custom' && (dateFrom || dateTo)) {
+        query.createdAt = {};
+        
+        if (dateFrom) query.createdAt.$gte = new Date(dateFrom);
+        if (dateTo) query.createdAt.$lte = new Date(dateTo);
+      }
+    }
+
+    // find estimates lesgoo
+    let estimates = await Estimate.find({...query, user: req.user._id}) // fart phusshhhh
+      .populate('client')
+      .sort({ createdAt: -1 })
+      .limit(200)
+      .lean();
+
+    // ai helped me write the regex code 🙏 ts is way too hard im sorry
+    if (search && search.trim() !== '') {
+      const q = search.trim().replace(/\s+/g, ' ');
+      const regex = new RegExp(escapeRegex(q), 'i');
+
+      estimates = estimates.filter(e => {
+        if (regex.test(String(e._id || ''))) return true;
+
+        if (Array.isArray(e.items) && e.items.some(it => it.name && regex.test(String(it.name)))) return true;
+
+        if (e.client && typeof e.client === 'object') {
+          const first = (e.client.firstName || '').trim();
+
+          const last = (e.client.lastName || '').trim();
+          const fullName = [first, last].filter(Boolean).join(' ').replace(/\s+/g, ' ');
+          if (fullName && regex.test(fullName)){
+             return true;
+          }
+          if (first && regex.test(first)){ 
+            return true;
+          }
+          if (last && regex.test(last)) {
+            return true;
+          }
+          if (e.client.email && regex.test(String(e.client.email))){
+            return true;
+          }
+        } else {
+          if (e.clientName && regex.test(String(e.clientName))){
+            return true;
+          }
+          if (e.clientEmail && regex.test(String(e.clientEmail))){
+            return true;
+          }
+        }
+
+        return false;
+      });
+    }
+
+    
+
+    // final
+    const results = estimates.map(e => {
+      const subtotal = (e.items || []).reduce((s, it) => s + (Number(it.price) || 0), 0);
+
+
+      const discountAmount = e.discountType === 'flat' ? (Number(e.discount) || 0) : (subtotal * (Number(e.discount) || 0) / 100);
+
+      const total = (subtotal - discountAmount) * (1 + (Number(e.tax) || 0) / 100);
+
+      return {
+        id: e._id,
+        clientName: e.client
+        ? ([e.client.firstName, e.client.lastName]
+            .filter(Boolean) 
+            .map(name => name.trim())
+            .join(' ') || e.clientName || '-')
+        : (e.clientName || '-'),
+        clientEmail: e.client ? (e.client.email || e.clientEmail) : (e.clientEmail || '-'),
+        createdAt: e.createdAt,
+
+        status: e.status || 'Draft',
+        total: Number(total || 0)
+      };
+    });
+
+    res.json(results);
+  } catch (err) {
+    console.error('Estimate API error', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 // pdf routee
