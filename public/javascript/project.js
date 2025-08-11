@@ -85,7 +85,7 @@ async function addMember(memberId) {
 }
 
 async function removeMember(memberId) {
-    const res = await fetch(`/projects/<%= project._id %>/members/remove`, {
+    const res = await fetch(`/projects/${window.projectId}/members/remove`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
