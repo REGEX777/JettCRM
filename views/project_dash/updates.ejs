@@ -6,19 +6,11 @@
   <title>Create Project Update</title>
   <link rel="stylesheet" href="/css/output.css">
   <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
 </head>
 <body class="bg-gray-50">
-    <% if (success.length > 0) { %>
-     <div class="h-10 w-full bg-green-500 flex items-center justify-center">
-        <p><%= success[0] %></p>
-     </div>
-    <% } %>
+  <%- include('../fragments/alerts'); -%>
 
-    <% if (error.length > 0) { %>
-     <div class="h-10 w-full bg-red-500">
-        <p><%= error[0] %></p>
-     </div>
-    <% } %>
   <div class="max-w-2xl mx-auto p-6">
     <div class="flex justify-between items-center mb-6">
       <a href="/projects/v/updates/<%= project._id %>" class="text-blue-600 text-sm font-medium flex items-center">
@@ -156,5 +148,6 @@
       }
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
 </html>

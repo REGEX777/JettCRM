@@ -11,17 +11,8 @@
 </head>
 
 <body class="bg-gray-50">
-  <% if (success.length > 0) { %>
-  <div class="w-full bg-green-500 text-white py-2 px-4 text-center">
-    <p><%= success[0] %></p>
-  </div>
-  <% } %>
+  <%- include('../fragments/alerts'); -%>
 
-  <% if (error.length > 0) { %>
-  <div class="w-full bg-red-500 text-white py-2 px-4 text-center">
-    <p><%= error[0] %></p>
-  </div>
-  <% } %>
   <div class="max-w-4xl mx-auto py-10 px-6">
     <div class="flex justify-between items-center mb-6">
       <a href="/projects/v/<%= project._id %>" class="text-blue-600 text-sm font-medium flex items-center">

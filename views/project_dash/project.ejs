@@ -1,285 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/output.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="/css/output.css" />
     <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-    <title><%= project.name %> | Project Details</title>
+    <title><%= project.name %> | Project View</title>
 </head>
-<body class="bg-gray-50 font-sans">
-    <% if (success.length > 0) { %>
-    <div class="w-full bg-green-500 text-white py-2 px-4 text-center">
-        <p><%= success[0] %></p>
-    </div>
-    <% } %>
 
-    <% if (error.length > 0) { %>
-    <div class="w-full bg-red-500 text-white py-2 px-4 text-center">
-        <p><%= error[0] %></p>
-    </div>
-    <% } %>
+<body class="bg-gray-50 font-poppins text-gray-800">
+    <%- include('../fragments/alerts'); -%>
 
-    <%- include('../fragments/sidebar'); -%>
+    <div class="flex min-h-screen">
+        <%- include('../fragments/sidebar'); -%>
 
-    
-    <div class="ml-96 flex-1 p-8">
-        <%- include('../fragments/header'); -%>
+        <div class="flex flex-col w-full ml-[24rem]">
+            <%- include('../fragments/header'); -%>
 
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex flex-row items-center justify-center gap-3">
-                <h1 class="text-3xl font-bold text-gray-800"><%= project.name %></h1>
-                <% if(!project.client){%>
-                    <div class="py-1 px-3 rounded-full text-white text-sm bg-red-500 flex items-center justify-center">
-                        <p>Pending Invite</p>
+            <main class="p-8 w-full space-y-6">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="min-w-0">
+                        <h1 class="text-3xl font-semibold tracking-tight text-slate-900 truncate"><%= project.name %>
+                        </h1>
+                        <p class="mt-1 text-sm text-slate-500">Project details, teammates and tasks</p>
                     </div>
-                <% } %>
-            </div>
 
-            <div class="flex items-center space-x-4">
-                <span class="px-3 py-1 rounded-full text-sm font-medium 
-                    <%= project.status === 'active' ? 'bg-blue-100 text-blue-800' : '' %>
-                    <%= project.status === 'completed' ? 'bg-green-100 text-green-800' : '' %>
-                    <%= project.status === 'on-hold' ? 'bg-yellow-100 text-yellow-800' : '' %>">
-                    <%= project.status.charAt(0).toUpperCase() + project.status.slice(1) %>
-                </span>
-            </div>
-        </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="px-3 py-1 rounded-full text-sm font-semibold <%= project.status === 'active' ? 'bg-blue-50 text-blue-700' : project.status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-yellow-50 text-amber-700' %>">
+                            <%= project.status.charAt(0).toUpperCase() + project.status.slice(1) %>
+                        </span>
 
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 space-y-6">
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-800 mb-3">Project Description</h2>
-                        <p class="text-gray-600 whitespace-pre-line"><%= project.description || 'No description provided' %></p>
-                    </div>
-                    
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-800 mb-3">Assigned Teammates</h2>
-                        <% if (project.assignedTeammates && project.assignedTeammates.length > 0) { %>
 
-                            <div class="flex flex-wrap gap-3">
-                            <% project.assignedTeammates.forEach((teammate, index) => { %>
-                                <button onclick="copytoClipboard(`<%= teammate.email %>`)" data-tooltip-target="tooltip-teammate-<%= index %>" class="flex items-center gap-2 bg-gray-50 rounded-full py-1 px-3">
-                                    <img class="w-6 h-6 rounded-full" 
-                                        src="<%= 'https://ui-avatars.com/api/?name=' + teammate.firstName + '&background=random' %>" 
-                                        alt="<%= teammate.firstName %>">
-                                    <span class="text-sm text-gray-700"><%= teammate.firstName %> <%= teammate.lastName %></span>
-                                </button>
-                                <div id="tooltip-teammate-<%= index %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
-                                        <%= teammate.email %> (Click To Copy Email)
-                                    <div class="tooltip-arrow" data-popper-arrow></div>
-                                </div>
-                            <% }); %>
-
-                            </div>
-
-                        <% } else { %>
-                            <p class="text-gray-400">No teammates assigned yet</p>
-                        <% } %>
-                    </div>
-                    <% if(!project.client) { %>
-                    <div class="flex items-start justify-center flex-col gap-3">
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <h2 class="text-xl font-semibold text-gray-800">Client</h2>
-                            <div class="py-1 text-xs px-1 text-[#ffffff] rounded-full bg-[#fda500] flex items-center justify-center gap-1">
-                                <p><i class="fa-solid fa-circle-exclamation"></i></p>
-                                <p class="pr-1">Pending Invite</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-wrap gap-3">
-                            <button onclick="copytoClipboard(`<%= project.clientEmail %>`)" data-tooltip-target="tooltip-default-1" class="flex items-center gap-2 bg-gray-50 rounded-full py-1 px-3">
-                                <img class="w-6 h-6 rounded-full" 
-                                    src="<%= 'https://ui-avatars.com/api/?name=' + project.clientEmail + '&background=random' %>" 
-                                    alt="<%= project.clientEmail %>">
-                                <span class="text-sm text-gray-700"><%= project.clientEmail %></span>
-                            </button>
-                            <div id="tooltip-default-1" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
-                                    <%= project.clientEmail %> (Click To Copy Email)
-                                <div class="tooltip-arrow" data-popper-arrow></div>
-                            </div>
+                        <div class="hidden sm:flex items-center gap-2">
+                            <a href="/projects/v/expenses/<%= project._id %>"
+                                class="px-3 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Expense
+                                Tracker</a>
+                            <a href="/projects/v/updates/<%= project._id %>"
+                                class="px-3 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Updates</a>
                         </div>
                     </div>
-                    <% } %>
-                    <% if (project.client) { %>
-                        <div class="flex items-start justify-center flex-col gap-3">
-                            <div class="flex flex-row items-center justify-center gap-2">
-                                <h2 class="text-xl font-semibold text-gray-800">Client</h2>
-                            </div>
-                            <div class="flex flex-wrap gap-3">
-                                <button onclick="copytoClipboard(`<%= project.clientEmail %>`)" data-tooltip-target="tooltip-default" class="flex items-center gap-2 bg-gray-50 rounded-full py-1 px-3">
-                                    <img class="w-6 h-6 rounded-full" 
-                                        src="<%= 'https://ui-avatars.com/api/?name=' + project.client.firstName + '&background=random' %>" 
-                                        alt="<%= project.client.firstName %>">
-                                    <span class="text-sm text-gray-700"><%= project.client.firstName %> <%= project.client.lastName %></span>
-                                </button>
-                                <a href="<%= user.googleAccessToken && user.googleRefreshToken && user.googleTokenExpiryDate 
-                                    ? `/calendar/new-meeting?id=${project.client._id}&pid=${project._id}` 
-                                    : `/calendar/auth?id=${project.client._id}?pid=id=${project._id}` %>" 
-                                    class="inline-flex items-center px-4 py-1 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white <%= user.googleAccessToken && user.googleRefreshToken && user.googleTokenExpiryDate ? 'bg-blue-600 hover:bg-blue-700' : 'bg-red-600 hover:bg-red-700' %> focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                    </svg>
-
-                                    <%= user.googleAccessToken && user.googleRefreshToken && user.googleTokenExpiryDate 
-                                        ? 'Schedule Meeting' 
-                                        : 'Connect Google Calendar' %>
-                                </a>
-                                <div id="tooltip-default" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
-                                    <%= project.client.email %> (Click To Copy Email)
-                                    <div class="tooltip-arrow" data-popper-arrow></div>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>
-                
                 </div>
 
-                <!-- Right columnn -->
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500">Team</h3>
-                        <p class="text-gray-800"><%= project.team.name %></p>
-                    </div>
-                    
-                    <% if (project.deadlineDate) { %>
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500">Deadline</h3>
-                        <p class="text-gray-800"><%= new Date(project.deadlineDate).toLocaleDateString() %></p>
-                        <%
-                            var daysLeft = Math.ceil((new Date(project.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24));
-                        %>
-                        <p class="text-sm <%= daysLeft <= 7 ? 'text-red-500' : 'text-gray-500' %>">
-                            <%= daysLeft > 0 ? `${daysLeft} days remaining` : 'Deadline passed' %>
-                        </p>
-                    </div>
-                    <% } %>
-                    
-                    <% if (project.budget) { %>
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500">Budget</h3>
-                        <p class="text-gray-800">$<%= project.budget.toLocaleString() %></p>
-                    </div>
-                    <% } %>
-                    
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-500">Created</h3>
-                        <p class="text-gray-800"><%= new Date(project.createdAt).toLocaleDateString() %></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <!-- Main stufd -->
+                <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 space-y-6">
+                            <section class="space-y-3">
+                                <h2 class="text-lg font-semibold text-slate-800">Description</h2>
+                                <p class="text-sm text-slate-600 whitespace-pre-line">
+                                    <%= project.description || 'No description provided.' %></p>
+                            </section>
 
-        <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-800">Tasks</h2>
-            <div class="flex flex-row items-center justify-center gap-2">
-                <a href="/projects/v/expenses/<%= project._id %>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                    <i class="fa-solid fa-dollar-sign mr-2"></i>Expense Tracker
-                </a>
-                <a href="/projects/v/updates/<%= project._id %>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                    <i class="fas fa-plus mr-2"></i>Updates
-                </a>
-                <a href="/projects/taskmanager/<%= project._id %>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                    <i class="fas fa-plus mr-2"></i>Add Task
-                </a>
-            </div>  
+                            <section class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <h2 class="text-lg font-semibold text-slate-800">Assigned Teammates</h2>
+                                    <button onclick="openAssignModal()"
+                                        class="text-sm text-indigo-600 hover:underline">Manage</button>
+                                </div>
 
-        </div>
+                                <% if (project.assignedTeammates && project.assignedTeammates.length > 0) { %>
+                                <div class="flex flex-wrap gap-3">
+                                    <% project.assignedTeammates.forEach((tm, idx) => { %>
+                                    <button onclick="copyToClipboard('<%= tm.email %>')"
+                                        class="group relative flex items-center gap-3 bg-slate-50 px-1 py-1 rounded-full hover:bg-slate-100">
+                                        <img src="<%= 'https://ui-avatars.com/api/?name=' + encodeURIComponent(tm.firstName + ' ' + tm.lastName) + '&background=ddd' %>"
+                                            alt="<%= tm.firstName %>" class="w-8 h-8 rounded-full" />
+                                        <span class="text-sm text-slate-700"><%= tm.firstName %>
+                                            <%= tm.lastName %></span>
+                                        <span class="sr-only">Copy email</span>
+                                    </button>
+                                    <% }); %>
+                                </div>
+                                <% } else { %>
+                                <div class="text-sm text-slate-500">No teammates assigned yet.</div>
+                                <% } %>
+                            </section>
 
-        <% if (project.tasks && project.tasks.length > 0) { %>
-            <div class="grid grid-cols-1 gap-4">
-                <% project.tasks.forEach(task => { %>
-                <div class="task-card bg-white rounded-lg border border-gray-200 p-4 transition duration-200">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-medium text-gray-800"><%= task.taskname %></h3>
-                            <% if (task.taskdescription) { %>
-                            <p class="text-sm text-gray-600 mt-1"><%= task.taskdescription %></p>
+                            <% if (!project.client) { %>
+                            <section class="space-y-3">
+                                <h2 class="text-lg font-semibold text-slate-800">Client</h2>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="inline-flex items-center gap-2 bg-amber-500 text-white px-2 py-1 rounded-full text-xs">
+                                        Pending Invite</div>
+                                    <div class="text-sm text-slate-700"><%= project.clientEmail || 'No client email' %>
+                                    </div>
+                                </div>
+                            </section>
+                            <% } else { %>
+                            <section class="space-y-3">
+                                <h2 class="text-lg font-semibold text-slate-800">Client</h2>
+                                <div class="flex items-center gap-3">
+                                    <img src="<%= 'https://ui-avatars.com/api/?name=' + encodeURIComponent(project.client.firstName + ' ' + project.client.lastName) + '&background=eee' %>"
+                                        alt="client" class="w-10 h-10 rounded-full" />
+                                    <div>
+                                        <div class="text-sm font-medium text-slate-800"><%= project.client.firstName %>
+                                            <%= project.client.lastName %></div>
+                                        <div class="text-sm text-slate-500"><button
+                                                onclick="copyToClipboard('<%= project.client.email %>')"
+                                                class="hover:underline"><%= project.client.email %></button></div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 flex items-center gap-3">
+                                    <% if (user.googleAccessToken && user.googleRefreshToken && user.googleTokenExpiryDate) { %>
+                                    <a href="/calendar/new-meeting?id=<%= project.client._id %>&pid=<%= project._id %>"
+                                        class="px-3 py-2 bg-white rounded-lg border border-slate-100 text-sm shadow-sm hover:bg-slate-50 gap-3 flex flex-row items-center justify-center">
+                                        <i class="fa-solid fa-video"></i>
+                                        Schedule Meeting
+                                    </a>
+                                    <% } else { %>
+                                    <a href="/calendar/auth?id=<%= project.client._id %>&pid=<%= project._id %>"
+                                        class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-rose-600 text-white text-sm shadow-sm">Connect
+                                        Google Calendar</a>
+                                    <% } %>
+
+                                </div>
+                            </section>
                             <% } %>
+
                         </div>
-                        <% if (task.deadlineDate) { %>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-500">Due: <%= new Date(task.deadlineDate).toLocaleDateString() %></p>
-                            <%
-                                var taskDaysLeft = Math.ceil((new Date(task.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24));
-                            %>
-                            <div class="flex flex-row items-center justify-center gap-2">
-                                <span class="text-xs px-2 py-1 rounded-full 
-                                    <%= task.status === 'working' ? 'bg-blue-100 text-blue-800' : '' %>
-                                    <%= task.status === 'pending approval' ? 'bg-purple-100 text-grey-800' : '' %>
-                                    <%= task.status === 'completed' ? 'bg-green-100 text-green-800' : '' %>">
-                                    <%= task.status.charAt(0).toUpperCase() + task.status.slice(1) %>
-                                </span>                          
-                                <span class="text-xs px-2 py-1 rounded-full 
-                                    <%= taskDaysLeft <= 3 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' %>">
-                                    <%= taskDaysLeft > 0 ? `${taskDaysLeft} days left` : 'Overdue' %>
-                                </span>
+
+                        <aside class="space-y-4">
+                            <div class="bg-slate-50 p-4 rounded-lg">
+                                <h3 class="text-sm font-medium text-slate-500">Team</h3>
+                                <div class="text-sm font-medium text-slate-800"><%= project.team?.name %></div>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-lg">
+                                <h3 class="text-sm font-medium text-slate-500">Deadline</h3>
+                                <% if (project.deadlineDate) { %>
+                                <div class="text-sm text-slate-800">
+                                    <%= new Date(project.deadlineDate).toLocaleDateString() %></div>
+                                <% var daysLeft = Math.ceil((new Date(project.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24)); %>
+                                <div class="text-xs <%= daysLeft <= 7 ? 'text-rose-600' : 'text-slate-500' %>">
+                                    <%= daysLeft > 0 ? `${daysLeft} days remaining` : 'Deadline passed' %></div>
+                                <% } else { %>
+                                <div class="text-sm text-slate-500">N/A</div>
+                                <% } %>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-lg">
+                                <h3 class="text-sm font-medium text-slate-500">Budget</h3>
+                                <div class="text-sm text-slate-800">
+                                    <%= project.budget ? ('$' + project.budget.toLocaleString()) : '—' %></div>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-lg">
+                                <h3 class="text-sm font-medium text-slate-500">Created</h3>
+                                <div class="text-sm text-slate-800">
+                                    <%= new Date(project.createdAt).toLocaleDateString() %></div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-semibold text-slate-900">Tasks</h2>
+                    <div class="flex items-center gap-2">
+                        <a href="/projects/taskmanager/<%= project._id %>"
+                            class="px-3 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                            <i class="fas fa-plus"></i>
+                            Add Task
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <% if (project.tasks && project.tasks.length > 0) { %>
+                <div class="grid grid-cols-1 gap-4">
+                    <% project.tasks.forEach(task => { %>
+                    <% var taskDaysLeft = task.deadlineDate ? Math.ceil((new Date(task.deadlineDate) - new Date()) / (1000 * 60 * 60 * 24)) : null; %>
+                    <div class="bg-white rounded-lg border border-slate-100 p-4 shadow-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="min-w-0">
+                                <h3 class="font-medium text-slate-800 truncate"><%= task.taskname %></h3>
+                                <% if (task.taskdescription) { %>
+                                <p class="text-sm text-slate-500 mt-1 truncate"><%= task.taskdescription %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="flex items-end flex-col gap-3 text-right">
+                                <% if (task.deadlineDate) { %>
+                                <div class="text-xs text-slate-500">Due <span
+                                        class="font-medium"><%= new Date(task.deadlineDate).toLocaleDateString() %></span>
+                                </div>
+                                <% } %>
+
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="px-2 py-1 rounded-full text-xs font-semibold <%= task.status === 'working' ? 'bg-blue-50 text-blue-700' : task.status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-700' %>"><%= task.status.charAt(0).toUpperCase() + task.status.slice(1) %></span>
+                                    <% if (task.deadlineDate) { %>
+                                    <span
+                                        class="px-2 py-1 rounded-full text-xs font-medium <%= taskDaysLeft <= 3 ? 'bg-rose-50 text-rose-700' : 'bg-blue-50 text-blue-700' %>"><%= taskDaysLeft > 0 ? (taskDaysLeft + ' days left') : 'Overdue' %></span>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
-                        <% } %>
-                    </div>
-                    
-                    <% if (task.teammates && task.teammates.length > 0) { %>
+
+                        <% if (task.teammates && task.teammates.length > 0) { %>
                         <div class="mt-3 flex items-center justify-between">
-                            <div class="flex flex-row items-center justify-center">
-                                <span class="text-sm text-gray-500 mr-2">Assigned to:</span>
-                                <div class="flex flex-row items-center justify-center gap-4">
-                                    <% task.teammates.forEach(teammate => { %>
-                                        <div class="flex -space-x-2 items-center gap-3 bg-gray-50 px-[3px] py-[3px] rounded-full">
-                                            <img class="w-6 h-6 rounded-full border-2 border-white" 
-                                                src="<%= teammate.avatar || 'https://ui-avatars.com/api/?name=' + teammate.firstName + '&background=random' %>" 
-                                                alt="<%= teammate.firstName || teammate.name %>">
-                                            <p class="text-xs text-gray-600 pr-1"><%= teammate.firstName %> <%= teammate.lastName %></p>
-                                        </div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-sm text-slate-500">Assigned to</div>
+                                <div class="flex items-center -space-x-2">
+                                    <% task.teammates.forEach(tm => { %>
+                                    <img class="w-8 h-8 rounded-full border-2 border-white"
+                                        src="<%= tm.avatar || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(tm.firstName || tm.name)) %>"
+                                        alt="<%= tm.firstName || tm.name %>">
                                     <% }); %>
                                 </div>
                             </div>
-                            <div class="flex flex-row items-center justify-center gap-2">
-                                <% if(task.status === 'pending approval'){ %> 
-                                    <button onclick="showApprovalModal('<%= task.approvalLink %>', '<%= task._id %>', '<%= project._id %>')" class="flex flex-row items-center justify-center gap-2 hover:bg-gray-200 transition-all duration-75 px-2 py-1 rounded-lg text-sm cursor-pointer">
-                                        <p><i class="fa-solid fa-magnifying-glass"></i> Review</p>
-                                    </button>
+
+                            <div class="flex items-center gap-2">
+                                <% if (task.status === 'pending approval') { %>
+                                <button onclick="showApprovalModal('<%= task.approvalLink %>', '<%= task._id %>')"
+                                    class="px-3 py-2 rounded-lg bg-white border border-slate-100 text-sm hover:bg-slate-50">Review</button>
                                 <% } %>
 
-                                <a href="/projects/e/<%= project._id %>/tasks/edit/<%= task._id %>" class="flex flex-row items-center justify-center gap-2 hover:bg-gray-200 transition-all duration-75 px-2 py-1 rounded-lg text-sm cursor-pointer">
-                                    <p><i class="fa-solid fa-pencil"></i> Edit</p>
-                                </a>
+                                <a href="/projects/e/<%= project._id %>/tasks/edit/<%= task._id %>"
+                                    class="px-3 py-2 rounded-lg bg-white border border-slate-100 text-sm hover:bg-slate-50">Edit</a>
                             </div>
-
-
                         </div>
-                    <% } %>
+                        <% } %>
+                    </div>
+                    <% }); %>
                 </div>
-                <% }); %>
-            </div>
-        <% } else { %>
-            <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
-                <i class="fas fa-tasks text-4xl text-gray-300 mb-3"></i>
-                <h3 class="text-lg font-medium text-gray-500">No tasks yet</h3>
-                <p class="text-gray-400 mt-1">Add your first task to get started</p>
-            </div>
-        <% } %>
-    </div>
-    <div id="approvalModal" class="fixed inset-0 z-50 bg-[#0000002f] flex items-center justify-center hidden">
-        <div class="bg-white w-96 rounded-lg shadow-lg p-6 text-center">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Submitted Link</h2>
-            <p id="approvalLink" class="text-blue-600 break-words"></p>
+                <% } else { %>
+                <div class="bg-white rounded-lg border border-slate-100 p-8 text-center text-slate-500">
+                    <i class="fas fa-tasks text-4xl mb-3 text-slate-300"></i>
+                    <h3 class="text-lg font-medium">No tasks yet</h3>
+                    <p class="mt-1 text-sm">Create your first task to get started.</p>
+                </div>
+                <% } %>
 
-            <div class="mt-6 flex justify-center space-x-4">
-            <a id="approve" href="#"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                Approve Project
-            </a>
-            <button onclick="closeApprovalModal()"
-                class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition">
-                Close
-            </button>
+            </main>
+
+
+
+            <div id="approvalModal" class="fixed inset-0 z-50 bg-black/40 hidden items-center justify-center">
+                <div class="bg-white w-96 rounded-2xl shadow-lg p-6">
+                    <h2 class="text-lg font-semibold text-slate-900">Submitted Link</h2>
+                    <p id="approvalLink" class="text-indigo-600 mt-3 break-words"></p>
+
+                    <div class="mt-6 flex justify-end gap-3">
+                        <a id="approveBtn" href="#" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Approve
+                            Project</a>
+                        <button onclick="closeApprovalModal()"
+                            class="px-4 py-2 border border-slate-200 rounded-lg">Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="assignModal" class="fixed inset-0 z-50 bg-black/40 hidden items-center justify-center">
+                <div class="bg-white w-[600px] rounded-2xl shadow-lg p-6">
+                    <h2 class="text-lg font-semibold">Manage Teammates</h2>
+                    <div class="grid grid-cols-2 gap-6 mt-4">
+
+                        <div>
+                            <h3 class="font-medium text-slate-700 mb-2">Current Members</h3>
+                            <ul id="currentMembers" class="space-y-2">
+                                <% project.assignedTeammates.forEach(m => { %>
+                                <li class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+                                    <span><%= m.firstName %> <%= m.lastName %></span>
+                                    <button onclick="removeMember('<%= m._id %>')"
+                                        class="text-red-500 hover:text-red-700">&times;</button>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+
+
+
+
+                        <div>
+                            <h3 class="font-medium text-slate-700 mb-2">Available Teammates</h3>
+                            <ul id="availableMembers" class="space-y-2">
+                                <% teammates
+                                    .filter(tm => !project.assignedTeammates.some(am => am._id.toString() === tm._id.toString()))
+                                    .forEach(tm => { %>
+                                <li class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+                                    <span><%= tm.firstName %> <%= tm.lastName %></span>
+                                    <button onclick="addMember('<%= tm._id %>')"
+                                        class="text-green-500 hover:text-green-700">+</button>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closeAssignModal()"
+                            class="px-4 py-2 border border-slate-200 rounded-lg">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</body>
+
+
+
+    <script>
+        window.projectId = "<%= project._id %>";
+    </script>
+    <script src="/javascript/project.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-<script src="/javascript/project.js"></script>
+</body>
+
 </html>

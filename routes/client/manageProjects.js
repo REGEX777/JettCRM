@@ -123,6 +123,9 @@ router.get('/v/:id', async (req, res)=>{
         req.flash('error', 'Invalid Project ID.')
         return res.redirect('/projects')
     }
+
+
+
     try{
         const project = await Project.findOne({_id: projectId})
             .populate('team')
@@ -138,15 +141,97 @@ router.get('/v/:id', async (req, res)=>{
             req.flash('error', "Unauthorized")
             return res.redirect('/projects')
         }
-        const headerText = "Task Manager"
+
+        const team = await Team.findById(project.team._id).populate('members');
+
+        const headerText = "Project View"
         const backBtnLink = '/projects'
 
-        res.render('project_dash/project', {project, headerText, backBtnLink})
+        res.render('project_dash/project', {project, headerText, backBtnLink, teammates: team.members})
     }catch(err){
         console.log(err)
         res.status(500).send('Internal Server Error')
     }
 })
+
+// APIss
+
+router.post('/:id/members/add', async (req, res)=>{
+    try{
+        const projectId = req.params.id;
+        const {memberId} = req.body;
+
+        const project = await Project.findById(projectId).populate('assignedTeammates').populate('team')
+
+        if(!project){
+            req.flash('error', 'Project Not Found')
+            res.redirect(`/projects/v/${projectId}`)
+        }
+
+        if(!project.team.owner.equals(req.user._id)){
+            req.flash('error', 'Unauthorized')
+            res.redirect('/projects')
+        }
+
+        if (!project.assignedTeammates.some(tm => tm._id.equals(memberId))) {
+            project.assignedTeammates.push(memberId);
+            await project.save();
+        }
+
+        const team = await Team.findById(project.team._id).populate('members');
+
+        const assignedTeammates = await Project.findById(projectId).populate('assignedTeammates').then(p => p.assignedTeammates);
+
+        const availableTeammates = team.members.filter(tm =>
+            !assignedTeammates.some(am => am._id.equals(tm._id))
+        );
+
+        res.json({ assignedTeammates, availableTeammates });
+    }catch(err){
+        console.log(err)
+        res.status(500).send("Internal Server Error")
+    }
+})
+
+
+
+router.post('/:id/members/remove', async (req, res)=>{
+ try {
+    const projectId = req.params.id;
+    const { memberId } = req.body;
+
+    const project = await Project.findById(projectId).populate('assignedTeammates').populate('team');
+
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    if (!project.team.owner.equals(req.user._id)) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    project.assignedTeammates = project.assignedTeammates.filter(
+      tm => !tm._id.equals(memberId)
+    );
+    await project.save();
+
+    const team = await Team.findById(project.team._id).populate('members');
+    const assignedTeammates = await Project.findById(projectId)
+      .populate('assignedTeammates')
+      .then(p => p.assignedTeammates);
+
+    const availableTeammates = team.members.filter(tm =>
+      !assignedTeammates.some(am => am._id.equals(tm._id))
+    );
+
+    res.json({ assignedTeammates, availableTeammates });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 
 router.get('/v/updates/:id',async (req, res)=>{
@@ -677,9 +762,14 @@ router.get('/taskmanager/:id', async (req, res) => {
             return res.redirect('/projects')
         }
         const team = project.assignedTeammates
+
+        const headerText = "Create New Taks"
+        const backBtnLink = `/projects/v/${projectId}`
         res.render('taskmanager/taskmanager', {
             project,
-            team
+            team,
+            headerText,
+            backBtnLink
         })
     } catch (err) {
         console.log(err)
@@ -760,7 +850,7 @@ router.get('/e/:projectId/tasks/edit/:taskId', async (req, res)=>{
             return res.redirect(`/projects/v/${projectId}`)
         }
         const headerText = "Edit Task"
-        const backBtnLink = '/projects'
+        const backBtnLink = `/projects/v/${projectId}`
         res.render('taskmanager/editTask', {
             project,
             task,

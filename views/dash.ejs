@@ -12,17 +12,8 @@
 
 <body>
     <!-- Parent -->
-    <% if (success.length > 0) { %>
-    <div class="h-10 w-full bg-green-500 flex items-center justify-center">
-        <p><%= success[0] %></p>
-    </div>
-    <% } %>
+<%- include('../fragments/alerts'); -%>
 
-    <% if (error.length > 0) { %>
-    <div class="h-10 w-full bg-red-500">
-        <p><%= error[0] %></p>
-    </div>
-    <% } %>
     <div class="flex flex-row justify-start">
 
         <%- include('fragments/sidebar'); -%>
