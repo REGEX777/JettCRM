@@ -46,8 +46,10 @@ const userSchema = new mongoose.Schema({
 
 
   // verification stuff
-  verfifed: { type: Boolean, default: false },
-  verificationToken: {type: String, unqiue: true}
+  verified: { type: Boolean, default: false },
+  verificationToken: {type: String, unqiue: true},
+
+  lastVerificationEmail: {type: Date, default: null}
 });
 
 const User = mongoose.model('User', userSchema);

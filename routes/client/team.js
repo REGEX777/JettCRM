@@ -18,7 +18,7 @@ router.get('/',async (req, res)=>{
 
         if (!team) {
             req.flash('error', 'No team found.');
-            return res.redirect('/');
+            return res.redirect('/dashboard');
         }
 
         const teammates = await User.find({

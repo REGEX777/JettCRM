@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 // Middleware Imports
 import { storeOriginalUrl } from './middleware/saveOriginalURL.js';
 import { isLoggedIn } from './middleware/isLoggedIn.js';
+import { isVerified } from './middleware/accountVerified.js';
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
@@ -97,6 +98,11 @@ import emailRoute from './routes/api/email.js'
 // email routes -- verifying email
 import verificationRoute from './routes/backend/email/verification.js'
 
+// resend verification
+import resendVerificationRoute from './routes/services/resendVerification.js';
+
+import dashboardSelectorRoute from './routes/client/selectDash.js'
+
 // public
 app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
@@ -104,8 +110,13 @@ app.use('/invite', storeOriginalUrl, inviteRoute);
 app.use('/entry', loungeRoute);
 
 
+
 // verify
 app.use('/verify', verificationRoute)
+
+
+// resend verification 
+app.use('/resend-verification', isLoggedIn, resendVerificationRoute);
 
 // login signup auth
 app.use('/logout', logOutRoute);
@@ -115,26 +126,28 @@ app.use('/oauth2/', googleOauth2);
 
 // secure routes
 app.use('/geninvoice', isLoggedIn, invoiceRoute);
-app.use('/settings', storeOriginalUrl, isLoggedIn, settingsRoute);
-app.use('/projects', storeOriginalUrl, isLoggedIn, projectManageRoute);
-app.use('/team', storeOriginalUrl, isLoggedIn, teamRoute);
-app.use('/client', storeOriginalUrl, isLoggedIn, clientRoute);
-app.use('/myteam', storeOriginalUrl, isLoggedIn, teamdashRoute);
-app.use('/mytasks', storeOriginalUrl, isLoggedIn, taskRoute);
-app.use('/stripe', storeOriginalUrl, isLoggedIn, onboardROute);
+app.use('/settings', storeOriginalUrl, isLoggedIn, isVerified, settingsRoute);
+app.use('/projects', storeOriginalUrl, isLoggedIn, isVerified, projectManageRoute);
+app.use('/team', storeOriginalUrl, isLoggedIn, isVerified, teamRoute);
+app.use('/client', storeOriginalUrl, isLoggedIn, isVerified, clientRoute);
+app.use('/myteam', storeOriginalUrl, isLoggedIn, isVerified, teamdashRoute);
+app.use('/mytasks', storeOriginalUrl, isLoggedIn, isVerified, taskRoute);
+app.use('/stripe', storeOriginalUrl, isLoggedIn, isVerified, onboardROute);
 // app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute);
-app.use('/tools/estimate', storeOriginalUrl, isLoggedIn, estimateRoute);
+app.use('/tools/estimate', storeOriginalUrl, isLoggedIn, isVerified, estimateRoute);
 
 // bzzzzzzzzzz static file
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// never gonna give u up
-app.use('/', storeOriginalUrl, isLoggedIn, dashRoute);
-
-
 // api
 
 app.use('/email', emailRoute)
+
+
+// never gonna give u up
+app.use('/dashboard', storeOriginalUrl, isLoggedIn, isVerified, dashRoute);
+
+app.use('/', isLoggedIn, dashboardSelectorRoute)
 
 
 

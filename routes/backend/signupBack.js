@@ -57,7 +57,9 @@ router.post('/', validateEmail, isLoggedOut, async (req, res) => {
             clientOf: [],
 
 
-            verificationToken: token
+            verificationToken: token,
+            lastVerificationEmail: Date.now()
+            
         });
 
         if (token && role === "team") {

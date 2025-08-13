@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
 
         if (!team) {
             req.flash('error', 'Team not found');
-            return res.redirect('/');
+            return res.redirect('/dashboard');
         }
 
         let filteredProjects = [...team.projects];
@@ -582,7 +582,7 @@ router.post("/", async (req, res) => {
         await project.save();
         team.projects.push(project._id);
         await team.save();
-        // implement email leater so for now just loggin it
+        
         const invite = new Invite({
             email: clientEmail,
             token,

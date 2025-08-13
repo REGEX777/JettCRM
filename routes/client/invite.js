@@ -143,9 +143,12 @@ router.post('/accept', async (req, res) => {
 
             project.client = req.user._id;
             await project.save();
+            
+            if (!req.user.clientOf.some(id => id.toString() === project._id.toString())) {
+                req.user.clientOf.push(project._id);
+            }
 
-
-            req.flash('success', `Youve succesfully joined ${project.name}`)
+            req.flash('success', `You've succesfully joined ${project.name}`)
             invite.accepted = true;
             invite.linkedUser = req.user._id;
 

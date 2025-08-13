@@ -17,7 +17,7 @@ router.get('/:token',async (req, res)=>{
             return res.send('Invalid Request')
         }
 
-        user.verfifed = true;
+        user.verified = true;
         await user.save();
 
 

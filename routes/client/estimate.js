@@ -147,7 +147,7 @@ router.get('/', async (req, res) => {
 router.get('/create', (req, res)=>{
     try{
         const headerText = "Estimate Maker"
-        const backBtnLink = "/"
+        const backBtnLink = "/dashboard"
         res.render('estimate/createEstimate', {headerText, backBtnLink})
     }catch(err){
         console.log(err);
