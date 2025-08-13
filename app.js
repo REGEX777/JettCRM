@@ -91,14 +91,21 @@ import meetingsRoute from './routes/misc/calendar.js'
 
 import onboardROute from './routes/misc/onboard.js'
 
-// api routes
+// api routes --- thios is for updating email
 import emailRoute from './routes/api/email.js'
+
+// email routes -- verifying email
+import verificationRoute from './routes/backend/email/verification.js'
 
 // public
 app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
 app.use('/invite', storeOriginalUrl, inviteRoute);
 app.use('/entry', loungeRoute);
+
+
+// verify
+app.use('/verify', verificationRoute)
 
 // login signup auth
 app.use('/logout', logOutRoute);
@@ -128,6 +135,7 @@ app.use('/', storeOriginalUrl, isLoggedIn, dashRoute);
 // api
 
 app.use('/email', emailRoute)
+
 
 
 app.listen(port, ()=>{

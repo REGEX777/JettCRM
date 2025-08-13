@@ -1,5 +1,6 @@
 import express from 'express';
 import crypto from 'crypto'
+import { Resend } from 'resend';
 
 // model import
 import mongoose from 'mongoose';
@@ -10,6 +11,7 @@ import Invite from '../../models/Invite.js';
 
 const router = express.Router();
 
+const resend = new Resend(process.env.RESEND_KEY)
 
 // Utility Import
 import { uploadInvoice } from '../../utils/multerConfig.js';
@@ -591,7 +593,23 @@ router.post("/", async (req, res) => {
 
         await invite.save();
 
-        console.log(`client invite: https:/localhost:9000/invite/accept/${token}`)
+
+        const { data, error } = await resend.emails.send({
+            from: 'invite@thesmartscribe.com',
+            to: [invite.email],
+            subject: 'Invitation to join a project as a client',
+            html: `<a href="http://localhost:9000/invite/accept/${token}">Accept Invite</a>`
+        });
+
+
+        if (error) {
+            console.error('Resend email error:', error);
+        } else {
+            console.log('Email sent successfully:', data);
+        }
+
+
+
 
         req.flash('success', 'Project Created Successfully!')
         res.redirect('/projects')

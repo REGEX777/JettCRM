@@ -1,104 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Team Projects</title>
-  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="/css/output.css" />
   <script src="https://kit.fontawesome.com/82eb69e53c.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
+<%- include('../fragments/alerts'); -%>
 
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-    
-    <!-- Header -->
-    <header class="flex justify-between items-center mb-8">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Team Projects</h1>
-        <p class="text-sm text-gray-500">Manage your team's projects and tasks</p>
-      </div>
-      <div class="flex items-center space-x-4">
-        <button class="p-2 rounded-full hover:bg-gray-100 transition">
-          <i class="fas fa-bell text-gray-600"></i>
-        </button>
-        <div class="relative">
-          <button class="flex items-center space-x-2 focus:outline-none">
-            <img alt="profilepic" src="https://www.tlgtrucks.com/Portals/0/adam/Swiper/t-n2Vp1v2025DnecF67fuA/Image/peterbilt-launches-new-model-589-1.jpg?mode=max&w=1920"
-                 class="h-10 w-10 rounded-lg object-cover border border-gray-200">
-          </button>
-        </div>
-      </div>
-    </header>
+  <!-- header -->
 
-    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+
+  <header class="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <% if (typeof backBtnLink !== 'undefined' && backBtnLink) { %>
+      <a href="<%= backBtnLink %>" class="flex items-center text-gray-500 hover:text-gray-700">
+        <i class="fa-solid fa-arrow-left pr-2"></i>
+      </a>
+      <% } %>
+      <h1 class="text-lg font-semibold"><%= headerText %></h1>
+    </div>
+
+
+
+    <div class="relative">
+      <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
+        class="flex items-center gap-2 hover:bg-gray-100 p-1 rounded-lg transition">
+        <i class="fa-solid fa-angle-down text-gray-500"></i>
+        <img alt="profilepic"
+          src="<%= user.profilePicture %>"
+          class="h-10 w-10 bg-gray-200 rounded-lg object-cover">
+      </button>
+
+      <div id="dropdownHover"
+        class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+        <ul class="py-2 text-sm text-gray-700">
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
+          </li>
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Sign out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- Main stuff -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <section class="bg-white rounded-xl border border-gray-200  hover:border-indigo-300 hover:shadow-md  transition overflow-hidden p-8">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 class="text-xl font-semibold text-gray-800"><%= team.name %></h2>
-          <p class="text-sm text-gray-500">Team ID: <span class="font-mono"><%= team._id %></span></p>
+          <h1 class="text-xl font-semibold text-gray-900"><%= team.name %></h1>
+          <p class="text-sm text-gray-500">
+            Team ID: <span class="font-mono text-gray-800"><%= team._id %></span>
+          </p>
         </div>
       </div>
+    </section>
+
+
+    
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-gray-900">Active Projects</h2>
+      <% if (projects && projects.length) { %>
+        <span class="text-sm text-gray-500"><%= projects.length %> total</span>
+      <% } %>
     </div>
 
-    <div class="mb-6 flex justify-between items-center">
-      <h3 class="text-lg font-semibold text-gray-800">Active Projects</h3>
-    </div>
 
-    <div id="projectContainer">
+    
+    
+    <section id="projectContainer">
       <% if (projects.length === 0) { %>
-        <div class="bg-white rounded-xl shadow-sm p-8 text-center">
-          <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <div class="bg-white rounded-2xl shadow-sm p-8 p-10 text-center">
+          <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-5">
             <i class="fas fa-folder-open text-gray-400 text-xl"></i>
           </div>
-          <h4 class="text-lg font-medium text-gray-900 mb-2">No Projects to Display</h4>
-          <p class="text-gray-500 mb-6">This team doesn't have any projets yet.</p>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">No Projects to Display</h3>
+          <p class="text-gray-500 max-w-md mx-auto">This team doesn't have any projects yet.</p>
         </div>
       <% } else { %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <% projects.forEach(project => { %>
-            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition group">
-              <div class="p-5">
-                <div class="flex justify-between items-start mb-3">
-                  <h4 class="text-base font-medium text-gray-900 group-hover:text-indigo-600 transition">
+            <% const badgeClass = ({
+              active:    'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+              pending:   'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
+              completed: 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200'
+            }[project.status]) || 'bg-gray-100 text-gray-700 ring-1 ring-gray-200'; %>
+
+            <article class="group bg-white rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-md transition overflow-hidden">
+              <div class="p-6">
+                <header class="flex items-start justify-between gap-4 mb-4">
+                  <h3 class="text-base font-semibold text-gray-900 group-hover:text-indigo-600 transition">
                     <%= project.name %>
-                  </h4>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                    <%= project.status === 'active' ? 'bg-green-100 text-green-800' : '' %>
-                    <%= project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' %>
-                    <%= project.status === 'completed' ? 'bg-blue-100 text-blue-800' : '' %>">
+                  </h3>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= badgeClass %>">
                     <%= project.status.charAt(0).toUpperCase() + project.status.slice(1) %>
                   </span>
-                </div>
+                </header>
 
-                <div class="space-y-3 text-sm text-gray-600 mb-4">
+                <dl class="space-y-3 text-sm text-gray-700">
                   <div class="flex items-start">
                     <i class="far fa-calendar-alt mt-0.5 mr-2 text-gray-400"></i>
                     <div>
-                      <p class="text-xs text-gray-500">Start Date</p>
-                      <p><%= new Date(project.createdAt).toLocaleDateString() %></p>
+                      <dt class="text-xs text-gray-500">Start Date</dt>
+                      <dd><%= new Date(project.createdAt).toLocaleDateString() %></dd>
                     </div>
                   </div>
                   <div class="flex items-start">
                     <i class="far fa-clock mt-0.5 mr-2 text-gray-400"></i>
                     <div>
-                      <p class="text-xs text-gray-500">Deadline</p>
-                      <p><%= new Date(project.deadlineDate).toLocaleDateString() %></p>
+                      <dt class="text-xs text-gray-500">Deadline</dt>
+                      <dd><%= new Date(project.deadlineDate).toLocaleDateString() %></dd>
                     </div>
                   </div>
-                </div>
+                </dl>
               </div>
 
-              <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+              <footer class="px-6 py-3 bg-gray-50 border-t border-gray-100">
                 <a href="/mytasks/<%= project._id %>/tasks"
-                  class="w-full block text-center px-4 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-500 hover:bg-indigo-50 rounded-md transition">
+                   class="w-full block text-center px-4 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-500 hover:bg-indigo-50 rounded-md transition">
                   View Tasks
                 </a>
-              </div>
-            </div>
+              </footer>
+            </article>
           <% }) %>
         </div>
       <% } %>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <script src="/javascript/team_dash.js"></script>
 </body>

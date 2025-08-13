@@ -3,6 +3,7 @@ const router = express.Router();
 
 // model import
 import Project from '../../models/Projects.js';
+import { header } from 'express-validator';
 
 router.get('/:id/tasks', async (req, res) => {
   try {
@@ -20,10 +21,13 @@ router.get('/:id/tasks', async (req, res) => {
       task.teammates.some(teammate => teammate.toString() === userId.toString())
     );
     
-
+    const headerText = "Project View"
+    const backBtnLink = `/myteam/${project.team}`
     res.render('taskmanager/tasks', {
       project,
-      tasks: userTasks
+      tasks: userTasks,
+      headerText,
+      backBtnLink
     });
   } catch (err) {
     console.log(err);

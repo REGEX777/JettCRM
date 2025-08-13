@@ -42,7 +42,12 @@ const userSchema = new mongoose.Schema({
   // user business stuff
   businessName: String,
   businessAddress: String,
-  businessEmail: String
+  businessEmail: String,
+
+
+  // verification stuff
+  verfifed: { type: Boolean, default: false },
+  verificationToken: {type: String, unqiue: true}
 });
 
 const User = mongoose.model('User', userSchema);

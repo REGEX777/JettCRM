@@ -6,6 +6,7 @@ const router = express.Router();
 import User from '../../models/User.js';
 import Team from '../../models/Team.js';
 import Project from '../../models/Projects.js'
+import { header } from 'express-validator';
 
 router.get('/', async (req, res) => {
     try {
@@ -17,7 +18,8 @@ router.get('/', async (req, res) => {
             department: member.department
         }));
 
-        res.render('myteam/dash', { teams });
+        const headerText = "Team Dashboard"
+        res.render('myteam/dash', { teams, headerText });
     } catch (err) {
         console.log(err);
         res.status(500).send('Internal Server Error');
@@ -40,8 +42,9 @@ router.get('/:id', async (req, res) => {
             team: team._id,
             assignedTeammates: req.user._id
         }) 
-
-        res.render('myteam/view', { team, projects });
+        const headerText = "Project View"
+        const backBtnLink = '/myteam'
+        res.render('myteam/view', { team, projects, headerText, backBtnLink });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
