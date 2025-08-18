@@ -30,7 +30,7 @@ const deleteOldProfileImage = async (imagePath) => {
 router.get('/', async (req, res) => {
   try {
     const headerText = "Settings"
-    const backBtnLink = '/'
+    const backBtnLink = '/dashboard'
     res.render('settings/settings', {headerText, backBtnLink});
   } catch (err) {
     console.error(err);

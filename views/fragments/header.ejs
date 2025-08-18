@@ -1,4 +1,4 @@
-            <div class="h-[4rem] rounded-lg w-full bg-white flex items-center justify-between px-10">
+            <div class="h-[4rem] w-full bg-white flex items-center justify-between px-10">
                 <div class="flex items-center gap-4">
                 
                 <% if (typeof backBtnLink !== 'undefined' && backBtnLink) { %>
@@ -21,14 +21,18 @@
                     class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
                         <li>
-                            <a href="#"
+                            <a href="/settings"
                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
                         </li>
                         <li>
-                            <a href="#"
+                            <a href="/logout"
                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
                                 out</a>
                         </li>
+                        <li>
+                            <a href="/"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Change Dashboard</a>
+                        </li
                     </ul>
                 </div>
             </div>

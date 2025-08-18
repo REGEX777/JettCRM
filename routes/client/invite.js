@@ -155,7 +155,7 @@ router.post('/accept', async (req, res) => {
 
             await Promise.all([invite.save(), req.user.save()]);
             res.clearCookie('inviteInfo');
-            return res.redirect(`/project/${project._id}`)
+            return res.redirect(`/client`)
         }
 
         if (req.user.email !== invite.email) {

@@ -56,8 +56,15 @@ export default function async (passport) {
                         googleId: profile.id
                     });
 
-                    if (user) return done(null, user);
-
+                    if (user) {
+                        // check for refresh token IM ON A HIGHWAY TO HELLLLLLLL 
+                        if(refreshToken && !user.googleRefreshToken){
+                            user.googleRefreshToken = refreshToken;
+                            await user.save();
+                        }
+                        req.session.tempGoogleAccessToken = accessToken;
+                        return done(null, user);
+                    }
                     const existingEmailUser = await User.findOne({
                         email: profile.emails[0].value
                     });
@@ -89,7 +96,9 @@ export default function async (passport) {
                         acceptedTos: true,
                         admin: false,
                         googleId: profile.id,
-                        profilePicture: profile.photos[0].value
+                        profilePicture: profile.photos[0].value,
+                        verified: true,
+                        googleRefreshToken: refreshToken
                     });
 
                     if (invite && invite.token && invite.role === 'team') {
@@ -140,7 +149,7 @@ export default function async (passport) {
                     }
 
                     await newUser.save();
-
+                    req.session.tempGoogleAccessToken = accessToken;
                     return done(null, newUser);
                 } catch (err) {
                     return done(err, null);

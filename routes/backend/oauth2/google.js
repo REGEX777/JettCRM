@@ -12,8 +12,25 @@ router.get('/google', (req, res, next) => {
   if (token && role) {
     req.session.oauthInvite = { token, role };
   }
-  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+  passport.authenticate('google', { scope: ['profile', 'email', 'https://www.googleapis.com/auth/meetings.space.created' ,'https://www.googleapis.com/auth/calendar', 'openid'], accessType: "offline", prompt: "consent" })(req, res, next);
 });
+
+
+router.get('/google/connect', (req, res, next) => {
+  req.session.oauthConnect = true;
+  req.session.connectRedirect = req.query.redirect || req.get('Referrer') || '/settings';
+
+  passport.authenticate('google', {
+    scope: [
+      'profile',
+      'email',
+      'https://www.googleapis.com/auth/calendar',
+      'https://www.googleapis.com/auth/meetings.space.created'
+    ],
+    accessType: 'offline',
+    prompt: 'consent'
+  })(req, res, next);
+})
 
 router.get('/google/callback',
   passport.authenticate('google', {
@@ -21,10 +38,21 @@ router.get('/google/callback',
     failureFlash: true
   }),
   (req, res) => {
-    const redirectTo = req.session.redUrl || '/';
+    const wasConnect = !!req.session.oauthConnect;
+    const connectRedirect = req.session.connectRedirect;
+
+    const redirectTo = wasConnect ? (connectRedirect || '/settings') : (req.session.redUrl || '/');
+
+    delete req.session.oauthConnect;
+    delete req.session.connectRedirect;
     delete req.session.redUrl;
 
-    req.flash('success', 'Logged in successfully.');
+
+    if (wasConnect) {
+      req.flash('success', 'Google account connected successfully.');
+    } else {
+      req.flash('success', 'Logged in successfully.');
+    }
     res.redirect(redirectTo);
   }
 );

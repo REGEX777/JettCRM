@@ -65,7 +65,7 @@ router.get('/', async (req, res) => {
         const paginatedProjects = filteredProjects.slice(skip, skip + limit);
 
         const headerText = `Manage Projects`
-        const backBtnLink = '/'
+        const backBtnLink = '/dashboard'
         res.render('project_dash/manageProjects', {
             projects: paginatedProjects,
             currentPage: page,
@@ -593,10 +593,11 @@ router.post("/", async (req, res) => {
 
         await invite.save();
 
+        console.log(invite.email)
 
         const { data, error } = await resend.emails.send({
             from: 'invite@thesmartscribe.com',
-            to: [invite.email],
+            to: [`${invite.email}`],
             subject: 'Invitation to join a project as a client',
             html: `<a href="http://localhost:9000/invite/accept/${token}">Accept Invite</a>`
         });

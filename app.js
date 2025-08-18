@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 import { storeOriginalUrl } from './middleware/saveOriginalURL.js';
 import { isLoggedIn } from './middleware/isLoggedIn.js';
 import { isVerified } from './middleware/accountVerified.js';
+import { checkClient } from './middleware/isUserClient.js';
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
@@ -103,6 +104,10 @@ import resendVerificationRoute from './routes/services/resendVerification.js';
 
 import dashboardSelectorRoute from './routes/client/selectDash.js'
 
+// link auth
+import linkAuthRoute from './routes/backend/oauth2/link.js'
+
+
 // public
 app.use('/signup', signupRoute);
 app.use('/login', loginRoute);
@@ -129,11 +134,11 @@ app.use('/geninvoice', isLoggedIn, invoiceRoute);
 app.use('/settings', storeOriginalUrl, isLoggedIn, isVerified, settingsRoute);
 app.use('/projects', storeOriginalUrl, isLoggedIn, isVerified, projectManageRoute);
 app.use('/team', storeOriginalUrl, isLoggedIn, isVerified, teamRoute);
-app.use('/client', storeOriginalUrl, isLoggedIn, isVerified, clientRoute);
+app.use('/client', storeOriginalUrl, isLoggedIn, isVerified, checkClient, clientRoute);
 app.use('/myteam', storeOriginalUrl, isLoggedIn, isVerified, teamdashRoute);
 app.use('/mytasks', storeOriginalUrl, isLoggedIn, isVerified, taskRoute);
 app.use('/stripe', storeOriginalUrl, isLoggedIn, isVerified, onboardROute);
-// app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute);
+app.use('/calendar', storeOriginalUrl, isLoggedIn, meetingsRoute);
 app.use('/tools/estimate', storeOriginalUrl, isLoggedIn, isVerified, estimateRoute);
 
 // bzzzzzzzzzz static file
@@ -143,6 +148,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/email', emailRoute)
 
+// auth route
+
+app.use('/link', storeOriginalUrl, isLoggedIn, linkAuthRoute)
 
 // never gonna give u up
 app.use('/dashboard', storeOriginalUrl, isLoggedIn, isVerified, dashRoute);

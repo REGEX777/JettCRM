@@ -10,76 +10,68 @@
     <title>Projects Management</title>
 </head>
 
-<body>
-    <!-- Parent -->
-    <% if (success.length > 0) { %>
-    <div class="h-10 w-full bg-green-500 flex items-center justify-center">
-        <p class="text-white"><%= success[0] %></p>
-    </div>
-    <% } %>
-    <% if (error.length > 0) { %>
-    <div class="h-10 w-full bg-red-500 flex items-center justify-center">
-        <p class="text-white"><%= error[0] %></p>
-    </div>
-    <% } %>
-    <div class="flex flex-row justify-start">
+    <body class="bg-gray-50 font-poppins text-gray-800">
+    <%- include('../fragments/alerts'); -%>
 
+    <div class="flex min-h-screen">
         <%- include('../fragments/sidebar'); -%>
 
-        <div
-            class="flex flex-col min-h-screen bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+        <div class="flex flex-col w-full ml-[24rem]">
             <%- include('../fragments/header'); -%>
 
+                 <main class="p-8 w-full">
 
-            <div class="w-full flex items-center justify-center">
-                <div class="flex flex-col items-center justify-center w-full">
-                    <div class="flex justify-between items-center mb-6 w-full">
-                        <h1 class="text-3xl font-bold">Upcoming Meetings</h1>
-                        <a href="/calendar/new-meeting"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition">
-                            <i class="fas fa-plus mr-2"></i> Schedule New Meeting
-                        </a>
-                    </div>
 
-                    <% if (events.length === 0) { %>
-                    <div class="bg-white p-6 rounded-xl shadow text-center">
-                        <p class="text-gray-500 text-sm">No meetings scheduled.</p>
-                    </div>
-                    <% } else { %>
-                    <div class="space-y-4 w-full">
-                        <% events.forEach(event => { %>
-                        <div
-                            class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-lg font-semibold">
-                                    <%= event.summary || 'Untitled Meeting' %>
-                                </h2>
-                                <% if (event.hangoutLink) { %>
-                                <a href="<%= event.hangoutLink %>" target="_blank"
-                                    class="text-blue-600 text-sm underline">
-                                    Join Google Meet
+                    <div class="w-full flex items-center justify-center">
+                        <div class="flex flex-col items-center justify-center w-full">
+                            <div class="flex justify-between items-center mb-6 w-full">
+                                <h1 class="text-3xl font-bold">Upcoming Meetings</h1>
+                                <a href="/calendar/new-meeting"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition">
+                                    <i class="fas fa-plus mr-2"></i> Schedule New Meeting
                                 </a>
-                                <% } %>
                             </div>
 
-                            <div class="text-sm text-gray-600 space-y-1">
-                                <p><strong>Start:</strong>
-                                    <%= new Date(event.start.dateTime || event.start.date).toLocaleString('en-IN') %>
-                                </p>
-                                <% if (event.end && event.end.dateTime) { %>
-                                <p><strong>End:</strong> <%= new Date(event.end.dateTime).toLocaleString('en-IN') %></p>
-                                <% } %>
-                                <% if (event.description) { %>
-                                <p><strong>Description:</strong> <%= event.description %></p>
-                                <% } %>
+                            <% if (events.length === 0) { %>
+                            <div class="bg-white p-6 rounded-xl shadow text-center">
+                                <p class="text-gray-500 text-sm">No meetings scheduled.</p>
                             </div>
+                            <% } else { %>
+                            <div class="space-y-4 w-full">
+                                <% events.forEach(event => { %>
+                                <div
+                                    class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h2 class="text-lg font-semibold">
+                                            <%= event.summary || 'Untitled Meeting' %>
+                                        </h2>
+                                        <% if (event.hangoutLink) { %>
+                                        <a href="<%= event.hangoutLink %>" target="_blank"
+                                            class="text-blue-600 text-sm underline">
+                                            Join Google Meet
+                                        </a>
+                                        <% } %>
+                                    </div>
+
+                                    <div class="text-sm text-gray-600 space-y-1">
+                                        <p><strong>Start:</strong>
+                                            <%= new Date(event.start.dateTime || event.start.date).toLocaleString('en-IN') %>
+                                        </p>
+                                        <% if (event.end && event.end.dateTime) { %>
+                                        <p><strong>End:</strong> <%= new Date(event.end.dateTime).toLocaleString('en-IN') %></p>
+                                        <% } %>
+                                        <% if (event.description) { %>
+                                        <p><strong>Description:</strong> <%= event.description %></p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <% }) %>
+                            </div>
+                            <% } %>
                         </div>
-                        <% }) %>
-                    </div>
-                    <% } %>
-                </div>
 
-            </div>
+                    </div>
+                </main>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>

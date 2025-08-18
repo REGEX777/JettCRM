@@ -10,255 +10,257 @@
     <title>Document</title>
 </head>
 
-<body>
-    <!-- Parent -->
-<%- include('fragments/alerts'); -%>
+    <body class="bg-gray-50 font-poppins text-gray-800">
+    <%- include('fragments/alerts'); -%>
 
-    <div class="flex flex-row justify-start">
-
+    <div class="flex min-h-screen">
         <%- include('fragments/sidebar'); -%>
 
-        <div class="flex flex-col bg-[#FAFAFA] px-10 py-5 pt-10 font-poppins ml-[24rem] w-[calc(100%-24rem)] gap-3">
+        <div class="flex flex-col w-full ml-[24rem]">
             <%- include('fragments/header'); -%>
-            <div
-                class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
-                <div class="w-full">
-                    <p class="font-medium">Quick Access</p>
-                </div>
-                <div class="w-full min-h-[12rem] grid grid-cols-3 gap-5">
-                    <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
-                        <div class="w-full">
-                            <p><i class="fa-solid fa-dollar-sign text-[#00B506] pr-2"></i> Financial Insights</p>
-                        </div>
+            <main class="p-8 w-full">
 
-                        <div class="w-full flex flex-row items-start justify-between mt-4 gap-10 h-full">
-                            <div class="flex flex-col items-start justify-center gap-2 flex-none">
-                                <p class="text-[0.65rem]">Total Income</p>
-                                <p class="text-4xl">$1,225</p>
-                                <p class="text-[0.65rem]"><i class="fa-solid fa-arrow-trend-up pr-2 text-[#00B506]"></i>
-                                    12% Growth</p>
-                            </div>
-
-                            <div
-                                class="flex flex-col px-3 text-xs gap-2 py-2 items-start justify-center h-full flex-grow rounded-lg bg-[#FFFFFF] border border-border">
-                                <p>Total Invoices: 120</p>
-                                <p>Paid Invoice: 12</p>
-                                <p>Invoices this month: 120</p>
-                                <p>Revenue this month: $3000</p>
-                            </div>
-                        </div>
+                <div
+                    class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+                    <div class="w-full">
+                        <p class="font-medium">Quick Access</p>
                     </div>
-
-                    <!-- tasks card -->
-                    <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
-                        <div class="w-full">
-                            <p><i class="fa-solid fa-list text-[#3D3BF3] pr-2"></i> Projects Insights</p>
-                        </div>
-                        <div class="w-full flex flex-row items-start justify-between mt-4 gap-10 h-full">
-                            <div class="w-full flex items-center justify-between">
-                                <div class="flex flex-col items-start justify-center gap-2">
-                                    <p class="text-[0.65rem]">Pending Tasks</p>
-                                    <p class="text-4xl"><%= pending %></p>
-                                </div>
-                                <div class="flex flex-col items-start justify-center gap-2">
-                                    <p class="text-[0.65rem]">Completed Tasks</p>
-                                    <p class="text-4xl"><%= completed %></p>
-                                </div>
-                                <div class="flex flex-col items-start justify-center gap-2">
-                                    <p class="text-[0.65rem]">Validation</p>
-                                    <p class="text-4xl"><%= validation %></p>
-                                </div>
+                    <div class="w-full min-h-[12rem] grid grid-cols-3 gap-5">
+                        <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
+                            <div class="w-full">
+                                <p><i class="fa-solid fa-dollar-sign text-[#00B506] pr-2"></i> Financial Insights</p>
                             </div>
-                        </div>
-                        <div class="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
-                            <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-pink-400 to-fuchsia-500"
-                                style="width: <%= progress %>%">
-                            </div>
-                        </div>
-                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                            <span>Progress bar</span>
-                            <span><%= progress %>%</span>
-                        </div>
 
-                    </div>
-                    
-                    
-                    
-                    <div class="w-full bg-[#FAFAFA] border border-border rounded-md py-3 px-3 flex flex-col gap-2">
-
-                        <div class="text-sm font-semibold text-[#333] px-1">
-                            Upcoming Meetings
-                        </div>
-
-                        <% if (events && events.length > 0) { %>
-                        <div class="flex flex-col gap-2">
-                            <% events.slice(0, 2).forEach(event => { %>
-                            <div class="bg-white border border-border rounded-md p-2 flex items-center justify-between">
-                                <div class="flex flex-col text-xs">
-                                    <p class="font-medium text-[#111]"><%= event.summary || "No Title" %></p>
-                                    <% if (event.start && event.start.dateTime) { %>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">
-                                        <%= new Date(event.start.dateTime).toLocaleString('en-IN', {
-                                            weekday: 'short',
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        }) %>
-                                    </p>
-                                    <% } else { %>
-                                    <p class="text-[11px] text-gray-400 mt-0.5">No start time</p>
-                                    <% } %>
+                            <div class="w-full flex flex-row items-start justify-between mt-4 gap-10 h-full">
+                                <p class="italic text-xs">Coming Soon</p>
+                                <!-- <div class="flex flex-col items-start justify-center gap-2 flex-none">
+                                    <p class="text-[0.65rem]">Total Income</p>
+                                    <p class="text-4xl">$1,225</p>
+                                    <p class="text-[0.65rem]"><i class="fa-solid fa-arrow-trend-up pr-2 text-[#00B506]"></i>
+                                        12% Growth</p>
                                 </div>
-                                <a href="<%= event.hangoutLink || (event.conferenceData?.entryPoints?.[0]?.uri || '#') %>"
-                                    target="_blank" class="text-blue-500 text-xs underline hover:text-blue-700">
-                                    Join
-                                </a>
-                            </div>
-                            <% }); %>
-                        </div>
-
-                        <% if (events.length > 2) { %>
-                        <a href="/calendar" class="text-[11px] text-blue-500 hover:underline px-1 mt-1 self-start">See all meetings</a>
-                        <% } %>
-
-                        <% } else { %>
-                        <div class="text-xs text-gray-500 mt-1 px-1">No meetings found.</div>
-                        <% } %>
-
-                    </div>
-                </div>
-            </div>
-            <div
-                class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
-                <div class="w-full">
-                    <p class="font-medium">Upcoming Deadlines</p>
-                </div>
-                <div class="flex flex-col items-center justify-center w-full gap-3">
-                    <% if (upcomingDeadlines.length > 0) { %>
-                    <% upcomingDeadlines.forEach(project => { %>
-                    <a href="/projects/v/<%= project._id %>" target="_blank" class="w-full">
-                        <div
-                            class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5 hover:bg-gray-100 transition">
-                            <p class="font-medium">
-                                <%= project.name %>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF] ml-1"></i>
-                            </p>
-                            <div class="flex flex-row items-center justify-center gap-2">
 
                                 <div
-                                    class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
-                                    <p>
-                                        <% if (project.daysRemaining === 0) { %>
-                                        Due Today
-                                        <% } else if (project.daysRemaining < 0) { %>
-                                        Overdue by <%= Math.abs(project.daysRemaining) %>
-                                        Day<%= Math.abs(project.daysRemaining) > 1 ? 's' : '' %>
+                                    class="flex flex-col px-3 text-xs gap-2 py-2 items-start justify-center h-full flex-grow rounded-lg bg-[#FFFFFF] border border-border">
+                                    <p>Total Invoices: 120</p>
+                                    <p>Paid Invoice: 12</p>
+                                    <p>Invoices this month: 120</p>
+                                    <p>Revenue this month: $3000</p>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <!-- tasks card -->
+                        <div class="h-full w-full bg-[#FAFAFA] border border-border rounded-lg py-3 px-5 flex flex-col">
+                            <div class="w-full">
+                                <p><i class="fa-solid fa-list text-[#3D3BF3] pr-2"></i> Projects Insights</p>
+                            </div>
+                            <div class="w-full flex flex-row items-start justify-between mt-4 gap-10 h-full">
+                                <div class="w-full flex items-center justify-between">
+                                    <div class="flex flex-col items-start justify-center gap-2">
+                                        <p class="text-[0.65rem]">Pending Tasks</p>
+                                        <p class="text-4xl"><%= pending %></p>
+                                    </div>
+                                    <div class="flex flex-col items-start justify-center gap-2">
+                                        <p class="text-[0.65rem]">Completed Tasks</p>
+                                        <p class="text-4xl"><%= completed %></p>
+                                    </div>
+                                    <div class="flex flex-col items-start justify-center gap-2">
+                                        <p class="text-[0.65rem]">Validation</p>
+                                        <p class="text-4xl"><%= validation %></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
+                                <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-pink-400 to-fuchsia-500"
+                                    style="width: <%= progress %>%">
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Progress bar</span>
+                                <span><%= progress %>%</span>
+                            </div>
+
+                        </div>
+                        
+                        
+                        
+                        <div class="w-full bg-[#FAFAFA] border border-border rounded-md py-3 px-3 flex flex-col gap-2">
+
+                            <div class="text-sm font-semibold text-[#333] px-1">
+                                Upcoming Meetings
+                            </div>
+
+                            <% if (events && events.length > 0) { %>
+                            <div class="flex flex-col gap-2">
+                                <% events.slice(0, 2).forEach(event => { %>
+                                <div class="bg-white border border-border rounded-md p-2 flex items-center justify-between">
+                                    <div class="flex flex-col text-xs">
+                                        <p class="font-medium text-[#111]"><%= event.summary || "No Title" %></p>
+                                        <% if (event.start && event.start.dateTime) { %>
+                                        <p class="text-[11px] text-gray-500 mt-0.5">
+                                            <%= new Date(event.start.dateTime).toLocaleString('en-IN', {
+                                                weekday: 'short',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) %>
+                                        </p>
                                         <% } else { %>
-                                        Due in <%= project.daysRemaining %>
-                                        Day<%= project.daysRemaining > 1 ? 's' : '' %>
+                                        <p class="text-[11px] text-gray-400 mt-0.5">No start time</p>
                                         <% } %>
-                                    </p>
+                                    </div>
+                                    <a href="<%= event.hangoutLink || (event.conferenceData?.entryPoints?.[0]?.uri || '#') %>"
+                                        target="_blank" class="text-blue-500 text-xs underline hover:text-blue-700">
+                                        Join
+                                    </a>
+                                </div>
+                                <% }); %>
+                            </div>
+
+                            <% if (events.length > 2) { %>
+                            <a href="/calendar" class="text-[11px] text-blue-500 hover:underline px-1 mt-1 self-start">See all meetings</a>
+                            <% } %>
+
+                            <% } else { %>
+                            <div class="text-xs text-gray-500 mt-1 px-1">No meetings found.</div>
+                            <% } %>
+
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+                    <div class="w-full">
+                        <p class="font-medium">Upcoming Deadlines</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center w-full gap-3">
+                        <% if (upcomingDeadlines.length > 0) { %>
+                        <% upcomingDeadlines.forEach(project => { %>
+                        <a href="/projects/v/<%= project._id %>" target="_blank" class="w-full">
+                            <div
+                                class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5 hover:bg-gray-100 transition">
+                                <p class="font-medium">
+                                    <%= project.name %>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#3546FF] ml-1"></i>
+                                </p>
+                                <div class="flex flex-row items-center justify-center gap-2">
+
+                                    <div
+                                        class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                                        <p>
+                                            <% if (project.daysRemaining === 0) { %>
+                                            Due Today
+                                            <% } else if (project.daysRemaining < 0) { %>
+                                            Overdue by <%= Math.abs(project.daysRemaining) %>
+                                            Day<%= Math.abs(project.daysRemaining) > 1 ? 's' : '' %>
+                                            <% } else { %>
+                                            Due in <%= project.daysRemaining %>
+                                            Day<%= project.daysRemaining > 1 ? 's' : '' %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <% }) %>
+                        <% } else { %>
+                        <p class="text-gray-500">You have no upcoming deadlines.</p>
+                        <% } %>
+
+                        <div class="flex items-center justify-center">
+                            <a href="/projects" class="text-[#3546FF] font-medium hover:underline">See All</a>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
+                    <div class="w-full">
+                        <p class="font-medium">Pending Invoices</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center w-full gap-3">
+                        <div
+                            class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
+
+                                <div
+                                    class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
+                                    <p>Payment Pending</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
+                                    <p>Billed to: test@gmail.com</p>
+                                </div>
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                                    <p>$2,324</p>
+                                </div>
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                                    <p>Generated on 23/02/2025</p>
                                 </div>
                             </div>
                         </div>
-                    </a>
-                    <% }) %>
-                    <% } else { %>
-                    <p class="text-gray-500">You have no upcoming deadlines.</p>
-                    <% } %>
+                        <div
+                            class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
 
-                    <div class="flex items-center justify-center">
-                        <a href="/projects" class="text-[#3546FF] font-medium hover:underline">See All</a>
+                                <div
+                                    class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
+                                    <p>Payment Pending</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
+                                    <p>Billed to: test@gmail.com</p>
+                                </div>
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                                    <p>$2,324</p>
+                                </div>
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                                    <p>Generated on 23/02/2025</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
+
+                                <div
+                                    class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
+                                    <p>Payment Pending</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
+                                    <p>Billed to: test@gmail.com</p>
+                                </div>
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
+                                    <p>$2,324</p>
+                                </div>
+                                <div
+                                    class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
+                                    <p>Generated on 23/02/2025</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <a href="#">See All</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div
-                class="min-h-[4rem] rounded-lg w-full bg-white flex flex-col items-center justify-center py-5 px-5 gap-5">
-                <div class="w-full">
-                    <p class="font-medium">Pending Invoices</p>
-                </div>
-                <div class="flex flex-col items-center justify-center w-full gap-3">
-                    <div
-                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
-
-                            <div
-                                class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
-                                <p>Payment Pending</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <div
-                                class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
-                                <p>Billed to: test@gmail.com</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
-                                <p>$2,324</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
-                                <p>Generated on 23/02/2025</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
-
-                            <div
-                                class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
-                                <p>Payment Pending</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <div
-                                class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
-                                <p>Billed to: test@gmail.com</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
-                                <p>$2,324</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
-                                <p>Generated on 23/02/2025</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="h-[5rem] bg-[#FAFAFA] border-border w-full rounded-lg flex flex-row items-center justify-between px-5">
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <p>Invoice <a class="text-[#3546FF]" href="#">#2314</a></p>
-
-                            <div
-                                class="py-1 px-3 rounded-lg border-pendingorangeborder border-2 bg-pendingorange flex items-center justify-center text-sm">
-                                <p>Payment Pending</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-row items-center justify-center gap-2">
-                            <div
-                                class="py-1 px-3 rounded-lg bg-graybg border-2 border-grayborder flex items-center justify-center text-sm">
-                                <p>Billed to: test@gmail.com</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-okgreen border-2 border-okgreenborder flex items-center justify-center text-sm">
-                                <p>$2,324</p>
-                            </div>
-                            <div
-                                class="py-1 px-3 rounded-lg bg-badred border-2 border-badredborder flex items-center justify-center text-sm">
-                                <p>Generated on 23/02/2025</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center">
-                        <a href="#">See All</a>
-                    </div>
-                </div>
-            </div>
+            </main>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>

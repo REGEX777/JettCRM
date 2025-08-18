@@ -9,4 +9,9 @@ export const oauth2Client = new google.auth.OAuth2(
 )
 
 //scopeeeeeeeeeeeeeees
-export const SCOPES = ['https://www.googleapis.com/auth/calendar']
+export const SCOPES = [
+  'openid',
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
+  'https://www.googleapis.com/auth/calendar'
+];

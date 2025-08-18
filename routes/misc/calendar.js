@@ -9,50 +9,9 @@ import { header } from 'express-validator';
 
 const router = express.Router();
 
-router.get('/auth', (req, res) => {
 
-  const id = req.query.id || '';
-  const pid = req.query.pid || '';
-  const stateObj = { id, pid };
-  const encodedState = encodeURIComponent(JSON.stringify(stateObj));
-  const authUrl = oauth2Client.generateAuthUrl({
-    access_type: 'offline',
-    prompt: 'consent',
-    scope: SCOPES,
-    state: encodedState,
-  });
-  res.redirect(authUrl);
-});
 
-router.get('/callback', async (req, res) => {
-  const code = req.query.code;
-  const state = req.query.state;
 
-  let id = '', pid = '';
-
-  try {
-    if (state) {
-      const parsed = JSON.parse(decodeURIComponent(state));
-      id = parsed.id;
-      pid = parsed.pid;
-    }
-
-    const { tokens } = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
-
-    await User.findByIdAndUpdate(req.user._id, {
-      googleAccessToken: tokens.access_token,
-      googleRefreshToken: tokens.refresh_token,
-      googleTokenExpiryDate: tokens.expiry_date ? new Date(tokens.expiry_date) : null,
-    });
-
-    req.flash('success', 'Google Calendar connected!');
-    return res.redirect(`/calendar/new-meeting/${id}/${pid}`);
-  } catch (err) {
-    console.error('OAuth callback error:', err);
-    res.status(500).send('Failed to authenticate with Google');
-  }
-});
 
 
 // meeting stuff
@@ -61,53 +20,80 @@ router.get('/callback', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const user = req.user;
-    if (!user || !user.googleAccessToken || !user.googleRefreshToken) {
-      req.flash('error', 'Google Calendar not connected.');
-      return res.redirect('/calendar/auth');
+    
+    if (!user) {
+      req.flash('error', 'Please log in first');
+      return res.redirect('/login');
     }
 
+
+    if (!user.googleRefreshToken) {
+      req.flash('error', 'Google Calendar not connected.');
+      return res.redirect('/link/auth');
+    }
+
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_CALLBACK_URL
+    );
+
+    
     oauth2Client.setCredentials({
-      access_token: user.googleAccessToken,
       refresh_token: user.googleRefreshToken
     });
 
-    const tokenInfo = await oauth2Client.getAccessToken();
-    if (tokenInfo.res && tokenInfo.res.data.expiry_date < Date.now()) {
-      const { credentials } = await oauth2Client.refreshAccessToken();
-      user.googleAccessToken = credentials.access_token;
-      user.googleTokenExpiryDate = credentials.expiry_date ? new Date(credentials.expiry_date) : null;
-      await user.save();
+    try {
+      const { token } = await oauth2Client.getAccessToken();
+      
+
+      req.session.googleAccessToken = token;
+      
+      const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+
+      const eventsResponse = await calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        maxResults: 10,
+        singleEvents: true,
+        orderBy: 'startTime'
+      });
+
+      const meetingEvents = eventsResponse.data.items.filter(event =>
+        event.conferenceData &&
+        event.conferenceData.entryPoints &&
+        event.conferenceData.entryPoints.some(point => point.entryPointType === 'video')
+      );
+      
+      meetingEvents.sort((a, b) => {
+        const aTime = new Date(a.start.dateTime || a.start.date).getTime();
+        const bTime = new Date(b.start.dateTime || b.start.date).getTime();
+        return bTime - aTime;
+      });
+
+      const headerText = "All Meetings";
+      const backBtnLink = '/dashboard';
+
+      return res.render('calendar/all-meetings', { 
+        events: meetingEvents, 
+        headerText, 
+        backBtnLink 
+      });
+
+    } catch (err) {
+      console.log('API error:', err);
+      if (err.code === 401) {
+        
+        req.flash('error', 'Your Google session expired. Please reconnect.');
+        return res.redirect('/link/auth');
+      }
+      throw err;
     }
 
-    const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
-
-    const eventsResponse = await calendar.events.list({
-      calendarId: 'primary',
-      timeMin: new Date().toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: 'startTime'
-    });
-
-    const meetingEvents = eventsResponse.data.items.filter(event =>
-      event.conferenceData &&
-      event.conferenceData.entryPoints &&
-      event.conferenceData.entryPoints.some(point => point.entryPointType === 'video')
-    );
-    
-    meetingEvents.sort((a, b) => {
-      const aTime = new Date(a.start.dateTime || a.start.date).getTime();
-      const bTime = new Date(b.start.dateTime || b.start.date).getTime();
-      return bTime - aTime;
-    });
-
-    const headerText = "All Meetings"
-    const backBtnLink = '/'
-    res.render('calendar/all-meetings', { events: meetingEvents, headerText, backBtnLink });
-
   } catch (err) {
-    console.error('Error fetching events:', err);
-    res.status(500).send('Failed to load meetings.');
+    console.log('Error fetching events:', err);
+    req.flash('error', 'Failed to load meetings.');
+    return res.redirect('/dashboard');
   }
 });
 
@@ -118,14 +104,10 @@ router.get('/new-meeting', async (req, res) => {
     const user = req.user;
     if (!user) return res.status(401).send('Unauthorized');
 
-    const hasGoogleAuth = user.googleAccessToken && user.googleRefreshToken;
-    if (!hasGoogleAuth) return res.redirect('/calendar/auth');
-
-    oauth2Client.setCredentials({
-      access_token: user.googleAccessToken,
-      refresh_token: user.googleRefreshToken,
-      expiry_date: user.googleTokenExpiryDate?.getTime(),
-    });
+    if(!user.googleRefreshToken){
+      req.flash('error', 'Google account not connected')
+      return res.redirect('/link/auth');
+    }
 
     const isExpired =
       user.googleTokenExpiryDate &&
@@ -138,7 +120,6 @@ router.get('/new-meeting', async (req, res) => {
         ? new Date(credentials.expiry_date)
         : null;
       await user.save();
-      console.log('🔁 Token refreshed for', user.email);
     }
 
     const clientId = req.query.id;
@@ -167,96 +148,127 @@ router.get('/new-meeting', async (req, res) => {
 
 router.post('/create', async (req, res) => {
   try {
-    const user = req.user;
+    const { user, body } = req;
 
-    if (!user || !user.googleAccessToken || !user.googleRefreshToken) {
+    
+    if (!user) {
+      req.flash('error', 'Please log in first');
+      return res.redirect('/login');
+    }
+    
+    if (!user.googleRefreshToken) {
       req.flash('error', 'Google Calendar not connected');
-      return res.redirect('/calendar/new-meeting');
+      return res.redirect('/link/auth');
     }
 
+    
+
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_CALLBACK_URL
+    );
     oauth2Client.setCredentials({
-      access_token: user.googleAccessToken,
       refresh_token: user.googleRefreshToken
     });
 
-    if (user.googleTokenExpiryDate && user.googleTokenExpiryDate < new Date()) {
-      const { credentials } = await oauth2Client.refreshAccessToken();
-      user.googleAccessToken = credentials.access_token;
-      user.googleTokenExpiryDate = credentials.expiry_date ? new Date(credentials.expiry_date) : null;
-      await user.save();
+
+
+    try {
+      await oauth2Client.getAccessToken();
+    } catch (err) {
+      console.log('Token error:', err);
+      req.flash('error', 'Session expired. Please reconnect Google.');
+      return res.redirect('/link/auth');
     }
 
-    const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
-
-    const { summary, description, startTime, endTime, attendees, projectId } = req.body;
-
+    // Prepare meeting event
+    const { summary, description, startTime, endTime, attendees, projectId } = body;
+    
     const event = {
-      summary,
-      description,
+      summary: summary || 'Meeting',
+      description: description || '',
       start: {
-        dateTime: new Date(startTime),
+        dateTime: new Date(startTime).toISOString(),
         timeZone: 'Asia/Kolkata',
       },
       end: {
-        dateTime: new Date(endTime),
+        dateTime: new Date(endTime).toISOString(),
         timeZone: 'Asia/Kolkata',
       },
       conferenceData: {
         createRequest: {
-          requestId: `meet-${Date.now()}`,
-          conferenceSolutionKey: {
-            type: 'hangoutsMeet',
-          },
-        },
+          requestId: `meet-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+          conferenceSolutionKey: { type: 'hangoutsMeet' }
+        }
       },
-      attendees: attendees
-        ? attendees.split(',').map(email => ({ email: email.trim() }))
-        : [],
+      attendees: attendees ? 
+        attendees.split(',')
+          .map(email => email.trim())
+          .filter(email => email.length > 0)
+          .map(email => ({ email })) : 
+        []
     };
 
+    // calender update
+    const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
     const response = await calendar.events.insert({
       calendarId: 'primary',
       resource: event,
       conferenceDataVersion: 1,
+      sendUpdates: 'all'
     });
 
-    const meetLink = response.data?.hangoutLink || 'No Meet link generated';
+    const meetLink = response.data.hangoutLink;
 
-    const project = await Project.findOne({ _id: projectId }).populate('client');
+    // pprojec update incase of client
+    if (projectId && mongoose.Types.ObjectId.isValid(projectId)) {
+      try {
+        const project = await Project.findById(projectId).populate('client');
+        if (project?.client?.email) {
+          const isClientInvited = event.attendees.some(
+            a => a.email.toLowerCase() === project.client.email.toLowerCase()
+          );
 
-    if (project && project.client && project.client.email) {
-      const isClientInvited = event.attendees.some(
-        a => a.email.toLowerCase() === project.client.email.toLowerCase()
-      );
-
-      if (isClientInvited) {
-        project.latestMeetingLink = meetLink;
-
-        project.updates.push({
-          title: 'Meeting Created',
-          uType: 'alert',
-          icon: 'calendar',
-          details: `A new meeting has been scheduled by the Project Manager.`,
-          relatedLinks: [
-            {
-              linkTitle: 'Join Meeting',
-              link: meetLink
-            }
-          ],
-          status: null
-        });
-
-        await project.save();
+          if (isClientInvited) {
+            await Project.findByIdAndUpdate(projectId, {
+              $set: { latestMeetingLink: meetLink },
+              $push: {
+                updates: {
+                  title: 'Meeting Scheduled',
+                  uType: 'alert',
+                  icon: 'calendar',
+                  details: 'A new meeting has been scheduled by the Project Manager.',
+                  relatedLinks: [{
+                    linkTitle: 'Join Meeting',
+                    link: meetLink
+                  }],
+                  createdAt: new Date()
+                }
+              }
+            });
+          }
+        }
+      } catch (projectErr) {
+        console.log(projectErr);
       }
     }
 
-    req.flash('success', `Meeting created! Meet link: ${meetLink}`);
-    res.redirect('/calendar');
+    req.flash('success', 'Meeting created successfully!');
+    return res.redirect('/calendar');
 
   } catch (err) {
-    console.error('Error creating Google Meet event:', err);
-    req.flash('error', 'Failed to create meeting.');
-    res.redirect('/calendar/new-meeting');
+    console.log(err);
+    
+    let errorMessage = 'Failed to create meeting';
+    if (err.code === 401) {
+      errorMessage = 'Google session expired. Please reconnect.';
+    } else if (err.message.includes('end date')) {
+      errorMessage = 'End time must be after start time';
+    }
+
+    req.flash('error', errorMessage);
+    return res.redirect('/calendar/new-meeting');
   }
 });
 

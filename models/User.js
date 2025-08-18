@@ -26,9 +26,7 @@ const userSchema = new mongoose.Schema({
   teamMemberOf: [teamMembershipSchema],
   clientOf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
   stripeAccountId: String,
-  googleAccessToken: String,
   googleRefreshToken: String,
-  googleTokenExpiryDate: Date,
   profilePicture: {
     type: String,
     default: '/default/default.jpg'

@@ -126,11 +126,13 @@ router.get('/', async (req, res) => {
             .limit(limit)
             .sort({ createdAt: -1 }); // newest first
 
-        const headerText = "EEEOOOO";
+        const headerText = "Create an estimate";
+        const backBtnLink = "/dashboard"
 
         res.render("estimate/estimates", {
             estimates,
             headerText,
+            backBtnLink,
             currentPage: page,
             totalPages: Math.ceil(totalCount / limit),
             totalCount,

@@ -10,200 +10,230 @@
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-[#F8FAFC] min-h-screen font-poppins text-gray-800">
+<body class="bg-gray-50 font-poppins text-gray-800">
+  <%- include('../fragments/alerts'); -%>
 
-<%- include('../fragments/alerts'); -%>
-
-  <div class="flex">
-    <!-- Sidebar -->
+  <div class="flex min-h-screen">
     <%- include('../fragments/sidebar'); -%>
 
-    <main class="ml-[24rem] w-[calc(100%-24rem)] px-10 py-8 space-y-10">
+    <div class="flex flex-col w-full ml-[24rem]">
       <%- include('../fragments/header'); -%>
 
+      <main class="p-8 w-full">
 
-      <section class="bg-white rounded-2xl shadow p-8">
-        <form action="/settings/personal" method="POST" enctype="multipart/form-data"
-          class="bg-white rounded-2xl shadow p-8">
-          <h2 class="text-lg font-semibold border-b border-gray-100 pb-4 mb-6">Personal Information</h2>
+        <section class="bg-white rounded-2xl shadow p-8">
+          <form action="/settings/personal" method="POST" enctype="multipart/form-data"
+            class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-lg font-semibold border-b border-gray-100 pb-4 mb-6">Personal Information</h2>
 
-          <!-- ts so annoying gng T_T -->
-          <!-- why wont it work Im crying please for gods sake work  -->
-          <div class="flex flex-col md:flex-row gap-8">
-            <div class="relative h-[15rem] w-[15rem] group overflow-hidden rounded-lg">
-              <!-- profile pic -->
-              <img src="<%= user.profilePicture %>" alt="Profile Picture"
-                class="w-full h-full object-cover transition duration-300 group-hover:brightness-75 rounded-lg"
-                id="profilePreview">
+            <!-- ts so annoying gng T_T -->
+            <!-- why wont it work Im crying please for gods sake work  -->
+            <div class="flex flex-col md:flex-row gap-8">
+              <div class="relative h-[15rem] w-[15rem] group overflow-hidden rounded-lg">
+                <!-- profile pic -->
+                <img src="<%= user.profilePicture %>" alt="Profile Picture"
+                  class="w-full h-full object-cover transition duration-300 group-hover:brightness-75 rounded-lg"
+                  id="profilePreview">
 
-              <div class="absolute top-2 right-2 z-10">
-                <div class="relative group/dots">
-                  <button type="button" id="dropdownHoverButton" data-dropdown-toggle="dropdownHover-1"
-                    data-dropdown-trigger="hover" class="text-black font-bold text-2xl p-2 bg-white rounded-full">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                  </button>
+                <div class="absolute top-2 right-2 z-10">
+                  <div class="relative group/dots">
+                    <button type="button" id="dropdownHoverButton" data-dropdown-toggle="dropdownHover-1"
+                      data-dropdown-trigger="hover" class="text-black font-bold text-2xl p-2 bg-white rounded-full">
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
 
-                  <div id="dropdownHover-1"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
-                      <li>
-                        <a href="#" onclick="triggerFileInput()"
-                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Change
-                          Profile Picture</a>
-                      </li>
-                      <li>
-                        <a href="/settings/profilePicture/delete"
-                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Remove
-                          Profile Picture</a>
-                      </li>
-                      <li>
-                        <a href="<%= user.profilePicture %>" target="_blank"
-                          class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">View
-                          Profile Picture</a>
-                      </li>
-                    </ul>
+                    <div id="dropdownHover-1"
+                      class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <li>
+                          <a href="#" onclick="triggerFileInput()"
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Change
+                            Profile Picture</a>
+                        </li>
+                        <li>
+                          <a href="/settings/profilePicture/delete"
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Remove
+                            Profile Picture</a>
+                        </li>
+                        <li>
+                          <a href="<%= user.profilePicture %>" target="_blank"
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">View
+                            Profile Picture</a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
+
+                <input type="file" name="profileImage" id="profilePictureInput" accept="image/*" class="hidden">
               </div>
 
-              <input type="file" name="profileImage" id="profilePictureInput" accept="image/*" class="hidden">
-            </div>
+              <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="text-sm text-gray-600 mb-1 block">Full Name</label>
+                  <input name="firstName" type="text" value="<%= user.firstName %>"
+                    class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-100" />
 
-            <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="text-sm text-gray-600 mb-1 block">Full Name</label>
-                <input name="firstName" type="text" value="<%= user.firstName %>"
-                  class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-100" />
-                              
-              </div>
-              <div>
-                <label class="text-sm text-gray-600 mb-1 block">Last Name</label>
-                <input name="lastName" type="text" value="<%= user.lastName %>"
-                  class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-100" />
+                </div>
+                <div>
+                  <label class="text-sm text-gray-600 mb-1 block">Last Name</label>
+                  <input name="lastName" type="text" value="<%= user.lastName %>"
+                    class="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-100" />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="flex justify-end mt-6">
-            <button type="submit" class="bg-[#3546FF] text-white px-6 py-2 rounded-lg hover:bg-[#2a38cc] transition">
-              Save
-            </button>
-          </div>
-        </form>
-        <div class="mt-8 bg-white shadow-md border border-gray-200 rounded-lg p-6 w-full">
-          <h2 class="text-lg font-semibold mb-4 text-gray-800">Change Email Address</h2>
-          <!-- email form -->
-          <form action="/settings/email/update" method="post">
-            <div class="mb-4">
-              <label for="currentEmail" class="block text-sm text-gray-600 mb-1">Current Email</label>
-              <input type="email" id="currentEmail" disabled value="<%= user.email %>"
-                class="w-full px-3 py-2 bg-gray-100 rounded-md border border-gray-300 text-gray-700">
+            <div class="flex justify-end mt-6">
+              <button type="submit" class="bg-[#3546FF] text-white px-6 py-2 rounded-lg hover:bg-[#2a38cc] transition">
+                Save
+              </button>
             </div>
-
-            <div class="mb-4">
-              <label for="newEmail" class="block text-sm text-gray-600 mb-1">New Email</label>
-              <input type="email" name="newEmail" id="newEmail" placeholder="Enter new email address"
-                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
-            </div>
-
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-all duration-200">
-              Update Email
-            </button>
           </form>
-        </div>
-        <!-- bizness stuff here -->
-         <div class="mt-8 bg-white shadow-md border border-gray-200 rounded-lg p-6 w-full">
-          <h2 class="text-lg font-semibold mb-4 text-gray-800">Update Business Information</h2>
-          
-          <form action="/settings/business/update" method="post">
-            
-            <div class="mb-4">
-              <label for="businessName" class="block text-sm text-gray-600 mb-1">Business Name</label>
-              <input 
-                type="text" 
-                name="businessName" 
-                id="businessName" 
-                placeholder="Enter your business name"
-                value="<%= user.businessName || '' %>"
-                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              >
-            </div>
+          <div class="mt-8 bg-white shadow-md border border-gray-200 rounded-lg p-6 w-full">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800">Change Email Address</h2>
+            <!-- email form -->
+            <form action="/settings/email/update" method="post">
+              <div class="mb-4">
+                <label for="currentEmail" class="block text-sm text-gray-600 mb-1">Current Email</label>
+                <input type="email" id="currentEmail" disabled value="<%= user.email %>"
+                  class="w-full px-3 py-2 bg-gray-100 rounded-md border border-gray-300 text-gray-700">
+              </div>
 
-            <div class="mb-4">
-              <label for="businessAddress" class="block text-sm text-gray-600 mb-1">Business Address</label>
-              <input 
-                type="text" 
-                name="businessAddress" 
-                id="businessAddress" 
-                placeholder="Enter your business address"
-                value="<%= user.businessAddress || '' %>"
-                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              >
-            </div>
+              <div class="mb-4">
+                <label for="newEmail" class="block text-sm text-gray-600 mb-1">New Email</label>
+                <input type="email" name="newEmail" id="newEmail" placeholder="Enter new email address"
+                  class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+              </div>
 
-            <div class="mb-4">
-              <label for="businessEmail" class="block text-sm text-gray-600 mb-1">Business Email</label>
-              <input 
-                type="email" 
-                name="businessEmail" 
-                id="businessEmail" 
-                placeholder="Enter your business email"
-                value="<%= user.businessEmail || '' %>"
-                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              >
-            </div>
+              <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-all duration-200">
+                Update Email
+              </button>
+            </form>
+          </div>
+          <!-- bizness stuff here -->
+          <div class="mt-8 bg-white shadow-md border border-gray-200 rounded-lg p-6 w-full">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800">Update Business Information</h2>
 
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-all duration-200">
-              Update Business Info
-            </button>
-          </form>
+            <form action="/settings/business/update" method="post">
+
+              <div class="mb-4">
+                <label for="businessName" class="block text-sm text-gray-600 mb-1">Business Name</label>
+                <input type="text" name="businessName" id="businessName" placeholder="Enter your business name"
+                  value="<%= user.businessName || '' %>"
+                  class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+              </div>
+
+              <div class="mb-4">
+                <label for="businessAddress" class="block text-sm text-gray-600 mb-1">Business Address</label>
+                <input type="text" name="businessAddress" id="businessAddress" placeholder="Enter your business address"
+                  value="<%= user.businessAddress || '' %>"
+                  class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+              </div>
+
+              <div class="mb-4">
+                <label for="businessEmail" class="block text-sm text-gray-600 mb-1">Business Email</label>
+                <input type="email" name="businessEmail" id="businessEmail" placeholder="Enter your business email"
+                  value="<%= user.businessEmail || '' %>"
+                  class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+              </div>
+
+              <button
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md transition-all duration-200">
+                Update Business Info
+              </button>
+            </form>
           </div>
 
-      </section>
-    </main>
+          <div class="mt-8 bg-white shadow-md border border-gray-200 rounded-lg p-6 w-full">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800">Link Google Account</h2>
+            <div class="flex flex-col items-start justify-center gap-5">
+              <p>Link your google account to access features like meetings.</p>
+              <% if(!user.googleId){ %>
+              <a href="/link/auth"
+                class="w-[40%] flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 mb-4 transition duration-150">
+                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4" />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853" />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05" />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335" />
+                </svg>
+                Link your Google account
+              </a>
+              <% }else{ %>
+              <div
+                class="w-[40%]  flex items-center justify-center py-2 px-4 border border-gray-300 bg-[#e9e9e9] rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 mb-4 transition duration-150">
+                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4" />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853" />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05" />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335" />
+                </svg>
+                Already Linked
+              </div>
+              <% } %>
+            </div>
+          </div>
 
-  </div>
+        </section>
+      </main>
 
-  <!-- flowbite script -->
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const preview = document.getElementById('profileImagePreview');
-      const input = document.getElementById('profileImageUpload');
+    <!-- flowbite script -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const preview = document.getElementById('profileImagePreview');
+        const input = document.getElementById('profileImageUpload');
+
+        input.addEventListener('change', (e) => {
+          const file = e.target.files ? . [0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              preview.src = event.target.result
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      });
+
+      const input = document.getElementById('profilePictureInput');
+      const image = document.getElementById('profilePreview');
+
+      function triggerFileInput() {
+        input.click();
+      }
 
       input.addEventListener('change', (e) => {
-        const file = e.target.files ?. [0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            preview.src = event.target.result
-          };
-          reader.readAsDataURL(file);
-        }
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          image.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
       });
-    });
-
-    const input = document.getElementById('profilePictureInput');
-    const image = document.getElementById('profilePreview');
-
-    function triggerFileInput() {
-      input.click();
-    }
-
-    input.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        image.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  </script>
+    </script>
 
 </body>
 
