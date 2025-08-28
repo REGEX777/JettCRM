@@ -37,8 +37,8 @@ router.get('/onboard', async (req, res) => {
 
     const accountLink = await stripe.accountLinks.create({
       account: connectedAccountId,
-      refresh_url: 'http://localhost:9000/stripe/connect/onboard/refresh',
-      return_url: 'http://localhost:9000/stripe/connect/status',
+      refresh_url: 'https://jettcrm.thesmartscribe.com/stripe/connect/onboard/refresh',
+      return_url: 'https://jettcrm.thesmartscribe.com/stripe/connect/status',
       type: 'account_onboarding'
     });
 

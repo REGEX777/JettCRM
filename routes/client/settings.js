@@ -149,7 +149,7 @@ router.post('/email/update', async (req, res)=>{
 
     // email thingy will go hereeee
 
-    const verificationLink = `http://localhost:9000/email/verify/${token}`
+    const verificationLink = `https://jettcrm.thesmartscribe.com/email/verify/${token}`
 
     console.log(verificationLink)
 

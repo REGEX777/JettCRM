@@ -31,7 +31,7 @@ router.get('/', async (req, res)=>{
                 from: 'verify@thesmartscribe.com',
                 to: [user.email],
                 subject: 'Verify your JettCRM account',
-                html: `<a href="http://localhost:9000/verify/${user.verificationToken}">Verify Account</a>`
+                html: `<a href="https://jettcrm.thesmartscribe.com/verify/${user.verificationToken}">Verify Account</a>`
             });
 
 
@@ -55,7 +55,7 @@ router.get('/', async (req, res)=>{
                     from: 'verify@thesmartscribe.com',
                     to: [user.email],
                     subject: 'Verify your JettCRM account',
-                    html: `<a href="http://localhost:9000/verify/${user.verificationToken}">Verify Account</a>`
+                    html: `<a href="https://jettcrm.thesmartscribe.com/verify/${user.verificationToken}">Verify Account</a>`
                 });
 
 

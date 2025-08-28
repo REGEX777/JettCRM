@@ -149,7 +149,7 @@ router.post('/', validateEmail, isLoggedOut, async (req, res) => {
                                 <p style="margin:0 0 16px;">Please verify your email address to complete your setup.</p>
 
                                 <div style="text-align:center;margin:32px 0;">
-                                <a href="http://localhost:9000/verify/${token}" style="display:inline-block;padding:12px 28px;background:linear-gradient(to right,#7c3aed,#d946ef);color:#ffffff;font-weight:600;font-size:16px;text-decoration:none;border-radius:8px;"> Verify Email </a>
+                                <a href="https://jettcrm.thesmartscribe.com/verify/${token}" style="display:inline-block;padding:12px 28px;background:linear-gradient(to right,#7c3aed,#d946ef);color:#ffffff;font-weight:600;font-size:16px;text-decoration:none;border-radius:8px;"> Verify Email </a>
                                 </div>
 
                                 <hr style="border:none;border-top:1px solid rgba(17,24,39,0.1);margin:24px 0;" />

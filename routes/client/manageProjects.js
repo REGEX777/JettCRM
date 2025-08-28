@@ -599,7 +599,7 @@ router.post("/", async (req, res) => {
             from: 'invite@thesmartscribe.com',
             to: [`${invite.email}`],
             subject: 'Invitation to join a project as a client',
-            html: `<a href="http://localhost:9000/invite/accept/${token}">Accept Invite</a>`
+            html: `<a href="https://jettcrm.thesmartscribe.com/invite/accept/${token}">Accept Invite</a>`
         });
 
 
