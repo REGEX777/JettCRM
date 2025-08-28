@@ -22,7 +22,7 @@ function closeApprovalModal() {
 (function () {
 
     window.copyToClipboard = function (text) {
-        navigator.clipboard ?.writeText(text).then(() => {
+        navigator.clipboard?.writeText(text).then(() => {
             const t = document.createElement('div');
             t.className = 'fixed right-6 bottom-6 z-50 rounded-lg bg-slate-900 text-white px-4 py-2 shadow';
             t.textContent = 'Copied to clipboard';
@@ -31,24 +31,11 @@ function closeApprovalModal() {
         }).catch(() => alert('Could not copy'));
     };
 
-
-    window.showApprovalModal = function (link, taskId) {
-        document.getElementById('approvalLink').textContent = link || 'No link provided';
-        document.getElementById('approveBtn').setAttribute('href', '/mytasks/approve/' + taskId);
-        const modal = document.getElementById('approvalModal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    };
-
     window.closeApprovalModal = function () {
         const modal = document.getElementById('approvalModal');
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     };
-
-    
-
-
 
     window.openAssignModal = function () {
         const modal = document.getElementById('assignModal');
@@ -65,7 +52,6 @@ function closeApprovalModal() {
     };
 
 })();
-
 
 
 
