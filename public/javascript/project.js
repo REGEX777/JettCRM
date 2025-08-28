@@ -34,7 +34,7 @@ function closeApprovalModal() {
 
     window.showApprovalModal = function (link, taskId) {
         document.getElementById('approvalLink').textContent = link || 'No link provided';
-        document.getElementById('approveBtn').setAttribute('href', '/projects/approve/' + taskId);
+        document.getElementById('approveBtn').setAttribute('href', '/mytasks/approve/' + taskId);
         const modal = document.getElementById('approvalModal');
         modal.classList.remove('hidden');
         modal.classList.add('flex');
